@@ -219,6 +219,13 @@ export default function Home() {
 
         case 'text': {
           outputFile = `text${ext}`;
+
+          // تحميل خط TTF من CDN لـ FFmpeg.wasm
+          setMessage({ text: '⏳ جاري تحميل الخط...', type: 'loading' });
+          const fontResponse = await fetch('https://cdn.jsdelivr.net/npm/dejavu-sans@1.0.0/DejaVuSans.ttf');
+          const fontBuffer = await fontResponse.arrayBuffer();
+          await ffmpeg.writeFile('font.ttf', new Uint8Array(fontBuffer));
+
           const safeText = textOverlay.replace(/'/g, "'\\''").replace(/:/g, '\:');
           let posX = '(w-text_w)/2';
           let posY = '(h-text_h)/2';
@@ -229,7 +236,7 @@ export default function Home() {
 
           args.push(
             '-vf',
-            `drawtext=text='${safeText}':fontsize=${textSize}:fontcolor=${textColor}:box=1:boxcolor=black@0.6:x=${posX}:y=${posY}:fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf`,
+            `drawtext=fontfile=font.ttf:text='${safeText}':fontsize=${textSize}:fontcolor=${textColor}:box=1:boxcolor=black@0.6:x=${posX}:y=${posY}`,
             '-c:a', 'copy'
           );
           break;
