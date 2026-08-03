@@ -222,9 +222,17 @@ export default function Home() {
 
           // تحميل خط TTF من CDN لـ FFmpeg.wasm
           setMessage({ text: '⏳ جاري تحميل الخط...', type: 'loading' });
-          const fontResponse = await fetch('https://cdn.jsdelivr.net/npm/dejavu-sans@1.0.0/DejaVuSans.ttf');
-          const fontBuffer = await fontResponse.arrayBuffer();
-          await ffmpeg.writeFile('font.ttf', new Uint8Array(fontBuffer));
+          try {
+            const fontResponse = await fetch('https://cdn.jsdelivr.net/npm/dejavu-sans@1.0.0/DejaVuSans.ttf');
+            const fontBuffer = await fontResponse.arrayBuffer();
+            await ffmpeg.writeFile('font.ttf', new Uint8Array(fontBuffer));
+          } catch (e) {
+            console.warn('Font load failed, trying fallback...');
+            // خط احتياطي
+            const fontResponse2 = await fetch('https://github.com/AstroNvim/astronvim/raw/master/.github/assets/DejaVuSans.ttf');
+            const fontBuffer2 = await fontResponse2.arrayBuffer();
+            await ffmpeg.writeFile('font.ttf', new Uint8Array(fontBuffer2));
+          }
 
           const safeText = textOverlay.replace(/'/g, "'\\''").replace(/:/g, '\:');
           let posX = '(w-text_w)/2';
@@ -234,10 +242,15 @@ export default function Home() {
           if (textPosition === 'left') { posX = '20'; }
           if (textPosition === 'right') { posX = 'w-text_w-20'; }
 
+          // -c:a copy لا يعمل مع -vf drawtext — يجب إعادة ترميز الفيديو
           args.push(
             '-vf',
             `drawtext=fontfile=font.ttf:text='${safeText}':fontsize=${textSize}:fontcolor=${textColor}:box=1:boxcolor=black@0.6:x=${posX}:y=${posY}`,
-            '-c:a', 'copy'
+            '-c:v', 'libx264',
+            '-preset', 'ultrafast',
+            '-crf', '23',
+            '-c:a', 'aac',
+            '-b:a', '128k'
           );
           break;
         }
@@ -255,7 +268,7 @@ export default function Home() {
         case 'volume-boost': {
           outputFile = `volume-boost${ext}`;
           const vol = volumeLevel / 100;
-          args.push('-af', `volume=${vol}`, '-c:v', 'copy');
+          args.push('-af', `volume=${vol}`, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '128k');
           break;
         }
 
@@ -270,7 +283,7 @@ export default function Home() {
           const audioExt = audioFile ? getExtension(audioFile.name) : '.webm';
           const audioInputName = `audio_input${audioExt}`;
           await ffmpeg.writeFile(audioInputName, await fetchFile(audioSource));
-          args = ['-i', inputName, '-i', audioInputName, '-c:v', 'copy', '-map', '0:v:0', '-map', '1:a:0', '-shortest'];
+          args = ['-i', inputName, '-i', audioInputName, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '128k', '-map', '0:v:0', '-map', '1:a:0', '-shortest'];
           break;
         }
 
@@ -286,7 +299,7 @@ export default function Home() {
           args = [
             '-i', inputName, '-i', voiceInput,
             '-filter_complex', '[0:a][1:a]amix=inputs=2:duration=longest:dropout_transition=3[aout]',
-            '-map', '0:v:0', '-map', '[aout]', '-c:v', 'copy'
+            '-map', '0:v:0', '-map', '[aout]', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '128k'
           ];
           break;
         }
