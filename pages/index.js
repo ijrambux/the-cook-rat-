@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import { 
   Scissors, Type, Music, VolumeX, Download, Upload, 
@@ -22,7 +22,7 @@ export default function Home() {
   const [ffmpegLoaded, setFfmpegLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState('trim');
   const [isPlaying, setIsPlaying] = useState(false);
-  
+
   const ffmpegRef = useRef(null);
   const videoRef = useRef(null);
   const fileInputRef = useRef(null);
@@ -30,34 +30,34 @@ export default function Home() {
   // تحميل FFmpeg ديناميكياً (SSR-safe)
   useEffect(() => {
     let mounted = true;
-    
+
     const loadFFmpeg = async () => {
       try {
         setMessage({ text: '⏳ جاري تحميل FFmpeg...', type: 'loading' });
-        
+
         const { FFmpeg } = await import('@ffmpeg/ffmpeg');
         const { toBlobURL } = await import('@ffmpeg/util');
-        
+
         if (!mounted) return;
-        
+
         const ffmpeg = new FFmpeg();
-        
+
         ffmpeg.on('log', ({ message: msg }) => {
           if (msg?.includes('error') || msg?.includes('Error')) {
             console.warn('FFmpeg:', msg);
           }
         });
-        
+
         ffmpeg.on('progress', ({ progress: p }) => {
           if (mounted) setProgress(Math.min(Math.round(p * 100), 99));
         });
-        
+
         const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd';
         await ffmpeg.load({
           coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
           wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
         });
-        
+
         if (mounted) {
           ffmpegRef.current = ffmpeg;
           setFfmpegLoaded(true);
@@ -70,7 +70,7 @@ export default function Home() {
         }
       }
     };
-    
+
     loadFFmpeg();
     return () => { mounted = false; };
   }, []);
@@ -78,19 +78,20 @@ export default function Home() {
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     if (!file.type.startsWith('video/')) {
       setMessage({ text: '❌ يرجى اختيار ملف فيديو صالح', type: 'error' });
       return;
     }
-    
+
     const url = URL.createObjectURL(file);
     setVideoFile(file);
     setVideoUrl(url);
     setOutputUrl(null);
     setOutputName('');
     setMessage({ text: `📁 تم اختيار: ${file.name}`, type: 'success' });
-    
+
+    // الحصول على مدة الفيديو
     const tempVideo = document.createElement('video');
     tempVideo.preload = 'metadata';
     tempVideo.onloadedmetadata = () => {
@@ -111,71 +112,75 @@ export default function Home() {
       setMessage({ text: '⚠️ يرجى اختيار فيديو أولاً', type: 'error' });
       return;
     }
-    
+
     setProcessing(true);
     setProgress(0);
     setOutputUrl(null);
     setMessage({ text: '⏳ جاري المعالجة...', type: 'loading' });
-    
+
     try {
       const { fetchFile } = await import('@ffmpeg/util');
       const ffmpeg = ffmpegRef.current;
       const ext = getExtension(videoFile.name);
       const inputName = `input${ext}`;
       let outputFile = `output${ext}`;
-      
+
+      // كتابة الملف
       await ffmpeg.writeFile(inputName, await fetchFile(videoFile));
-      
+
       let args = ['-i', inputName];
-      
+
       switch (command) {
         case 'trim':
           outputFile = `trimmed${ext}`;
           args.push('-ss', String(startTime), '-t', String(endTime - startTime), '-c', 'copy');
           break;
-          
+
         case 'extract-audio':
           outputFile = 'audio.mp3';
           args.push('-vn', '-acodec', 'libmp3lame', '-q:a', '2');
           break;
-          
+
         case 'remove-audio':
           outputFile = `no-audio${ext}`;
           args.push('-c', 'copy', '-an');
           break;
-          
+
         case 'text':
           outputFile = `text${ext}`;
-          const safeText = textOverlay.replace(/'/g, "'\\\\''").replace(/:/g, '\\:');
+          // نستخدم drawtext مع خط افتراضي
+          const safeText = textOverlay.replace(/'/g, "'\\''").replace(/:/g, '\:');
           args.push(
             '-vf',
             `drawtext=text='${safeText}':fontsize=48:fontcolor=white:box=1:boxcolor=black@0.5:x=(w-text_w)/2:y=(h-text_h)/2`,
             '-c:a', 'copy'
           );
           break;
-          
+
         default:
           throw new Error('أمر غير معروف');
       }
-      
+
       args.push('-y', outputFile);
       await ffmpeg.exec(args);
-      
+
+      // قراءة الناتج
       const data = await ffmpeg.readFile(outputFile);
       const mimeType = outputFile.endsWith('.mp3') ? 'audio/mpeg' : 'video/mp4';
       const blob = new Blob([data.buffer], { type: mimeType });
       const url = URL.createObjectURL(blob);
-      
+
       setOutputUrl(url);
       setOutputName(outputFile);
       setProgress(100);
       setMessage({ text: '✅ تمت المعالجة بنجاح!', type: 'success' });
-      
+
+      // تنظيف الملفات المؤقتة
       try {
         await ffmpeg.deleteFile(inputName);
         await ffmpeg.deleteFile(outputFile);
       } catch (_) {}
-      
+
     } catch (err) {
       console.error('Processing error:', err);
       setMessage({ text: '❌ خطأ: ' + (err.message || 'فشلت المعالجة'), type: 'error' });
@@ -234,7 +239,7 @@ export default function Home() {
                 <p className="text-xs text-gray-400">AI Video Editor</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                 ffmpegLoaded 
@@ -261,7 +266,7 @@ export default function Home() {
               onChange={handleFileChange}
               className="hidden"
             />
-            
+
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
@@ -272,11 +277,11 @@ export default function Home() {
               <Upload className="w-5 h-5" />
               اختر فيديو
             </motion.button>
-            
+
             <p className="mt-3 text-gray-400 text-sm">
               MP4, MOV, AVI, MKV — الحد الأقصى يعتمد على ذاكرة المتصفح
             </p>
-            
+
             {videoFile && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -308,7 +313,7 @@ export default function Home() {
                   onPause={() => setIsPlaying(false)}
                   controls={false}
                 />
-                
+
                 <button
                   onClick={togglePlay}
                   className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/40 transition-colors"
@@ -319,7 +324,7 @@ export default function Home() {
                     <Play className="w-16 h-16 text-white/80 drop-shadow-lg ml-2" />
                   )}
                 </button>
-                
+
                 {videoDuration > 0 && (
                   <div className="absolute bottom-4 right-4 bg-black/60 px-3 py-1 rounded-lg text-sm">
                     ⏱️ {formatTime(videoDuration)}
@@ -383,7 +388,7 @@ export default function Home() {
                           className="range-slider"
                         />
                       </div>
-                      
+
                       <div>
                         <label className="block text-sm text-gray-400 mb-2">
                           <Clock className="w-4 h-4 inline ml-1" />
@@ -399,7 +404,7 @@ export default function Home() {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="flex justify-center">
                       <button
                         onClick={() => processVideo('trim')}
@@ -434,7 +439,7 @@ export default function Home() {
                         placeholder="اكتب النص هنا..."
                       />
                     </div>
-                    
+
                     <div className="flex justify-center">
                       <button
                         onClick={() => processVideo('text')}
@@ -459,7 +464,7 @@ export default function Home() {
                     <p className="text-gray-400">
                       استخراج المسار الصوتي من الفيديو إلى ملف MP3
                     </p>
-                    
+
                     <button
                       onClick={() => processVideo('extract-audio')}
                       disabled={processing || !ffmpegLoaded}
@@ -482,7 +487,7 @@ export default function Home() {
                     <p className="text-gray-400">
                       إزالة المسار الصوتي بالكامل من الفيديو
                     </p>
-                    
+
                     <button
                       onClick={() => processVideo('remove-audio')}
                       disabled={processing || !ffmpegLoaded}
@@ -530,13 +535,13 @@ export default function Home() {
                 <CheckCircle className="w-5 h-5" />
                 النتيجة
               </h3>
-              
+
               {outputName.endsWith('.mp3') ? (
                 <audio controls className="w-full mb-4" src={outputUrl} />
               ) : (
                 <video controls className="w-full rounded-xl mb-4" src={outputUrl} />
               )}
-              
+
               <a
                 href={outputUrl}
                 download={outputName}
@@ -574,8 +579,18 @@ export default function Home() {
 
         {/* Footer */}
         <footer className="border-t border-white/5 py-6 text-center text-gray-500 text-sm">
-          <p>🐭 The Cook Rat — Made with ❤️ by <a href="https://x.com/0000000000388p" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@mouse0000000</a></p>
-          <p className="mt-1 text-xs opacity-50">Powered by FFmpeg.wasm & Next.js</p>
+          <p className="mb-3">🐭 The Cook Rat — Made by <a href="https://x.com/mouse0000000" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">@mouse0000000</a></p>
+          <a 
+            href="https://x.com/mouse0000000" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-white text-sm font-medium hover:bg-white/10 hover:border-primary/30 transition-all"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            Follow on X
+          </a>
         </footer>
       </div>
     </>
