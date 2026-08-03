@@ -33,7 +33,7 @@ export default function Home() {
 
     const loadFFmpeg = async () => {
       try {
-        setMessage({ text: '⏳ جاري تحميل FFmpeg...', type: 'loading' });
+        setMessage({ text: '⏳ جاري تحميل The Cook Rat...', type: 'loading' });
 
         const { FFmpeg } = await import('@ffmpeg/ffmpeg');
         const { toBlobURL } = await import('@ffmpeg/util');
@@ -61,12 +61,12 @@ export default function Home() {
         if (mounted) {
           ffmpegRef.current = ffmpeg;
           setFfmpegLoaded(true);
-          setMessage({ text: '✅ FFmpeg جاهز! اختر فيديو للبدء', type: 'success' });
+          setMessage({ text: '', type: 'info' });
         }
       } catch (err) {
         console.error('FFmpeg load error:', err);
         if (mounted) {
-          setMessage({ text: '⚠️ تعذر تحميل FFmpeg. حاول تحديث الصفحة.', type: 'error' });
+          setMessage({ text: '⚠️ تعذر تحميل The Cook Rat. حاول تحديث الصفحة.', type: 'error' });
         }
       }
     };
