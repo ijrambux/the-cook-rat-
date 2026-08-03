@@ -4,9 +4,9 @@ import {
   Scissors, Type, Music, VolumeX, Download, Upload,
   Play, Pause, Flame, MousePointer2, Film, Clock,
   CheckCircle, AlertCircle, Loader2, Mic, MicOff,
-  Volume2, Volume1, Replace, RotateCcw, Save, X,
+  Volume2, Volume1, Replace, RotateCcw, X,
   Globe, Link2, Youtube, Twitter, Facebook, Video,
-  ExternalLink, Smartphone, Monitor
+  ExternalLink, Smartphone, Monitor, Copy, Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -50,9 +50,7 @@ export default function Home() {
 
   // Download states
   const [downloadUrl, setDownloadUrl] = useState('');
-  const [downloadLoading, setDownloadLoading] = useState(false);
-  const [downloadData, setDownloadData] = useState(null);
-  const [downloadError, setDownloadError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   // Refs
   const ffmpegRef = useRef(null);
@@ -152,31 +150,67 @@ export default function Home() {
 
   const clearRecording = () => { setRecordedBlob(null); setRecordingTime(0); };
 
-  // ===== DOWNLOAD FROM SOCIAL MEDIA =====
+  // ===== DOWNLOAD HELPERS =====
   const detectPlatform = (url) => {
     const u = url.toLowerCase();
-    if (u.includes('youtube.com') || u.includes('youtu.be')) return { name: 'YouTube', icon: Youtube, color: '#FF0000' };
-    if (u.includes('tiktok.com')) return { name: 'TikTok', icon: Smartphone, color: '#00f2ea' };
-    if (u.includes('twitter.com') || u.includes('x.com')) return { name: 'X / Twitter', icon: Twitter, color: '#1DA1F2' };
-    if (u.includes('facebook.com') || u.includes('fb.watch')) return { name: 'Facebook', icon: Facebook, color: '#1877F2' };
-    if (u.includes('instagram.com')) return { name: 'Instagram', icon: Smartphone, color: '#E4405F' };
-    return { name: 'موقع', icon: Globe, color: '#00d4ff' };
+    if (u.includes('youtube.com') || u.includes('youtu.be')) return { name: 'YouTube', icon: Youtube, color: '#FF0000', service: 'yt' };
+    if (u.includes('tiktok.com')) return { name: 'TikTok', icon: Smartphone, color: '#00f2ea', service: 'tt' };
+    if (u.includes('twitter.com') || u.includes('x.com')) return { name: 'X / Twitter', icon: Twitter, color: '#1DA1F2', service: 'tw' };
+    if (u.includes('facebook.com') || u.includes('fb.watch')) return { name: 'Facebook', icon: Facebook, color: '#1877F2', service: 'fb' };
+    if (u.includes('instagram.com')) return { name: 'Instagram', icon: Smartphone, color: '#E4405F', service: 'ig' };
+    return { name: 'موقع', icon: Globe, color: '#00d4ff', service: 'generic' };
   };
 
-  const fetchVideoInfo = async () => {
-    if (!downloadUrl.trim()) return;
-    setDownloadLoading(true);
-    setDownloadError('');
-    setDownloadData(null);
+  const getDownloadLinks = (url) => {
+    const platform = detectPlatform(url);
+    const encoded = encodeURIComponent(url);
+    const links = [];
+
+    if (platform.service === 'yt') {
+      links.push(
+        { name: 'Y2mate', url: `https://www.y2mate.com/youtube/${encoded}`, type: 'video' },
+        { name: 'SaveFrom', url: `https://en.savefrom.net/1-how-to-download-youtube-video/${encoded}`, type: 'video' },
+        { name: 'Y2mate MP3', url: `https://www.y2mate.com/youtube-mp3/${encoded}`, type: 'audio' },
+      );
+    } else if (platform.service === 'tt') {
+      links.push(
+        { name: 'SSSTikTok', url: `https://ssstik.io/en`, type: 'video' },
+        { name: 'SaveFrom TikTok', url: `https://en.savefrom.net/9-how-to-download-tiktok-video.html`, type: 'video' },
+        { name: 'TikTokDownloader', url: `https://tiktokdownloader.io/`, type: 'video' },
+      );
+    } else if (platform.service === 'tw') {
+      links.push(
+        { name: 'SaveFrom X', url: `https://en.savefrom.net/9-how-to-download-twitter-video.html`, type: 'video' },
+        { name: 'TwitterVideoDownloader', url: `https://twittervideodownloader.com/`, type: 'video' },
+      );
+    } else if (platform.service === 'fb') {
+      links.push(
+        { name: 'SaveFrom FB', url: `https://en.savefrom.net/1-how-to-download-facebook-video.html`, type: 'video' },
+        { name: 'FDownloader', url: `https://fdownloader.net/`, type: 'video' },
+      );
+    } else if (platform.service === 'ig') {
+      links.push(
+        { name: 'SaveFrom IG', url: `https://en.savefrom.net/9-how-to-download-instagram-video.html`, type: 'video' },
+        { name: 'SnapInsta', url: `https://snapinsta.app/`, type: 'video' },
+      );
+    }
+
+    // Generic fallback
+    links.push(
+      { name: 'SaveFrom (عام)', url: `https://en.savefrom.net/`, type: 'video' },
+      { name: '9XBuddy', url: `https://9xbuddy.in/`, type: 'video' },
+    );
+
+    return { platform, links };
+  };
+
+  const copyToClipboard = async () => {
     try {
-      const res = await fetch(`/api/download?url=${encodeURIComponent(downloadUrl)}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'فشل جلب المعلومات');
-      setDownloadData(data);
-    } catch (err) {
-      setDownloadError(err.message || 'تعذر جلب معلومات الفيديو');
-    } finally {
-      setDownloadLoading(false);
+      await navigator.clipboard.writeText(downloadUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (e) {
+      setMessage({ text: '❌ تعذر النسخ', type: 'error' });
     }
   };
 
@@ -319,8 +353,8 @@ export default function Home() {
     { id: 'download', label: 'تحميل من المنصات', icon: Globe },
   ];
 
-  const platformInfo = detectPlatform(downloadUrl);
-  const PlatformIcon = platformInfo.icon;
+  const downloadInfo = downloadUrl ? getDownloadLinks(downloadUrl) : null;
+  const platformInfo = downloadInfo?.platform;
 
   return (
     <>
@@ -595,158 +629,79 @@ export default function Home() {
                                 type="url"
                                 value={downloadUrl}
                                 onChange={(e) => setDownloadUrl(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && fetchVideoInfo()}
                                 className="w-full bg-[#050510] border border-white/10 rounded-lg pl-10 pr-4 py-3 text-white outline-none focus:border-[#00d4ff] transition-colors"
                                 placeholder="https://youtube.com/watch?v=... أو https://tiktok.com/..."
                               />
                             </div>
                             <button
-                              onClick={fetchVideoInfo}
-                              disabled={downloadLoading || !downloadUrl.trim()}
-                              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white transition-all whitespace-nowrap"
-                              style={{
-                                background: 'linear-gradient(135deg, #00d4ff, #0066ff)',
-                                boxShadow: '0 0 25px rgba(0,212,255,0.3)',
-                                opacity: downloadLoading || !downloadUrl.trim() ? 0.5 : 1,
-                              }}
+                              onClick={copyToClipboard}
+                              className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                              title="نسخ الرابط"
                             >
-                              {downloadLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Globe className="w-5 h-5" />}
-                              {downloadLoading ? 'جاري الجلب...' : 'جلب المعلومات'}
+                              {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-gray-400" />}
                             </button>
                           </div>
 
-                          {/* Platform Detection Badge */}
-                          {downloadUrl && (
+                          {/* Platform Detection */}
+                          {downloadUrl && platformInfo && (
                             <div className="mt-3 flex items-center gap-2">
                               <span className="text-xs text-gray-500">المنصة المكتشفة:</span>
                               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold" style={{ backgroundColor: `${platformInfo.color}20`, color: platformInfo.color, border: `1px solid ${platformInfo.color}40` }}>
-                                <PlatformIcon className="w-3.5 h-3.5" />
+                                <platformInfo.icon className="w-3.5 h-3.5" />
                                 {platformInfo.name}
                               </span>
                             </div>
                           )}
                         </div>
 
-                        {/* Error */}
-                        {downloadError && (
-                          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center gap-3 text-red-400">
-                            <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                        {/* Download Links */}
+                        {downloadUrl && downloadInfo && (
+                          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                            {/* Video Downloaders */}
                             <div>
-                              <p className="font-bold text-sm">تعذر جلب المعلومات</p>
-                              <p className="text-xs opacity-80">{downloadError}</p>
+                              <h5 className="text-sm font-bold text-[#00d4ff] mb-3 flex items-center gap-2">
+                                <Video className="w-4 h-4" />خدمات تحميل الفيديو
+                              </h5>
+                              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                {downloadInfo.links.filter(l => l.type === 'video').map((link, i) => (
+                                  <a key={i} href={link.url} target="_blank" rel="noopener noreferrer"
+                                    className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 hover:border-[#00d4ff]/30 hover:bg-[#00d4ff]/5 transition-all group"
+                                    onClick={() => { if (link.url.includes('ssstik') || link.url.includes('y2mate')) { window.open(link.url, '_blank'); } }}>
+                                    <div className="flex items-center gap-2">
+                                      <Download className="w-4 h-4 text-gray-400 group-hover:text-[#00d4ff]" />
+                                      <span className="text-sm font-medium">{link.name}</span>
+                                    </div>
+                                    <ExternalLink className="w-3 h-3 text-gray-500" />
+                                  </a>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
 
-                        {/* Video Info & Download Options */}
-                        <AnimatePresence>
-                          {downloadData && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              exit={{ opacity: 0 }}
-                              className="bg-white/5 rounded-xl border border-white/5 overflow-hidden"
-                            >
-                              {/* Video Header */}
-                              <div className="p-4 flex gap-4 border-b border-white/5">
-                                {downloadData.thumbnail && (
-                                  <img
-                                    src={downloadData.thumbnail}
-                                    alt={downloadData.title}
-                                    className="w-32 h-20 object-cover rounded-lg flex-shrink-0"
-                                  />
-                                )}
-                                <div className="flex-1 min-w-0">
-                                  <h4 className="font-bold text-white truncate">{downloadData.title}</h4>
-                                  <p className="text-xs text-gray-400 mt-1">{downloadData.uploader}</p>
-                                  <div className="flex gap-3 mt-2">
-                                    {downloadData.duration && (
-                                      <span className="text-xs bg-white/5 px-2 py-1 rounded flex items-center gap-1">
-                                        <Clock className="w-3 h-3" />{formatTime(downloadData.duration)}
-                                      </span>
-                                    )}
-                                    <span className="text-xs bg-white/5 px-2 py-1 rounded flex items-center gap-1">
-                                      <Monitor className="w-3 h-3" />{downloadData.platform}
-                                    </span>
-                                  </div>
+                            {/* Audio Downloaders */}
+                            {downloadInfo.links.filter(l => l.type === 'audio').length > 0 && (
+                              <div>
+                                <h5 className="text-sm font-bold text-green-400 mb-3 flex items-center gap-2">
+                                  <Music className="w-4 h-4" />خدمات تحميل الصوت فقط
+                                </h5>
+                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                                  {downloadInfo.links.filter(l => l.type === 'audio').map((link, i) => (
+                                    <a key={i} href={link.url} target="_blank" rel="noopener noreferrer"
+                                      className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 hover:border-green-400/30 hover:bg-green-400/5 transition-all group">
+                                      <div className="flex items-center gap-2">
+                                        <Music className="w-4 h-4 text-gray-400 group-hover:text-green-400" />
+                                        <span className="text-sm font-medium">{link.name}</span>
+                                      </div>
+                                      <ExternalLink className="w-3 h-3 text-gray-500" />
+                                    </a>
+                                  ))}
                                 </div>
                               </div>
+                            )}
+                          </motion.div>
+                        )}
 
-                              {/* Download Options */}
-                              <div className="p-4 space-y-4">
-                                {/* Video + Audio */}
-                                {downloadData.formats?.video?.length > 0 && (
-                                  <div>
-                                    <h5 className="text-sm font-bold text-[#00d4ff] mb-2 flex items-center gap-2">
-                                      <Video className="w-4 h-4" />فيديو + صوت
-                                    </h5>
-                                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                                      {downloadData.formats.video.map((fmt, i) => (
-                                        <a
-                                          key={i}
-                                          href={fmt.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 hover:border-[#00d4ff]/30 hover:bg-[#00d4ff]/5 transition-all group"
-                                        >
-                                          <div className="flex items-center gap-2">
-                                            <Download className="w-4 h-4 text-gray-400 group-hover:text-[#00d4ff]" />
-                                            <span className="text-sm font-medium">{fmt.quality}</span>
-                                          </div>
-                                          <div className="flex items-center gap-2">
-                                            <span className="text-xs text-gray-500">{fmt.ext}</span>
-                                            <ExternalLink className="w-3 h-3 text-gray-500" />
-                                          </div>
-                                        </a>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* Audio Only */}
-                                {downloadData.formats?.audio?.length > 0 && (
-                                  <div>
-                                    <h5 className="text-sm font-bold text-green-400 mb-2 flex items-center gap-2">
-                                      <Music className="w-4 h-4" />صوت فقط
-                                    </h5>
-                                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2">
-                                      {downloadData.formats.audio.map((fmt, i) => (
-                                        <a
-                                          key={i}
-                                          href={fmt.url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          className="flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 hover:border-green-400/30 hover:bg-green-400/5 transition-all group"
-                                        >
-                                          <div className="flex items-center gap-2">
-                                            <Music className="w-4 h-4 text-gray-400 group-hover:text-green-400" />
-                                            <span className="text-sm font-medium">{fmt.quality}</span>
-                                          </div>
-                                          <div className="flex items-center gap-2">
-                                            <span className="text-xs text-gray-500">{fmt.ext}</span>
-                                            <ExternalLink className="w-3 h-3 text-gray-500" />
-                                          </div>
-                                        </a>
-                                      ))}
-                                    </div>
-                                  </div>
-                                )}
-
-                                {/* No formats */}
-                                {(!downloadData.formats?.video?.length && !downloadData.formats?.audio?.length) && (
-                                  <div className="text-center text-gray-500 py-4">
-                                    <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                                    <p>لم يتم العثور على روابط تحميل مباشرة</p>
-                                    <p className="text-xs mt-1">قد تتطلب المنصة تسجيل دخول أو تحميل يدوي</p>
-                                  </div>
-                                )}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-
-                        {/* Supported Platforms */}
-                        {!downloadData && !downloadLoading && (
+                        {/* Supported Platforms Grid */}
+                        {!downloadUrl && (
                           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                             {[
                               { name: 'YouTube', color: '#FF0000', icon: Youtube },
