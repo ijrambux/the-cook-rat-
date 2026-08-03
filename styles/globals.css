@@ -9,7 +9,7 @@
     color: #ffffff;
     overflow-x: hidden;
   }
-  
+
   ::selection {
     background-color: #00d4ff;
     color: #050510;
@@ -23,7 +23,7 @@
     border: 1px solid rgba(0, 212, 255, 0.15);
     border-radius: 16px;
   }
-  
+
   .btn-primary {
     background: linear-gradient(135deg, #00d4ff, #0066ff);
     color: white;
@@ -33,18 +33,18 @@
     transition: all 0.3s ease;
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
   }
-  
+
   .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
   }
-  
+
   .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
   }
-  
+
   .input-field {
     background: rgba(10, 10, 26, 0.8);
     border: 1px solid rgba(0, 212, 255, 0.2);
@@ -54,12 +54,12 @@
     outline: none;
     transition: all 0.3s ease;
   }
-  
+
   .input-field:focus {
     border-color: #00d4ff;
     box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
   }
-  
+
   .range-slider {
     -webkit-appearance: none;
     width: 100%;
@@ -68,7 +68,7 @@
     background: rgba(0, 212, 255, 0.2);
     outline: none;
   }
-  
+
   .range-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -79,10 +79,19 @@
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
   }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
 }
 
 @layer utilities {
   .text-glow {
     text-shadow: 0 0 10px rgba(0, 212, 255, 0.5), 0 0 20px rgba(0, 212, 255, 0.3);
   }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
