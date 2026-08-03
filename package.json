@@ -14,8 +14,7 @@
     "lucide-react": "^0.460.0",
     "framer-motion": "^11.0.0",
     "@ffmpeg/ffmpeg": "^0.12.10",
-    "@ffmpeg/util": "^0.12.1",
-    "youtube-dl-exec": "^3.0.15"
+    "@ffmpeg/util": "^0.12.1"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.17",
