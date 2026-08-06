@@ -776,19 +776,19 @@
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="number" id="statTotal">0</div>
-                <div class="label">إجمالي الفحوصات</div>
+                <div class="label">عدد العمليات</div>
             </div>
             <div class="stat-item">
                 <div class="number green" id="statValid">0</div>
-                <div class="label">✅ صالح</div>
+                <div class="label">✅ مؤكد</div>
             </div>
             <div class="stat-item">
                 <div class="number red" id="statInvalid">0</div>
-                <div class="label">❌ غير صالح</div>
+                <div class="label">❌ غير مؤكد</div>
             </div>
             <div class="stat-item">
                 <div class="number gold" id="statRemaining">0</div>
-                <div class="label">📊 متاح</div>
+                <div class="label">📊 متبقي</div>
             </div>
         </div>
 
@@ -917,7 +917,6 @@
             statRemaining.textContent = stats.remaining;
             remainingDisplay.textContent = stats.remaining;
 
-            // تغيير لون المتبقي
             if (stats.remaining <= 10) {
                 statRemaining.style.color = 'var(--danger)';
             } else if (stats.remaining <= 30) {
@@ -928,7 +927,7 @@
         }
 
         // ============================================================
-        //  VALIDATE PHONE (REAL API)
+        //  VALIDATE PHONE
         // ============================================================
         async function validatePhone() {
             if (isProcessing) return;
@@ -979,10 +978,10 @@
 
                 if (data.valid) {
                     stats.valid++;
-                    showToast(`✅ الرقم صالح (${data.country_name || 'غير معروف'})`, 'success');
+                    showToast(`✅ الرقم مؤكد (${data.country_name || 'غير معروف'})`, 'success');
                 } else {
                     stats.invalid++;
-                    showToast('❌ الرقم غير صالح', 'error');
+                    showToast('❌ الرقم غير مؤكد', 'error');
                 }
 
                 updateStats();
@@ -997,7 +996,7 @@
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
                         <div style="color:var(--text-secondary);font-size:0.9rem;">
-                            تعذر الاتصال بخادم التحقق
+                            تعذر الاتصال بالخادم
                         </div>
                         <div style="color:var(--text-muted);font-size:0.75rem;margin-top:6px;">
                             يرجى التحقق من اتصالك بالإنترنت
@@ -1025,7 +1024,7 @@
         function displayResult(data, phone) {
             const isValid = data.valid || false;
 
-            statusTag.textContent = isValid ? '✅ صالح' : '❌ غير صالح';
+            statusTag.textContent = isValid ? '✅ مؤكد' : '❌ غير مؤكد';
             statusTag.className = `status-tag ${isValid ? 'valid' : 'invalid'}`;
 
             let html = '';
