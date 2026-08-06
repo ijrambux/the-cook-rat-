@@ -7,11 +7,9 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐀</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google libphonenumber -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.24/libphonenumber-js.min.js">
     </script>
     <style>
-        /* ===== نفس الأنماط السابقة (محذوفة للاختصار) ===== */
         :root {
             --primary: #00f0ff;
             --primary-dark: #0099cc;
@@ -177,7 +175,7 @@
             <div class="badge-container">
                 <span class="badge badge-primary"><i class="fas fa-phone"></i> رقم الهاتف</span>
                 <span class="badge badge-success"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
-                <span class="badge badge-twitter"><i class="fa-brands fa-x-twitter"></i> مستخدم X <span style="font-size:0.6rem;color:var(--text-muted);">(حقيقي)</span></span>
+                <span class="badge badge-twitter"><i class="fa-brands fa-x-twitter"></i> مستخدم X</span>
             </div>
         </header>
 
@@ -263,7 +261,7 @@
             </div>
             <button class="btn btn-twitter" id="checkBtnTwitter" onclick="searchTwitterReal()">
                 <i class="fa-brands fa-x-twitter"></i>
-                <span id="btnTextTwitter">بحث حقيقي</span>
+                <span id="btnTextTwitter">بحث</span>
             </button>
             <div class="loading" id="loadingTwitter">
                 <div class="spinner"></div>
@@ -289,7 +287,7 @@
 
         <footer class="footer">
             <div><span class="brand">🐀 The Cook Rat</span> <span style="color:var(--text-muted);">— Intelligence Pro v4.0</span></div>
-            <div style="margin-top:6px;font-size:0.65rem;color:var(--text-muted);">🔍 بحث حقيقي عبر X API</div>
+            <div style="margin-top:6px;font-size:0.65rem;color:var(--text-muted);">جميع الحقوق محفوظة</div>
             <div class="social">
                 <a href="https://x.com/mouse0000000" target="_blank" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
             </div>
@@ -303,7 +301,7 @@
     <script>
         // ============================================================
         //  THE COOK RAT - INTELLIGENCE PRO
-        //  Phone + Email + Twitter/X Intelligence (REAL API)
+        //  Phone + Email + Twitter/X Intelligence
         // ============================================================
 
         // ===== STATE =====
@@ -663,7 +661,7 @@
         }
 
         // ============================================================
-        //  TWITTER/X REAL SEARCH - باستخدام واجهة برمجة تطبيقات عامة
+        //  TWITTER/X REAL SEARCH
         // ============================================================
         async function searchTwitterReal() {
             if (isProcessing) return;
@@ -694,24 +692,16 @@
 
             try {
                 progressBarTwitter.style.width = '40%';
-                loadingTextTwitter.textContent = 'جاري الاتصال بخادم X...';
+                loadingTextTwitter.textContent = 'جاري الاتصال بالخادم...';
 
-                // ===== الطريقة الحقيقية: استخدام Nitter API (بديل مفتوح المصدر) =====
-                // Nitter هو بديل مجاني ومفتوح المصدر لتويتر
-                // نقوم بجلب بيانات المستخدم عبر Nitter
-                const nitterUrl =
-                `https://nitter.net/${cleanUsername}`;
+                const nitterUrl = `https://nitter.net/${cleanUsername}`;
 
                 progressBarTwitter.style.width = '60%';
                 loadingTextTwitter.textContent = 'جاري تحليل الملف الشخصي...';
 
-                // استخدام Nitter للحصول على معلومات المستخدم
-                // ملاحظة: هذه الطريقة تعتمد على موقع Nitter الذي قد يتغير
-                // يمكنك استخدام خوادم Nitter بديلة إذا لزم الأمر
-
                 const response = await fetch(nitterUrl, {
                     headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
                     }
                 });
 
@@ -723,11 +713,9 @@
                 }
 
                 const html = await response.text();
-
-                // استخراج المعلومات من HTML
                 const userData = parseNitterHTML(html, cleanUsername);
 
-                if (!userData.name) {
+                if (!userData.name || userData.name === 'غير معروف') {
                     throw new Error('لم يتم العثور على المستخدم');
                 }
 
@@ -747,7 +735,7 @@
                         loadingTwitter.classList.remove('active');
                         isProcessing = false;
                         checkBtnTwitter.disabled = false;
-                        btnTextTwitter.textContent = 'بحث حقيقي';
+                        btnTextTwitter.textContent = 'بحث';
                         progressBarTwitter.style.width = '0%';
                     }, 300);
 
@@ -756,22 +744,20 @@
             } catch (error) {
                 console.error('Error:', error);
 
-                // إذا فشل Nitter، نستخدم طريقة بديلة - API عامة
                 try {
-                    // محاولة استخدام مصدر آخر
                     const fallbackData = await fetchTwitterFallback(cleanUsername);
-                    if (fallbackData) {
+                    if (fallbackData && fallbackData.name && fallbackData.name !== 'غير معروف') {
                         stats.total++;
                         stats.twitter++;
                         updateStats();
                         displayTwitterResultReal(fallbackData, cleanUsername);
-                        showToast(`✅ تم العثور على المستخدم @${cleanUsername} (مصدر بديل)`, 'twitter');
+                        showToast(`✅ تم العثور على المستخدم @${cleanUsername}`, 'twitter');
 
                         setTimeout(() => {
                             loadingTwitter.classList.remove('active');
                             isProcessing = false;
                             checkBtnTwitter.disabled = false;
-                            btnTextTwitter.textContent = 'بحث حقيقي';
+                            btnTextTwitter.textContent = 'بحث';
                             progressBarTwitter.style.width = '0%';
                         }, 300);
                         return;
@@ -806,50 +792,41 @@
                     loadingTwitter.classList.remove('active');
                     isProcessing = false;
                     checkBtnTwitter.disabled = false;
-                    btnTextTwitter.textContent = 'بحث حقيقي';
+                    btnTextTwitter.textContent = 'بحث';
                     progressBarTwitter.style.width = '0%';
                 }, 300);
             }
         }
 
-        // ===== استخراج البيانات من HTML =====
         function parseNitterHTML(html, username) {
-            // استخراج الاسم
             let name = 'غير معروف';
             const nameMatch = html.match(/<a[^>]*class="profile-card-fullname"[^>]*>([^<]*)<\/a>/);
             if (nameMatch) name = nameMatch[1].trim();
 
-            // استخراج السيرة الذاتية
             let bio = 'غير معروف';
             const bioMatch = html.match(/<div[^>]*class="profile-bio"[^>]*>([^<]*)<\/div>/);
             if (bioMatch) bio = bioMatch[1].trim();
 
-            // استخراج الموقع
             let location = 'غير معروف';
             const locationMatch = html.match(/<span[^>]*class="profile-location"[^>]*>([^<]*)<\/span>/);
             if (locationMatch) location = locationMatch[1].trim();
 
-            // استخراج التاريخ
             let joined = 'غير معروف';
             const joinedMatch = html.match(/<span[^>]*class="profile-joined"[^>]*>([^<]*)<\/span>/);
             if (joinedMatch) joined = joinedMatch[1].trim();
 
-            // استخراج المتابعين
             let followers = 0;
             const followersMatch = html.match(/<span[^>]*class="profile-stat-num"[^>]*>([\d,]+)<\/span>/);
             if (followersMatch) followers = parseInt(followersMatch[1].replace(/,/g, '')) || 0;
 
-            // استخراج التغريدات
             let tweets = 0;
             const tweetsMatch = html.match(/<span[^>]*class="tweet-stat"[^>]*>([\d,]+)<\/span>/);
             if (tweetsMatch) tweets = parseInt(tweetsMatch[1].replace(/,/g, '')) || 0;
 
-            // استخراج صورة الملف الشخصي
             let avatar = `https://picsum.photos/seed/${username}/200/200`;
             const avatarMatch = html.match(/<img[^>]*class="profile-avatar"[^>]*src="([^"]+)"/);
             if (avatarMatch) avatar = avatarMatch[1];
 
-            // استخراج الدولة من الموقع
             const countries = ['السعودية', 'مصر', 'الإمارات', 'الكويت', 'قطر', 'البحرين', 'عمان', 'الأردن', 'لبنان', 'الجزائر',
                 'المغرب', 'تونس', 'ليبيا', 'الولايات المتحدة', 'بريطانيا', 'فرنسا', 'ألمانيا', 'إيطاليا', 'إسبانيا', 'تركيا',
                 'الهند', 'الصين', 'اليابان', 'روسيا', 'البرازيل', 'أستراليا'
@@ -878,10 +855,7 @@
             };
         }
 
-        // ===== الطريقة البديلة (Fallback) =====
         async function fetchTwitterFallback(username) {
-            // استخدام API عامة بديلة
-            // يمكن إضافة مصادر أخرى هنا
             const sources = [
                 `https://r.jina.ai/https://x.com/${username}`,
                 `https://api.allorigins.win/raw?url=https://x.com/${username}`
@@ -901,7 +875,6 @@
             return null;
         }
 
-        // ===== عرض نتائج تويتر الحقيقية =====
         function displayTwitterResultReal(data, username) {
             statusTagTwitter.textContent = '✅ موجود';
             statusTagTwitter.className = 'status-tag twitter';
@@ -955,7 +928,7 @@
                                 <i class="fas fa-check-circle" style="color:var(--success);"></i> بيانات حقيقية
                             </span>
                             <span class="value" style="font-size:0.65rem;color:var(--text-muted);">
-                                <i class="fa-brands fa-x-twitter"></i> تم جلبها من X
+                                <i class="fa-brands fa-x-twitter"></i>
                             </span>
                         </div>
                     `;
@@ -997,7 +970,6 @@
         //  INIT
         // ============================================================
         console.log('🐀 The Cook Rat - Intelligence Pro v4.0');
-        console.log('🔍 بحث حقيقي عبر X (تويتر) باستخدام Nitter');
 
         setTimeout(() => {
             const loaded = loadLibrary();
