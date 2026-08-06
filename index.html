@@ -135,10 +135,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.8rem;
-            position: relative;
+            overflow: hidden;
             box-shadow: var(--glow);
             transition: var(--transition);
+            flex-shrink: 0;
         }
 
         .logo-icon:hover {
@@ -146,13 +146,10 @@
             box-shadow: var(--glow-strong);
         }
 
-        .logo-icon .crown {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            font-size: 0.9rem;
-            color: var(--gold);
-            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .logo-text {
@@ -389,22 +386,6 @@
             opacity: 0.5;
             cursor: not-allowed;
             transform: none;
-        }
-
-        .btn-primary .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        }
-
-        @keyframes ripple {
-            to {
-                transform: scale(4);
-                opacity: 0;
-            }
         }
 
         /* ===== Loading ===== */
@@ -690,7 +671,7 @@
             .result-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .logo-text .main { font-size: 1.8rem; }
-            .logo-icon { width: 56px; height: 56px; font-size: 2.2rem; }
+            .logo-icon { width: 56px; height: 56px; }
             .header .tagline { font-size: 0.85rem; }
             .status-badges { gap: 8px; }
             .badge { font-size: 0.6rem; padding: 4px 10px; }
@@ -703,6 +684,7 @@
             .form-control { font-size: 0.85rem; padding: 12px 14px; }
             .btn { font-size: 0.85rem; padding: 12px 20px; }
             .logo-text .main { font-size: 1.5rem; }
+            .logo-icon { width: 48px; height: 48px; }
         }
 
         /* ===== Scrollbar ===== */
@@ -724,8 +706,7 @@
         <header class="header">
             <div class="logo-container">
                 <div class="logo-icon">
-                    🐀
-                    <span class="crown">👑</span>
+                    <img src="https://pbs.twimg.com/profile_images/2083986675873525760/_swZy6tJ_400x400.jpg" alt="The Cook Rat">
                 </div>
                 <div class="logo-text">
                     <span class="main">The Cook Rat</span>
@@ -742,10 +723,10 @@
                     <i class="fas fa-check-circle"></i> نشط
                 </span>
                 <span class="badge badge-primary">
-                    <i class="fas fa-lock"></i> مشفر
+                    <i class="fas fa-lock"></i> آمن
                 </span>
                 <span class="badge badge-warning" id="usageBadge">
-                    <i class="fas fa-chart-bar"></i> <span id="remainingDisplay">100</span> متبقي
+                    <i class="fas fa-chart-bar"></i> <span id="remainingDisplay">0</span>
                 </span>
             </div>
         </header>
@@ -806,8 +787,8 @@
                 <div class="label">❌ غير صالح</div>
             </div>
             <div class="stat-item">
-                <div class="number gold" id="statRemaining">100</div>
-                <div class="label">📊 متبقي</div>
+                <div class="number gold" id="statRemaining">0</div>
+                <div class="label">📊 متاح</div>
             </div>
         </div>
 
@@ -838,10 +819,10 @@
     <script>
         // ============================================================
         //  THE COOK RAT - PHONE INTELLIGENCE SYSTEM
-        //  Secure · Encrypted · Professional
+        //  Secure · Professional
         // ============================================================
 
-        // ===== CONFIGURATION (Hidden) =====
+        // ===== CONFIGURATION =====
         const CONFIG = {
             endpoint: 'https://api.numverify.com/validate',
             key: 'bfdb5d86bac237e65fd8fdf44bbe4fb7',
@@ -947,7 +928,7 @@
         }
 
         // ============================================================
-        //  VALIDATE PHONE (REAL API - Hidden Source)
+        //  VALIDATE PHONE (REAL API)
         // ============================================================
         async function validatePhone() {
             if (isProcessing) return;
@@ -958,14 +939,12 @@
                 return;
             }
 
-            // تنظيف الرقم من المسافات والرموز غير الرقمية
             const cleanPhone = rawPhone.replace(/[\s\-\(\)\.]/g, '');
             if (!cleanPhone.match(/^\+?[0-9]{7,15}$/)) {
                 showToast('الرجاء إدخال رقم صحيح (7-15 رقم)', 'error');
                 return;
             }
 
-            // التحقق من المتبقي
             if (stats.remaining <= 0) {
                 showToast('تم استهلاك جميع الطلبات المتاحة', 'error');
                 return;
@@ -981,7 +960,6 @@
             loadingText.textContent = 'جاري الاتصال بالخادم...';
 
             try {
-                // طلب مشفر إلى الـ API (المصدر مخفي)
                 const url = `${CONFIG.endpoint}?access_key=${CONFIG.key}&number=${encodeURIComponent(cleanPhone)}&format=1`;
 
                 progressBar.style.width = '50%';
@@ -993,12 +971,10 @@
                 progressBar.style.width = '80%';
                 loadingText.textContent = 'جاري تجهيز النتائج...';
 
-                // تحديث الإحصائيات
                 stats.total++;
                 stats.remaining--;
                 updateStats();
 
-                // عرض النتيجة
                 displayResult(data, cleanPhone);
 
                 if (data.valid) {
@@ -1015,7 +991,6 @@
                 console.error('Error:', error);
                 showToast('⚠️ حدث خطأ في الاتصال، حاول مرة أخرى', 'error');
 
-                // عرض رسالة خطأ
                 resultContent.innerHTML = `
                     <div class="result-item full" style="text-align:center;padding:20px 0;border-bottom:none;">
                         <div style="color:var(--danger);font-size:2rem;margin-bottom:12px;">
@@ -1034,7 +1009,6 @@
                 statusTag.className = 'status-tag invalid';
             }
 
-            // ===== END PROCESS =====
             progressBar.style.width = '100%';
             setTimeout(() => {
                 loading.classList.remove('active');
@@ -1046,18 +1020,16 @@
         }
 
         // ============================================================
-        //  DISPLAY RESULT (Professional UI)
+        //  DISPLAY RESULT
         // ============================================================
         function displayResult(data, phone) {
             const isValid = data.valid || false;
 
-            // تحديث حالة الرقم
             statusTag.textContent = isValid ? '✅ صالح' : '❌ غير صالح';
             statusTag.className = `status-tag ${isValid ? 'valid' : 'invalid'}`;
 
             let html = '';
 
-            // معلومات أساسية
             html += `
                 <div class="result-item full">
                     <span class="label">📞 الرقم</span>
@@ -1066,7 +1038,6 @@
             `;
 
             if (isValid && data) {
-                // معلومات متقدمة
                 const fields = [
                     { label: '🌍 الدولة', value: data.country_name || 'غير معروف' },
                     { label: '🔢 مفتاح الدولة', value: data.country_prefix || 'غير معروف' },
@@ -1081,19 +1052,18 @@
                     html += `
                         <div class="result-item">
                             <span class="label">${field.label}</span>
-                            <span class="value ${field.value === 'غير معروف' ? 'text-muted' : ''}">${field.value}</span>
+                            <span class="value">${field.value}</span>
                         </div>
                     `;
                 }
 
-                // تاريخ الطلب
                 html += `
                     <div class="result-item full" style="border-bottom:none;padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
                         <span class="label" style="font-size:0.65rem;color:var(--text-muted);">
                             <i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}
                         </span>
                         <span class="value" style="font-size:0.65rem;color:var(--text-muted);">
-                            <i class="fas fa-shield-alt"></i> مشفر
+                            <i class="fas fa-shield-alt"></i> آمن
                         </span>
                     </div>
                 `;
@@ -1127,13 +1097,11 @@
         //  INIT
         // ============================================================
         console.log('🐀 The Cook Rat - Phone Intelligence System');
-        console.log('🔐 Secure · Encrypted · Professional');
-        console.log(`📊 ${stats.remaining} requests remaining`);
+        console.log('🔐 Secure · Professional');
 
         updateStats();
         showToast('🐀 النظام جاهز للاستخدام', 'info');
 
-        // اختبار الاتصال الخفي
         (async function healthCheck() {
             try {
                 const testUrl = `${CONFIG.endpoint}?access_key=${CONFIG.key}&number=201234567890&format=1`;
