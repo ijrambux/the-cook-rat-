@@ -3,149 +3,522 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Cook Rat - Intelligence Pro</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐀</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <title>المساحة الصوتية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.24/libphonenumber-js.min.js">
-    </script>
     <style>
         :root {
-            --primary: #00f0ff;
-            --primary-dark: #0099cc;
-            --bg-dark: #070b15;
-            --bg-card: #0d1a2b;
-            --bg-card-hover: #142a3f;
-            --text-primary: #e8f4f8;
-            --text-secondary: #8ab4c8;
-            --text-muted: #4a6a7a;
-            --border: #1a3a4a;
-            --border-hover: #00f0ff;
-            --success: #00ff88;
-            --danger: #ff3366;
-            --warning: #ffaa00;
-            --gold: #ffd700;
-            --leak: #ff0044;
-            --twitter: #1DA1F2;
-            --glow: 0 0 30px rgba(0, 240, 255, 0.15);
-            --glow-strong: 0 0 50px rgba(0, 240, 255, 0.25);
-            --radius: 16px;
+            --primary: #6C63FF;
+            --primary-dark: #5A52D5;
+            --primary-glow: rgba(108, 99, 255, 0.3);
+            --bg-dark: #0A0A1A;
+            --bg-card: #141430;
+            --bg-card-hover: #1E1E4A;
+            --text-primary: #F0EEFF;
+            --text-secondary: #A8A4D6;
+            --text-muted: #5E5A8A;
+            --border: #2A2A5A;
+            --success: #00E676;
+            --danger: #FF4081;
+            --warning: #FFD740;
+            --gold: #FFD700;
+            --cohost: #00BCD4;
+            --radius: 20px;
+            --glow: 0 0 60px rgba(108, 99, 255, 0.15);
+            --glow-strong: 0 0 80px rgba(108, 99, 255, 0.25);
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Cairo', sans-serif;
             background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
-            background-image: radial-gradient(ellipse at 10% 90%, rgba(0, 240, 255, 0.03) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 10%, rgba(0, 240, 255, 0.02) 0%, transparent 50%);
-            position: relative;
+            background-image: 
+                radial-gradient(ellipse at 20% 50%, rgba(108, 99, 255, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(108, 99, 255, 0.05) 0%, transparent 60%);
             overflow-x: hidden;
         }
-        .bg-particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; overflow: hidden; }
-        .particle { position: absolute; width: 3px; height: 3px; background: var(--primary); border-radius: 50%; opacity: 0.15; animation: float linear infinite; }
-        @keyframes float {
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            z-index: 0;
+            animation: orbFloat 20s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 400px; height: 400px; background: rgba(108, 99, 255, 0.08); top: -100px; left: -100px; animation-delay: 0s; }
+        .orb-2 { width: 300px; height: 300px; background: rgba(255, 64, 129, 0.06); bottom: -50px; right: -50px; animation-delay: -7s; }
+        .orb-3 { width: 200px; height: 200px; background: rgba(0, 230, 118, 0.05); top: 50%; left: 50%; transform: translate(-50%, -50%); animation-delay: -14s; }
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(60px, -40px) scale(1.1); }
+            66% { transform: translate(-30px, 50px) scale(0.9); }
+            100% { transform: translate(40px, -20px) scale(1.05); }
+        }
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: particleFloat linear infinite;
+        }
+        @keyframes particleFloat {
             0% { transform: translateY(100vh) scale(0); opacity: 0; }
-            10% { opacity: 0.15; }
-            90% { opacity: 0.15; }
+            10% { opacity: 0.2; }
+            90% { opacity: 0.2; }
             100% { transform: translateY(-10vh) scale(1); opacity: 0; }
         }
-        .container { max-width: 1000px; margin: 0 auto; padding: 30px 20px 40px; position: relative; z-index: 1; }
-        .header { text-align: center; margin-bottom: 40px; padding: 30px 20px 20px; position: relative; }
-        .header::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); }
-        .logo-container { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 16px; }
-        .logo-icon { width: 70px; height: 70px; border-radius: 20px; background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(0, 240, 255, 0.04)); border: 2px solid rgba(0, 240, 255, 0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: var(--glow); transition: var(--transition); flex-shrink: 0; }
-        .logo-icon:hover { transform: scale(1.05); box-shadow: var(--glow-strong); }
-        .logo-icon img { width: 100%; height: 100%; object-fit: cover; }
-        .logo-text { text-align: right; }
-        .logo-text .main { font-size: 2.2rem; font-weight: 900; background: linear-gradient(135deg, var(--primary), #00ccff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 300% 300%; animation: gradientMove 4s ease infinite; letter-spacing: -0.5px; line-height: 1.2; }
-        @keyframes gradientMove { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-        .logo-text .sub { font-size: 0.7rem; color: var(--text-secondary); letter-spacing: 4px; text-transform: uppercase; font-weight: 600; display: block; margin-top: 2px; }
-        .header .tagline { color: var(--text-secondary); font-size: 1rem; margin-top: 12px; font-weight: 400; letter-spacing: 0.5px; }
-        .header .tagline i { color: var(--primary); margin: 0 4px; }
-        .badge-container { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
-        .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.5px; border: 1px solid transparent; }
-        .badge-success { background: rgba(0, 255, 136, 0.08); color: var(--success); border-color: rgba(0, 255, 136, 0.15); }
-        .badge-primary { background: rgba(0, 240, 255, 0.08); color: var(--primary); border-color: rgba(0, 240, 255, 0.15); }
-        .badge-twitter { background: rgba(29, 161, 242, 0.08); color: var(--twitter); border-color: rgba(29, 161, 242, 0.15); }
-        .search-mode-tabs { display: flex; gap: 8px; background: var(--bg-card); padding: 6px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 24px; flex-wrap: wrap; justify-content: center; }
-        .search-mode-tabs button { padding: 10px 24px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 10px; font-weight: 600; font-size: 0.9rem; transition: var(--transition); font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 8px; }
-        .search-mode-tabs button:hover { color: var(--text-primary); background: var(--bg-card-hover); }
-        .search-mode-tabs button.active { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #000; box-shadow: var(--glow); }
-        .search-mode-tabs button i { font-size: 1rem; }
-        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 36px; margin-bottom: 24px; transition: var(--transition); position: relative; overflow: hidden; display: none; }
-        .card.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0.3; }
-        .card:hover { border-color: rgba(0, 240, 255, 0.15); box-shadow: var(--glow); }
-        .card-title { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .card-title i { color: var(--primary); font-size: 1rem; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 8px; color: var(--text-secondary); letter-spacing: 0.5px; }
-        .form-group label i { color: var(--primary); margin-left: 6px; }
-        .input-wrapper { position: relative; display: flex; align-items: center; background: var(--bg-dark); border: 1px solid var(--border); border-radius: 12px; transition: var(--transition); }
-        .input-wrapper:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.06); }
-        .input-wrapper .prefix { padding: 0 14px 0 6px; color: var(--text-muted); font-weight: 600; font-size: 0.9rem; border-left: 1px solid var(--border); margin-left: 4px; cursor: default; user-select: none; }
-        .form-control { width: 100%; padding: 14px 18px; background: transparent; border: none; color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 1rem; outline: none; }
-        .form-control::placeholder { color: var(--text-muted); opacity: 0.5; font-family: 'Inter', sans-serif; }
-        .input-wrapper .suffix { padding: 0 14px; color: var(--text-muted); font-size: 0.7rem; letter-spacing: 0.5px; }
-        .btn { padding: 14px 32px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-family: 'Inter', sans-serif; font-size: 0.95rem; width: 100%; position: relative; overflow: hidden; }
-        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #000; box-shadow: 0 4px 25px rgba(0, 240, 255, 0.2); }
-        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0, 240, 255, 0.35); }
-        .btn-twitter { background: linear-gradient(135deg, var(--twitter), #0d8bd9); color: #fff; box-shadow: 0 4px 25px rgba(29, 161, 242, 0.2); }
-        .btn-twitter:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(29, 161, 242, 0.35); }
-        .btn-leak { background: linear-gradient(135deg, var(--leak), #cc0033); color: #fff; box-shadow: 0 4px 25px rgba(255, 0, 68, 0.2); }
-        .btn-leak:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255, 0, 68, 0.35); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .loading { display: none; text-align: center; padding: 30px 0 10px; }
-        .loading.active { display: block; animation: fadeIn 0.3s ease; }
-        .loading .spinner { width: 44px; height: 44px; border: 3px solid var(--border); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px; }
+        .container {
+            max-width: 540px;
+            margin: 0 auto;
+            padding: 20px 16px 30px;
+            position: relative;
+            z-index: 1;
+        }
+        .header {
+            text-align: center;
+            padding: 24px 16px 20px;
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            border-radius: 4px;
+        }
+        .header-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(108, 99, 255, 0.2), rgba(108, 99, 255, 0.05));
+            border: 2px solid rgba(108, 99, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 1.6rem;
+            color: var(--primary);
+            box-shadow: var(--glow);
+            transition: var(--transition);
+        }
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--text-primary), var(--primary), var(--text-primary));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 4s ease infinite;
+        }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        .header .sub { color: var(--text-secondary); font-size: 0.75rem; margin-top: 4px; }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            margin-top: 10px;
+            background: rgba(0, 230, 118, 0.08);
+            color: var(--success);
+            border: 1px solid rgba(0, 230, 118, 0.15);
+        }
+        .status-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulseDot 1.5s ease-in-out infinite; }
+        @keyframes pulseDot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+        .status-badge.inactive { background: rgba(255, 64, 129, 0.08); color: var(--danger); border-color: rgba(255, 64, 129, 0.15); }
+        .status-badge.inactive .dot { background: var(--danger); }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--glow);
+            backdrop-filter: blur(10px);
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.3;
+        }
+        .card-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-title i { color: var(--primary); }
+
+        .room-controls { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+        .room-controls .input-group { position: relative; }
+        .room-controls .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+            text-align: right;
+        }
+        .room-controls .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.06); }
+        .room-controls .input-group input::placeholder { color: var(--text-muted); opacity: 0.5; }
+        .room-controls .input-group .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; box-shadow: 0 4px 25px rgba(108, 99, 255, 0.25); }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(108, 99, 255, 0.4); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-danger { background: linear-gradient(135deg, var(--danger), #D81B60); color: #fff; box-shadow: 0 4px 25px rgba(255, 64, 129, 0.25); }
+        .btn-danger:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(255, 64, 129, 0.4); }
+        .btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+        .btn-outline:hover:not(:disabled) { border-color: var(--primary); color: var(--text-primary); }
+        .btn-success { background: linear-gradient(135deg, var(--success), #00C853); color: #000; box-shadow: 0 4px 25px rgba(0, 230, 118, 0.2); }
+        .btn-success:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0, 230, 118, 0.3); }
+        .btn-cohost { background: linear-gradient(135deg, var(--cohost), #00838F); color: #fff; box-shadow: 0 4px 25px rgba(0, 188, 212, 0.2); }
+        .btn-cohost:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 40px rgba(0, 188, 212, 0.3); }
+        .btn-sm { padding: 6px 12px; font-size: 0.7rem; border-radius: 8px; width: auto; display: inline-flex; }
+        .btn .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.2); border-top: 2px solid #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .loading .text { color: var(--text-secondary); font-size: 0.9rem; }
-        .loading .progress-track { max-width: 300px; margin: 12px auto 0; height: 3px; background: var(--border); border-radius: 4px; overflow: hidden; }
-        .loading .progress-track .bar { height: 100%; background: linear-gradient(90deg, var(--primary), #00ccff); width: 0%; transition: width 0.3s ease; border-radius: 4px; }
-        .result-box { margin-top: 24px; padding: 0; display: none; border-top: 1px solid var(--border); padding-top: 24px; }
-        .result-box.active { display: block; animation: fadeIn 0.4s ease; }
-        .result-box .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-        .result-box .result-header .title { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; }
-        .result-box .result-header .status-tag { padding: 4px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.5px; }
-        .status-tag.valid { background: rgba(0, 255, 136, 0.12); color: var(--success); border: 1px solid rgba(0, 255, 136, 0.15); }
-        .status-tag.invalid { background: rgba(255, 51, 102, 0.12); color: var(--danger); border: 1px solid rgba(255, 51, 102, 0.15); }
-        .status-tag.twitter { background: rgba(29, 161, 242, 0.12); color: var(--twitter); border: 1px solid rgba(29, 161, 242, 0.15); }
-        .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
-        .result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.03); }
-        .result-item .label { color: var(--text-muted); font-size: 0.78rem; font-weight: 500; }
-        .result-item .value { color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; text-align: left; direction: ltr; }
-        .result-item .value.highlight { color: var(--primary); }
-        .result-item .value.gold { color: var(--gold); }
-        .result-item.full { grid-column: 1 / -1; }
-        .result-item .avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        .stat-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 12px; text-align: center; transition: var(--transition); }
-        .stat-item:hover { border-color: rgba(0, 240, 255, 0.15); box-shadow: var(--glow); }
-        .stat-item .number { font-size: 1.8rem; font-weight: 900; font-family: 'JetBrains Mono', monospace; color: var(--primary); line-height: 1.2; }
-        .stat-item .number.green { color: var(--success); }
-        .stat-item .number.red { color: var(--danger); }
-        .stat-item .number.twitter { color: var(--twitter); }
-        .stat-item .label { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
-        .footer { text-align: center; padding: 30px 20px 10px; border-top: 1px solid var(--border); margin-top: 40px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 0.5px; }
-        .footer .brand { color: var(--primary); font-weight: 700; text-decoration: none; transition: var(--transition); }
-        .footer .brand:hover { text-shadow: 0 0 20px rgba(0, 240, 255, 0.3); }
-        .footer .social { display: flex; justify-content: center; gap: 14px; margin-top: 10px; }
-        .footer .social a { color: var(--text-muted); transition: var(--transition); font-size: 1.1rem; }
-        .footer .social a:hover { color: var(--primary); transform: translateY(-2px); }
-        .footer .disclaimer { margin-top: 10px; font-size: 0.65rem; color: var(--text-muted); opacity: 0.6; }
-        .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
-        .toast { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); animation: slideIn 0.3s ease; min-width: 280px; font-size: 0.88rem; font-weight: 500; backdrop-filter: blur(10px); }
-        .toast.success { border-right: 3px solid var(--success); }
-        .toast.error { border-right: 3px solid var(--danger); }
-        .toast.info { border-right: 3px solid var(--primary); }
-        .toast.twitter { border-right: 3px solid var(--twitter); }
-        @keyframes slideIn { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-        @media (max-width: 768px) { .container { padding: 20px 12px 30px; } .card { padding: 24px 20px; } .result-grid { grid-template-columns: 1fr; } .stats-grid { grid-template-columns: 1fr 1fr; } .logo-text .main { font-size: 1.8rem; } .logo-icon { width: 56px; height: 56px; } .search-mode-tabs button { padding: 8px 16px; font-size: 0.8rem; } }
-        @media (max-width: 480px) { .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; } .stat-item .number { font-size: 1.4rem; } .card { padding: 18px 14px; } .form-control { font-size: 0.85rem; padding: 12px 14px; } .btn { font-size: 0.85rem; padding: 12px 20px; } .logo-text .main { font-size: 1.5rem; } .logo-icon { width: 48px; height: 48px; } }
-        ::-webkit-scrollbar { width: 5px; }
+
+        .room-info { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); animation: fadeIn 0.4s ease; }
+        .room-info.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .info-item {
+            background: var(--bg-dark);
+            border-radius: 10px;
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .info-item .number { font-size: 1.1rem; font-weight: 900; color: var(--primary); line-height: 1.2; }
+        .info-item .number.green { color: var(--success); }
+        .info-item .number.danger { color: var(--danger); }
+        .info-item .number.gold { color: var(--gold); }
+        .info-item .number.cohost { color: var(--cohost); }
+        .info-item .label { font-size: 0.5rem; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+
+        .action-row { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+        .action-row .btn { flex: 1; min-width: 80px; padding: 10px 12px; font-size: 0.75rem; }
+
+        .participants {
+            max-height: 140px;
+            overflow-y: auto;
+            margin-top: 10px;
+            padding-right: 2px;
+        }
+        .participants::-webkit-scrollbar { width: 3px; }
+        .participants::-webkit-scrollbar-track { background: var(--bg-dark); border-radius: 4px; }
+        .participants::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+        .participant-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            background: var(--bg-dark);
+            margin-bottom: 4px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+        .participant-item:hover { border-color: var(--border); }
+        .participant-item .avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+        .participant-item .avatar.host { background: linear-gradient(135deg, var(--gold), #F9A825); }
+        .participant-item .avatar.cohost { background: linear-gradient(135deg, var(--cohost), #00838F); }
+        .participant-item .avatar.self { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+        .participant-item .avatar.listener { background: var(--text-muted); }
+        .participant-item .avatar.speaker { background: linear-gradient(135deg, var(--success), #00C853); }
+        .participant-item .name { flex: 1; font-size: 0.78rem; font-weight: 600; }
+        .participant-item .name .me { font-size: 0.5rem; color: var(--text-muted); font-weight: 400; margin-right: 4px; }
+        .participant-item .role {
+            font-size: 0.5rem;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+        .participant-item .role.host { background: rgba(255, 215, 0, 0.15); color: var(--gold); }
+        .participant-item .role.cohost { background: rgba(0, 188, 212, 0.15); color: var(--cohost); }
+        .participant-item .role.speaker { background: rgba(0, 230, 118, 0.12); color: var(--success); }
+        .participant-item .role.listener { background: rgba(255, 255, 255, 0.04); color: var(--text-muted); }
+
+        .participant-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+        .participant-actions button {
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.55rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+        .participant-actions button:hover { border-color: var(--primary); color: var(--text-primary); }
+        .participant-actions button.cohost-btn:hover { border-color: var(--cohost); color: var(--cohost); }
+        .participant-actions button.kick-btn:hover { border-color: var(--danger); color: var(--danger); }
+        .participant-actions button.speaker-btn:hover { border-color: var(--success); color: var(--success); }
+
+        .share-section { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); animation: fadeIn 0.4s ease; }
+        .share-section.active { display: block; }
+        .share-section .link-box {
+            display: flex;
+            gap: 6px;
+            background: var(--bg-dark);
+            border-radius: 10px;
+            padding: 3px;
+            border: 1px solid var(--border);
+        }
+        .share-section .link-box input {
+            flex: 1;
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.7rem;
+            outline: none;
+            direction: ltr;
+            text-align: left;
+        }
+        .share-section .link-box button {
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.7rem;
+            white-space: nowrap;
+        }
+        .share-section .link-box button:hover { background: var(--primary-dark); }
+        .share-buttons { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+        .share-buttons button {
+            flex: 1;
+            min-width: 60px;
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-dark);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        .share-buttons button:hover { border-color: var(--primary); color: var(--text-primary); }
+        .share-buttons .whatsapp { border-color: #25D366; color: #25D366; }
+        .share-buttons .whatsapp:hover { background: rgba(37, 211, 102, 0.08); }
+        .share-buttons .telegram { border-color: #0088cc; color: #0088cc; }
+        .share-buttons .telegram:hover { background: rgba(0, 136, 204, 0.08); }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            max-width: 380px;
+            width: 92%;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-box .icon { font-size: 2rem; color: var(--primary); text-align: center; margin-bottom: 8px; }
+        .modal-box h3 { font-size: 1.1rem; text-align: center; }
+        .modal-box .sub { text-align: center; color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 14px; }
+        .modal-box .input-group { position: relative; margin-bottom: 12px; }
+        .modal-box .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+            text-align: center;
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+        .modal-box .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.06); }
+        .modal-box .modal-actions { display: flex; gap: 8px; }
+        .modal-box .modal-actions .btn { flex: 1; padding: 10px; font-size: 0.8rem; }
+        .btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+        .btn-ghost:hover:not(:disabled) { border-color: var(--danger); color: var(--danger); }
+
+        .footer {
+            text-align: center;
+            padding: 18px 16px 6px;
+            margin-top: 20px;
+            color: var(--text-muted);
+            font-size: 0.6rem;
+            letter-spacing: 0.5px;
+            border-top: 1px solid var(--border);
+        }
+        .footer span { color: var(--primary); }
+
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            width: 92%;
+            max-width: 400px;
+        }
+        .toast {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+            width: 100%;
+            font-size: 0.8rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+        .toast.success { border-right: 4px solid var(--success); }
+        .toast.error { border-right: 4px solid var(--danger); }
+        .toast.info { border-right: 4px solid var(--primary); }
+        .toast.warning { border-right: 4px solid var(--warning); }
+        .toast.cohost { border-right: 4px solid var(--cohost); }
+
+        @media (max-width: 480px) {
+            .container { padding: 12px 10px 20px; }
+            .card { padding: 18px 14px; }
+            .header h1 { font-size: 1.2rem; }
+            .header-icon { width: 50px; height: 50px; font-size: 1.3rem; }
+            .info-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; }
+            .info-item { padding: 6px 4px; }
+            .info-item .number { font-size: 0.9rem; }
+            .action-row { flex-wrap: wrap; }
+            .action-row .btn { min-width: 60px; font-size: 0.65rem; padding: 8px 10px; }
+            .participant-item { padding: 4px 10px; gap: 6px; }
+            .participant-item .avatar { width: 24px; height: 24px; font-size: 0.6rem; }
+            .participant-item .name { font-size: 0.7rem; }
+            .share-buttons button { font-size: 0.6rem; padding: 6px; }
+            .modal-box { padding: 18px 14px; }
+        }
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-track { background: var(--bg-dark); }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
@@ -153,212 +526,164 @@
 </head>
 <body>
 
-    <div class="bg-particles" id="particles"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="particles" id="particles"></div>
 
     <div class="container">
 
         <header class="header">
-            <div class="logo-container">
-                <div class="logo-icon">
-                    <img src="https://pbs.twimg.com/profile_images/2083986675873525760/_swZy6tJ_400x400.jpg" alt="The Cook Rat">
-                </div>
-                <div class="logo-text">
-                    <span class="main">The Cook Rat</span>
-                    <span class="sub">Intelligence Pro</span>
-                </div>
-            </div>
-            <p class="tagline">
-                <i class="fas fa-shield-alt"></i>
-                تحليل متقدم للأرقام، البريد الإلكتروني، ومستخدمي منصة X
-                <i class="fas fa-phone"></i>
-            </p>
-            <div class="badge-container">
-                <span class="badge badge-primary"><i class="fas fa-phone"></i> رقم الهاتف</span>
-                <span class="badge badge-success"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
-                <span class="badge badge-twitter"><i class="fa-brands fa-x-twitter"></i> مستخدم X</span>
+            <div class="header-icon"><i class="fas fa-microphone-alt"></i></div>
+            <h1>المساحة الصوتية</h1>
+            <div class="sub"><i class="fas fa-circle" style="font-size:0.3rem;vertical-align:middle;"></i> غرف صوتية خاصة مع مساعدين</div>
+            <div class="status-badge" id="statusBadge">
+                <span class="dot"></span>
+                <span id="statusText">جاهز</span>
             </div>
         </header>
 
-        <!-- ===== Search Mode Tabs ===== -->
-        <div class="search-mode-tabs">
-            <button class="active" onclick="switchMode('phone')">
-                <i class="fas fa-phone"></i> رقم الهاتف
-            </button>
-            <button onclick="switchMode('email')">
-                <i class="fas fa-envelope"></i> البريد الإلكتروني
-            </button>
-            <button onclick="switchMode('twitter')">
-                <i class="fa-brands fa-x-twitter"></i> مستخدم X
-            </button>
+        <div class="card">
+
+            <div class="room-controls" id="roomControls">
+                <div class="card-title"><i class="fas fa-door-open"></i> التحكم بالغرفة</div>
+                <div class="input-group">
+                    <input type="text" id="roomPasswordInput" placeholder="كلمة مرور الغرفة (اختياري)" dir="ltr">
+                    <span class="icon"><i class="fas fa-lock"></i></span>
+                </div>
+                <button class="btn btn-primary" id="createRoomBtn" onclick="createRoom()">
+                    <i class="fas fa-plus-circle"></i> إنشاء الغرفة
+                </button>
+                <button class="btn btn-outline" id="joinRoomBtn" onclick="showJoinModal()" style="display:none;">
+                    <i class="fas fa-sign-in-alt"></i> الانضمام إلى غرفة
+                </button>
+            </div>
+
+            <div class="room-info" id="roomInfo">
+                <div class="card-title" style="margin-bottom:8px;">
+                    <i class="fas fa-users"></i> الغرفة الحالية
+                    <span style="margin-right:auto;font-size:0.6rem;color:var(--text-muted);font-weight:400;" id="roomIdDisplay"></span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item"><div class="number" id="participantCount">0</div><div class="label">المشاركون</div></div>
+                    <div class="info-item"><div class="number green" id="speakerCount">0</div><div class="label">متحدثين</div></div>
+                    <div class="info-item"><div class="number gold" id="hostCount">0</div><div class="label">المسؤولين</div></div>
+                    <div class="info-item"><div class="number cohost" id="cohostCount">0</div><div class="label">المساعدين</div></div>
+                </div>
+
+                <div class="action-row">
+                    <button class="btn btn-success" id="toggleMicBtn" onclick="toggleMic()">
+                        <i class="fas fa-microphone"></i> كتم
+                    </button>
+                    <button class="btn btn-danger" onclick="closeRoom()">
+                        <i class="fas fa-door-closed"></i> إغلاق
+                    </button>
+                    <button class="btn btn-cohost" id="cohostPanelBtn" onclick="toggleCohostPanel()" style="display:none;">
+                        <i class="fas fa-user-plus"></i> مساعدين
+                    </button>
+                </div>
+
+                <div id="cohostPanel" style="display:none;background:var(--bg-dark);border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid rgba(0,188,212,0.15);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span style="font-size:0.7rem;color:var(--cohost);font-weight:700;"><i class="fas fa-user-cog"></i> إدارة المساعدين</span>
+                        <span style="font-size:0.55rem;color:var(--text-muted);">يمكن للمساعدين كتم وإدارة المشاركين</span>
+                    </div>
+                    <div id="cohostList" style="max-height:80px;overflow-y:auto;"></div>
+                </div>
+
+                <div class="participants" id="participantsList"></div>
+            </div>
+
+            <div class="share-section" id="shareSection">
+                <div class="card-title" style="margin-bottom:8px;"><i class="fas fa-share-alt"></i> دعوة الأصدقاء</div>
+                <div class="link-box">
+                    <input type="text" id="inviteLinkInput" readonly>
+                    <button onclick="copyInviteLink()"><i class="fas fa-copy"></i> نسخ</button>
+                </div>
+                <div class="share-buttons">
+                    <button class="whatsapp" onclick="shareWhatsApp()"><i class="fab fa-whatsapp"></i> واتساب</button>
+                    <button class="telegram" onclick="shareTelegram()"><i class="fab fa-telegram"></i> تيليجرام</button>
+                    <button onclick="copyInviteLink()"><i class="fas fa-link"></i> نسخ</button>
+                </div>
+            </div>
+
         </div>
 
-        <!-- ===== Phone Card ===== -->
-        <div class="card active" id="card-phone">
-            <div class="card-title"><i class="fas fa-search"></i> فحص الرقم</div>
-            <div class="form-group">
-                <label><i class="fas fa-phone-alt"></i> رقم الهاتف</label>
-                <div class="input-wrapper">
-                    <span class="prefix" id="countryPrefix">+</span>
-                    <input type="text" class="form-control" id="phoneInput" placeholder="أدخل الرقم مع مفتاح الدولة..." dir="ltr">
-                    <span class="suffix">مثال: 201234567890</span>
-                </div>
-            </div>
-            <button class="btn btn-primary" id="checkBtnPhone" onclick="validatePhone()">
-                <i class="fas fa-bolt"></i> <span id="btnTextPhone">تحليل الرقم</span>
-            </button>
-            <div class="loading" id="loadingPhone">
-                <div class="spinner"></div>
-                <div class="text" id="loadingTextPhone">جاري تحليل الرقم...</div>
-                <div class="progress-track"><div class="bar" id="progressBarPhone"></div></div>
-            </div>
-            <div class="result-box" id="resultBoxPhone">
-                <div class="result-header">
-                    <span class="title"><i class="fas fa-list-ul"></i> تفاصيل الرقم</span>
-                    <span class="status-tag" id="statusTagPhone">—</span>
-                </div>
-                <div class="result-grid" id="resultContentPhone"></div>
-            </div>
-        </div>
-
-        <!-- ===== Email Card ===== -->
-        <div class="card" id="card-email">
-            <div class="card-title"><i class="fas fa-search"></i> فحص البريد الإلكتروني</div>
-            <div class="form-group">
-                <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
-                <div class="input-wrapper">
-                    <span class="prefix">@</span>
-                    <input type="email" class="form-control" id="emailInput" placeholder="example@domain.com" dir="ltr">
-                    <span class="suffix">مثال: user@example.com</span>
-                </div>
-            </div>
-            <button class="btn btn-leak" id="checkBtnEmail" onclick="validateEmail()">
-                <i class="fas fa-exclamation-triangle"></i> <span id="btnTextEmail">فحص التسريب</span>
-            </button>
-            <div class="loading" id="loadingEmail">
-                <div class="spinner"></div>
-                <div class="text" id="loadingTextEmail">جاري فحص البريد...</div>
-                <div class="progress-track"><div class="bar" id="progressBarEmail"></div></div>
-            </div>
-            <div class="result-box" id="resultBoxEmail">
-                <div class="result-header">
-                    <span class="title"><i class="fas fa-list-ul"></i> نتائج الفحص</span>
-                    <span class="status-tag" id="statusTagEmail">—</span>
-                </div>
-                <div class="result-grid" id="resultContentEmail"></div>
-            </div>
-        </div>
-
-        <!-- ===== Twitter/X Card ===== -->
-        <div class="card" id="card-twitter">
-            <div class="card-title"><i class="fas fa-search"></i> البحث عن مستخدم X</div>
-            <div class="form-group">
-                <label><i class="fa-brands fa-x-twitter"></i> اسم المستخدم</label>
-                <div class="input-wrapper">
-                    <span class="prefix">@</span>
-                    <input type="text" class="form-control" id="twitterInput" placeholder="أدخل اسم المستخدم..." dir="ltr">
-                    <span class="suffix">مثال: elonmusk</span>
-                </div>
-            </div>
-            <button class="btn btn-twitter" id="checkBtnTwitter" onclick="searchTwitterReal()">
-                <i class="fa-brands fa-x-twitter"></i>
-                <span id="btnTextTwitter">بحث</span>
-            </button>
-            <div class="loading" id="loadingTwitter">
-                <div class="spinner"></div>
-                <div class="text" id="loadingTextTwitter">جاري البحث عن المستخدم...</div>
-                <div class="progress-track"><div class="bar" id="progressBarTwitter"></div></div>
-            </div>
-            <div class="result-box" id="resultBoxTwitter">
-                <div class="result-header">
-                    <span class="title"><i class="fas fa-list-ul"></i> معلومات المستخدم</span>
-                    <span class="status-tag" id="statusTagTwitter">—</span>
-                </div>
-                <div class="result-grid" id="resultContentTwitter"></div>
-            </div>
-        </div>
-
-        <!-- ===== Stats ===== -->
-        <div class="stats-grid">
-            <div class="stat-item"><div class="number" id="statTotal">0</div><div class="label">عدد العمليات</div></div>
-            <div class="stat-item"><div class="number green" id="statValid">0</div><div class="label">✅ مؤكد</div></div>
-            <div class="stat-item"><div class="number red" id="statInvalid">0</div><div class="label">❌ غير مؤكد</div></div>
-            <div class="stat-item"><div class="number twitter" id="statTwitter">0</div><div class="label"><i class="fa-brands fa-x-twitter"></i> مستخدمين</div></div>
-        </div>
-
-        <footer class="footer">
-            <div><span class="brand">🐀 The Cook Rat</span> <span style="color:var(--text-muted);">— Intelligence Pro v4.0</span></div>
-            <div style="margin-top:6px;font-size:0.65rem;color:var(--text-muted);">جميع الحقوق محفوظة</div>
-            <div class="social">
-                <a href="https://x.com/mouse0000000" target="_blank" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-            </div>
-            <div class="disclaimer">⚠️ للأغراض التعليمية والبحثية فقط</div>
-        </footer>
-
+        <footer class="footer"><span>✦</span> مساحة صوتية خاصة <span>✦</span></footer>
     </div>
 
+    <!-- ===== Join Modal ===== -->
+    <div class="modal-overlay" id="joinModal">
+        <div class="modal-box">
+            <div class="icon"><i class="fas fa-sign-in-alt"></i></div>
+            <h3>الانضمام إلى غرفة</h3>
+            <div class="sub">أدخل رمز الغرفة وكلمة المرور</div>
+            <div class="input-group">
+                <input type="text" id="joinRoomIdInput" placeholder="رمز الغرفة" dir="ltr" style="text-align:center;letter-spacing:2px;">
+            </div>
+            <div class="input-group">
+                <input type="password" id="joinPasswordInput" placeholder="كلمة المرور (اختياري)" dir="ltr" style="text-align:center;letter-spacing:4px;">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" onclick="closeJoinModal()">إلغاء</button>
+                <button class="btn btn-primary" onclick="joinRoomWithPassword()"><i class="fas fa-sign-in-alt"></i> انضمام</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== Toast Container ===== -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ============================================================
-        //  THE COOK RAT - INTELLIGENCE PRO
-        //  Phone + Email + Twitter/X Intelligence
-        // ============================================================
+        // ================================================================
+        //  المساحة الصوتية - مع نظام المساعدين (Co-Hosts)
+        //  تحكم كامل، مشاركة الصلاحيات مع أصدقائك
+        // ================================================================
 
         // ===== STATE =====
-        let stats = { total: 0, valid: 0, invalid: 0, twitter: 0 };
-        let isProcessing = false;
-        let phoneUtil = null;
-        let currentMode = 'phone';
+        let state = {
+            roomId: null,
+            isHost: false,
+            isCohost: false,
+            isMuted: false,
+            participants: [],
+            isActive: false,
+            cohosts: [] // IDs of co-hosts
+        };
 
         // ===== DOM REFS =====
-        const phoneInput = document.getElementById('phoneInput');
-        const countryPrefix = document.getElementById('countryPrefix');
-        const checkBtnPhone = document.getElementById('checkBtnPhone');
-        const btnTextPhone = document.getElementById('btnTextPhone');
-        const loadingPhone = document.getElementById('loadingPhone');
-        const loadingTextPhone = document.getElementById('loadingTextPhone');
-        const progressBarPhone = document.getElementById('progressBarPhone');
-        const resultBoxPhone = document.getElementById('resultBoxPhone');
-        const resultContentPhone = document.getElementById('resultContentPhone');
-        const statusTagPhone = document.getElementById('statusTagPhone');
-
-        const emailInput = document.getElementById('emailInput');
-        const checkBtnEmail = document.getElementById('checkBtnEmail');
-        const btnTextEmail = document.getElementById('btnTextEmail');
-        const loadingEmail = document.getElementById('loadingEmail');
-        const loadingTextEmail = document.getElementById('loadingTextEmail');
-        const progressBarEmail = document.getElementById('progressBarEmail');
-        const resultBoxEmail = document.getElementById('resultBoxEmail');
-        const resultContentEmail = document.getElementById('resultContentEmail');
-        const statusTagEmail = document.getElementById('statusTagEmail');
-
-        const twitterInput = document.getElementById('twitterInput');
-        const checkBtnTwitter = document.getElementById('checkBtnTwitter');
-        const btnTextTwitter = document.getElementById('btnTextTwitter');
-        const loadingTwitter = document.getElementById('loadingTwitter');
-        const loadingTextTwitter = document.getElementById('loadingTextTwitter');
-        const progressBarTwitter = document.getElementById('progressBarTwitter');
-        const resultBoxTwitter = document.getElementById('resultBoxTwitter');
-        const resultContentTwitter = document.getElementById('resultContentTwitter');
-        const statusTagTwitter = document.getElementById('statusTagTwitter');
-
-        const statTotal = document.getElementById('statTotal');
-        const statValid = document.getElementById('statValid');
-        const statInvalid = document.getElementById('statInvalid');
-        const statTwitter = document.getElementById('statTwitter');
+        const createRoomBtn = document.getElementById('createRoomBtn');
+        const joinRoomBtn = document.getElementById('joinRoomBtn');
+        const roomInfo = document.getElementById('roomInfo');
+        const shareSection = document.getElementById('shareSection');
+        const roomPasswordInput = document.getElementById('roomPasswordInput');
+        const inviteLinkInput = document.getElementById('inviteLinkInput');
+        const participantCount = document.getElementById('participantCount');
+        const speakerCount = document.getElementById('speakerCount');
+        const hostCount = document.getElementById('hostCount');
+        const cohostCount = document.getElementById('cohostCount');
+        const participantsList = document.getElementById('participantsList');
+        const toggleMicBtn = document.getElementById('toggleMicBtn');
+        const statusBadge = document.getElementById('statusBadge');
+        const statusText = document.getElementById('statusText');
+        const roomIdDisplay = document.getElementById('roomIdDisplay');
+        const cohostPanelBtn = document.getElementById('cohostPanelBtn');
+        const cohostPanel = document.getElementById('cohostPanel');
+        const cohostList = document.getElementById('cohostList');
 
         // ===== PARTICLES =====
         (function createParticles() {
             const container = document.getElementById('particles');
-            for (let i = 0; i < 25; i++) {
+            for (let i = 0; i < 18; i++) {
                 const el = document.createElement('div');
                 el.className = 'particle';
                 el.style.left = Math.random() * 100 + '%';
-                el.style.width = (1 + Math.random() * 3) + 'px';
-                el.style.height = el.style.width;
-                el.style.animationDuration = (15 + Math.random() * 25) + 's';
+                const size = 2 + Math.random() * 4;
+                el.style.width = size + 'px';
+                el.style.height = size + 'px';
+                el.style.animationDuration = (20 + Math.random() * 30) + 's';
                 el.style.animationDelay = (Math.random() * 20) + 's';
-                el.style.opacity = 0.05 + Math.random() * 0.12;
+                el.style.opacity = 0.05 + Math.random() * 0.1;
                 container.appendChild(el);
             }
         })();
@@ -369,614 +694,443 @@
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle',
-                twitter: 'fa-brands fa-x-twitter' };
+                warning: 'fa-exclamation-triangle', cohost: 'fa-user-cog' };
             const colors = { success: 'var(--success)', error: 'var(--danger)', info: 'var(--primary)',
-                twitter: 'var(--twitter)' };
+                warning: 'var(--warning)', cohost: 'var(--cohost)' };
             toast.innerHTML =
-                `<span style="color:${colors[type]}"><i class="fas ${icons[type]}"></i></span><span>${message}</span>`;
+                `<span style="color:${colors[type]||colors.info}"><i class="fas ${icons[type]||icons.info}"></i></span><span>${message}</span>`;
             container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0';
-                toast.style.transform = 'translateX(120%)';
-                setTimeout(() => toast.remove(), 300); }, 5000);
-        }
-
-        // ===== UPDATE STATS =====
-        function updateStats() {
-            statTotal.textContent = stats.total;
-            statValid.textContent = stats.valid;
-            statInvalid.textContent = stats.invalid;
-            statTwitter.textContent = stats.twitter;
-        }
-
-        // ===== SWITCH MODE =====
-        function switchMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.search-mode-tabs button').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.card').forEach(el => el.classList.remove('active'));
-            const tabs = document.querySelectorAll('.search-mode-tabs button');
-            const map = { 'phone': 0, 'email': 1, 'twitter': 2 };
-            tabs[map[mode]].classList.add('active');
-            document.getElementById('card-' + mode).classList.add('active');
-        }
-
-        // ============================================================
-        //  LOAD LIBPHONENUMBER (للهاتف)
-        // ============================================================
-        function loadLibrary() {
-            try {
-                if (typeof libphonenumber !== 'undefined') {
-                    phoneUtil = libphonenumber;
-                    console.log('✅ Google libphonenumber loaded');
-                    return true;
-                }
-                return false;
-            } catch (e) {
-                console.error('❌ Failed to load library:', e);
-                return false;
-            }
-        }
-
-        // ============================================================
-        //  PHONE VALIDATION (مثل السابق)
-        // ============================================================
-        function validatePhone() {
-            if (isProcessing) return;
-            const rawPhone = phoneInput.value.trim();
-            if (!rawPhone) { showToast('الرجاء إدخال رقم الهاتف', 'error'); return; }
-            const cleanPhone = rawPhone.replace(/[\s\-\(\)\.]/g, '');
-            let phoneWithPrefix = cleanPhone;
-            if (!phoneWithPrefix.startsWith('+')) phoneWithPrefix = '+' + phoneWithPrefix;
-            if (!phoneWithPrefix.match(/^\+[0-9]{7,15}$/)) {
-                showToast('الرجاء إدخال رقم صحيح (7-15 رقم مع مفتاح الدولة)', 'error');
-                return;
-            }
-            isProcessing = true;
-            checkBtnPhone.disabled = true;
-            btnTextPhone.textContent = 'جاري التحليل...';
-            loadingPhone.classList.add('active');
-            resultBoxPhone.classList.remove('active');
-            progressBarPhone.style.width = '20%';
-            loadingTextPhone.textContent = 'جاري تحليل الرقم...';
-            let progress = 20;
-            const interval = setInterval(() => { progress += 5; if (progress <= 80) progressBarPhone.style.width = progress +
-                    '%'; }, 50);
             setTimeout(() => {
-                clearInterval(interval);
-                progressBarPhone.style.width = '100%';
-                try {
-                    let result = analyzeWithLibphonenumber(phoneWithPrefix);
-                    stats.total++;
-                    if (result.status === 'valid') stats.valid++;
-                    else if (result.status === 'possible') stats.valid++;
-                    else stats.invalid++;
-                    updateStats();
-                    displayPhoneResult(result, phoneWithPrefix);
-                    if (result.status === 'valid') showToast(`✅ الرقم مؤكد (${result.countryName || 'غير معروف'}`,
-                        'success');
-                    else if (result.status === 'possible') showToast('⚠️ الرقم محتمل (تحقق من التنسيق)', 'info');
-                    else showToast('❌ الرقم غير مؤكد', 'error');
-                } catch (error) {
-                    console.error('Error:', error);
-                    showToast('⚠️ حدث خطأ في التحليل', 'error');
-                    resultContentPhone.innerHTML =
-                        `<div class="result-item full" style="text-align:center;padding:20px 0;border-bottom:none;"><div style="color:var(--danger);font-size:2rem;margin-bottom:12px;"><i class="fas fa-exclamation-triangle"></i></div><div style="color:var(--text-secondary);font-size:0.9rem;">تعذر تحليل الرقم</div><div style="color:var(--text-muted);font-size:0.75rem;margin-top:6px;">تأكد من صحة الرقم ومفتاح الدولة</div></div>`;
-                    resultBoxPhone.classList.add('active');
-                    statusTagPhone.textContent = '⚠️ خطأ';
-                    statusTagPhone.className = 'status-tag invalid';
-                }
-                setTimeout(() => {
-                    loadingPhone.classList.remove('active');
-                    isProcessing = false;
-                    checkBtnPhone.disabled = false;
-                    btnTextPhone.textContent = 'تحليل الرقم';
-                    progressBarPhone.style.width = '0%';
-                }, 300);
-            }, 800);
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
         }
 
-        function analyzeWithLibphonenumber(phoneNumber) {
-            if (!phoneUtil) { const loaded = loadLibrary(); if (!loaded) return analyzeFallback(phoneNumber); }
-            try {
-                const parsed = phoneUtil.parsePhoneNumber(phoneNumber);
-                if (!parsed) return analyzeFallback(phoneNumber);
-                const countryCode = parsed.country || 'UNKNOWN';
-                const countryName = getCountryName(countryCode);
-                const nationalNumber = parsed.nationalNumber || '';
-                const isValid = parsed.isValid();
-                const isPossible = parsed.isPossible();
-                let status = 'invalid';
-                if (isValid) status = 'valid';
-                else if (isPossible) status = 'possible';
-                let numberType = 'غير معروف';
-                try {
-                    if (parsed.getType) {
-                        const type = parsed.getType();
-                        const typeMap = { 'FIXED_LINE': 'أرضي', 'MOBILE': 'جوال', 'FIXED_LINE_OR_MOBILE': 'أرضي أو جوال',
-                            'TOLL_FREE': 'مجاني', 'PREMIUM_RATE': 'مدفوع', 'SHARED_COST': 'مشترك', 'VOIP': 'VoIP',
-                            'PERSONAL_NUMBER': 'شخصي', 'PAGER': 'بيجر', 'UAN': 'UAN', 'VOICEMAIL': 'بريد صوتي',
-                            'UNKNOWN': 'غير معروف' };
-                        numberType = typeMap[type] || type || 'غير معروف';
-                    }
-                } catch (e) {}
-                let internationalFormat = phoneNumber;
-                let nationalFormat = nationalNumber;
-                try { if (parsed.formatInternational) internationalFormat = parsed.formatInternational(); if (parsed
-                        .formatNational) nationalFormat = parsed.formatNational(); } catch (e) {}
-                return { status, countryCode, countryName, nationalNumber, numberType, internationalFormat, nationalFormat,
-                    isValid, isPossible };
-            } catch (error) {
-                console.warn('Libphonenumber parsing failed, using fallback:', error);
-                return analyzeFallback(phoneNumber);
-            }
+        // ===== ROOM FUNCTIONS =====
+        function generateRoomId() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let result = '';
+            for (let i = 0; i < 6; i++) result += chars.charAt(Math.floor(Math.random() * chars.length));
+            return result;
         }
 
-        function analyzeFallback(phoneNumber) {
-            const clean = phoneNumber.replace(/[^0-9+]/g, '');
-            let countryCode = 'UNKNOWN',
-                countryName = 'غير معروف',
-                nationalNumber = clean;
-            const match = clean.match(/^\+(\d{1,3})/);
-            if (match) { const code = match[1];
-                nationalNumber = clean.replace(/^\+(\d{1,3})/, '');
-                countryCode = getCountryCodeFromPrefix(code);
-                countryName = getCountryName(countryCode); }
-            const isValid = nationalNumber.length >= 7 && nationalNumber.length <= 15;
-            const isPossible = nationalNumber.length >= 5 && nationalNumber.length <= 18;
-            let status = 'invalid';
-            if (isValid) status = 'valid';
-            else if (isPossible) status = 'possible';
-            let numberType = 'غير معروف';
-            if (nationalNumber.length >= 10 && nationalNumber.length <= 11) numberType = 'جوال (محتمل)';
-            else if (nationalNumber.length >= 7 && nationalNumber.length <= 9) numberType = 'أرضي (محتمل)';
-            return { status, countryCode, countryName, nationalNumber, numberType, internationalFormat: phoneNumber,
-                nationalFormat: nationalNumber, isValid, isPossible };
+        function generateParticipantId() {
+            return 'user_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
         }
 
-        function getCountryCodeFromPrefix(prefix) {
-            const map = { '20': 'EG', '966': 'SA', '971': 'AE', '965': 'KW', '974': 'QA', '973': 'BH', '968': 'OM',
-                '962': 'JO', '961': 'LB', '970': 'PS', '963': 'SY', '964': 'IQ', '967': 'YE', '213': 'DZ', '212': 'MA',
-                '216': 'TN', '218': 'LY', '249': 'SD', '252': 'SO', '222': 'MR', '1': 'US', '44': 'GB', '33': 'FR',
-                '49': 'DE', '39': 'IT', '34': 'ES', '90': 'TR', '91': 'IN', '86': 'CN', '81': 'JP', '82': 'KR', '7': 'RU',
-                '55': 'BR', '61': 'AU' };
-            return map[prefix] || 'UNKNOWN';
-        }
-
-        function getCountryName(code) {
-            const countries = { 'EG': 'مصر', 'SA': 'السعودية', 'AE': 'الإمارات', 'KW': 'الكويت', 'QA': 'قطر', 'BH': 'البحرين',
-                'OM': 'عمان', 'JO': 'الأردن', 'LB': 'لبنان', 'PS': 'فلسطين', 'SY': 'سوريا', 'IQ': 'العراق', 'YE': 'اليمن',
-                'DZ': 'الجزائر', 'MA': 'المغرب', 'TN': 'تونس', 'LY': 'ليبيا', 'SD': 'السودان', 'SO': 'الصومال', 'MR': 'موريتانيا',
-                'US': 'الولايات المتحدة', 'GB': 'بريطانيا', 'FR': 'فرنسا', 'DE': 'ألمانيا', 'IT': 'إيطاليا', 'ES': 'إسبانيا',
-                'TR': 'تركيا', 'IN': 'الهند', 'CN': 'الصين', 'JP': 'اليابان', 'KR': 'كوريا الجنوبية', 'RU': 'روسيا',
-                'BR': 'البرازيل', 'AU': 'أستراليا' };
-            return countries[code] || code;
-        }
-
-        function displayPhoneResult(data, phone) {
-            const statusMap = { 'valid': { text: '✅ مؤكد', class: 'valid' }, 'possible': { text: '⚠️ محتمل',
-                    class: 'possible' }, 'invalid': { text: '❌ غير مؤكد', class: 'invalid' } };
-            const statusInfo = statusMap[data.status] || statusMap['invalid'];
-            statusTagPhone.textContent = statusInfo.text;
-            statusTagPhone.className = `status-tag ${statusInfo.class}`;
-            let html =
-                `<div class="result-item full"><span class="label">📞 الرقم</span><span class="value highlight">${phone}</span></div>`;
-            const fields = [{ label: '🌍 الدولة', value: data.countryName || 'غير معروف' }, { label: '🔢 مفتاح الدولة',
-                    value: data.countryCode || 'غير معروف' }, { label: '📱 نوع الرقم', value: data.numberType ||
-                    'غير معروف' }, ];
-            for (const field of fields) { html +=
-                    `<div class="result-item"><span class="label">${field.label}</span><span class="value">${field.value}</span></div>`
-                    ; }
-            html +=
-                `<div class="result-item"><span class="label">📊 التنسيق الدولي</span><span class="value">${data.internationalFormat || phone}</span></div>
-                        <div class="result-item"><span class="label">📊 التنسيق المحلي</span><span class="value">${data.nationalFormat || data.nationalNumber || phone}</span></div>
-                        <div class="result-item full" style="border-bottom:none;padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
-                            <span class="label" style="font-size:0.65rem;color:var(--text-muted);"><i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}</span>
-                            <span class="value" style="font-size:0.65rem;color:var(--text-muted);"></span>
-                        </div>`;
-            resultContentPhone.innerHTML = html;
-            resultBoxPhone.classList.add('active');
-        }
-
-        // ============================================================
-        //  EMAIL VALIDATION (مثل السابق)
-        // ============================================================
-        function validateEmail() {
-            if (isProcessing) return;
-            const email = emailInput.value.trim();
-            if (!email || !email.includes('@')) { showToast('الرجاء إدخال بريد إلكتروني صحيح', 'error'); return; }
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            if (!emailRegex.test(email)) { showToast('الرجاء إدخال بريد إلكتروني صحيح', 'error'); return; }
-            isProcessing = true;
-            checkBtnEmail.disabled = true;
-            btnTextEmail.textContent = 'جاري الفحص...';
-            loadingEmail.classList.add('active');
-            resultBoxEmail.classList.remove('active');
-            progressBarEmail.style.width = '10%';
-            loadingTextEmail.textContent = 'جاري التحقق من البريد...';
-            let progress = 10;
-            const interval = setInterval(() => { progress += 8; if (progress <= 70) progressBarEmail.style.width = progress +
-                    '%'; }, 100);
-            setTimeout(() => {
-                progressBarEmail.style.width = '50%';
-                loadingTextEmail.textContent = 'جاري فحص التسريبات...';
-                const parts = email.split('@');
-                const username = parts[0];
-                const domain = parts[1];
-                const hasLeaks = Math.random() < 0.3;
-                setTimeout(() => {
-                    clearInterval(interval);
-                    progressBarEmail.style.width = '100%';
-                    loadingTextEmail.textContent = 'تم الانتهاء من الفحص!';
-                    stats.total++;
-                    if (hasLeaks) { stats.valid++;
-                        showToast(`🔴 تم اكتشاف تسريبات للبريد: ${email}`, 'leak'); } else { stats.valid++;
-                        showToast(`✅ البريد آمن: ${email}`, 'success'); }
-                    updateStats();
-                    displayEmailResult(email, username, domain, hasLeaks);
-                    setTimeout(() => {
-                        loadingEmail.classList.remove('active');
-                        isProcessing = false;
-                        checkBtnEmail.disabled = false;
-                        btnTextEmail.textContent = 'فحص التسريب';
-                        progressBarEmail.style.width = '0%';
-                    }, 300);
-                }, 600);
-            }, 500);
-        }
-
-        function displayEmailResult(email, username, domain, hasLeaks) {
-            statusTagEmail.textContent = hasLeaks ? '🔴 مسرب' : '✅ آمن';
-            statusTagEmail.className = `status-tag ${hasLeaks ? 'leak' : 'valid'}`;
-            const leakSources = ['Adobe (2013) - 153M', 'LinkedIn (2012) - 117M', 'MySpace (2013) - 360M',
-                'Dropbox (2012) - 68M', 'Tumblr (2013) - 65M', 'Twitter (2023) - 200M', 'Facebook (2019) - 533M',
-                'Instagram (2021) - 49M', 'Canva (2019) - 137M', 'Dubsmash (2018) - 162M'
+        function getRandomName() {
+            const names = ['نورة', 'أحمد', 'سارة', 'محمد', 'فاطمة', 'خالد', 'ريم', 'عبدالله', 'منى', 'عمر', 'ليلى', 'سعيد', 'هدى',
+                'ناصر', 'خلود'
             ];
-            let html =
-                `<div class="result-item full"><span class="label">📧 البريد الإلكتروني</span><span class="value highlight">${email}</span></div>
-                        <div class="result-item"><span class="label">👤 اسم المستخدم</span><span class="value">${username}</span></div>
-                        <div class="result-item"><span class="label">🌐 النطاق</span><span class="value">${domain}</span></div>
-                        <div class="result-item"><span class="label">🔒 صحة البريد</span><span class="value ${hasLeaks ? 'danger' : 'success'}">${hasLeaks ? '❌ مسرب' : '✅ آمن'}</span></div>`;
-            if (hasLeaks) {
-                const randomLeaks = leakSources.sort(() => Math.random() - 0.5).slice(0, 3 + Math.floor(Math.random() * 3));
-                html +=
-                    `<div class="result-item full" style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border);"><span class="label" style="color:var(--leak);">🔴 التسريبات المكتشفة</span></div>
-                            ${randomLeaks.map(leak => `<div class="result-item full" style="border-bottom:1px solid rgba(255,0,68,0.08);"><span class="label" style="font-size:0.7rem;">📂</span><span class="value" style="font-size:0.78rem;color:var(--leak);">${leak}</span></div>`).join('')}
-                            <div class="result-item full" style="border-bottom:none;margin-top:4px;">
-                                <span class="label" style="font-size:0.65rem;color:var(--text-muted);">⚠️ يوصى بتغيير كلمة المرور</span>
-                                <span class="value" style="font-size:0.65rem;color:var(--text-muted);"><a href="https://haveibeenpwned.com/account/${encodeURIComponent(email)}" target="_blank" style="color:var(--primary);">تفاصيل</a></span>
-                            </div>`;
-            } else {
-                html +=
-                    `<div class="result-item full" style="margin-top:8px;padding-top:12px;border-top:1px solid var(--border);border-bottom:none;">
-                                <span class="label" style="font-size:0.65rem;color:var(--text-muted);"><i class="fas fa-shield-alt"></i> لم يتم العثور على تسريبات</span>
-                                <span class="value" style="font-size:0.65rem;color:var(--text-muted);"><i class="fas fa-check-circle" style="color:var(--success);"></i> آمن</span>
-                            </div>`;
-            }
-            html +=
-                `<div class="result-item full" style="border-bottom:none;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05);">
-                            <span class="label" style="font-size:0.6rem;color:var(--text-muted);"><i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}</span>
-                            <span class="value" style="font-size:0.6rem;color:var(--text-muted);"></span>
-                        </div>`;
-            resultContentEmail.innerHTML = html;
-            resultBoxEmail.classList.add('active');
+            return names[Math.floor(Math.random() * names.length)];
         }
 
-        // ============================================================
-        //  TWITTER/X REAL SEARCH
-        // ============================================================
-        async function searchTwitterReal() {
-            if (isProcessing) return;
+        function getRandomAvatar(name) {
+            const colors = ['#6C63FF', '#00BCD4', '#FF4081', '#FFD740', '#00E676', '#FF6F00', '#D500F9', '#00BFA5'];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
 
-            const username = twitterInput.value.trim();
-            if (!username) {
-                showToast('الرجاء إدخال اسم المستخدم', 'error');
-                return;
-            }
+        // ===== CREATE ROOM =====
+        function createRoom() {
+            const password = roomPasswordInput.value.trim();
+            createRoomBtn.disabled = true;
+            createRoomBtn.innerHTML = '<span class="spinner"></span> جاري الإنشاء...';
+            statusText.textContent = 'جاري الإنشاء...';
+            statusBadge.className = 'status-badge';
 
-            const cleanUsername = username.replace(/^@/, '');
+            setTimeout(() => {
+                state.roomId = generateRoomId();
+                state.isHost = true;
+                state.isCohost = false;
+                state.isActive = true;
+                state.cohosts = [];
 
-            isProcessing = true;
-            checkBtnTwitter.disabled = true;
-            btnTextTwitter.textContent = 'جاري البحث...';
-            loadingTwitter.classList.add('active');
-            resultBoxTwitter.classList.remove('active');
-            progressBarTwitter.style.width = '10%';
-            loadingTextTwitter.textContent = 'جاري البحث عن المستخدم...';
+                const hostId = generateParticipantId();
+                state.participants = [{
+                    id: hostId,
+                    name: 'المسؤول 👑',
+                    isHost: true,
+                    isCohost: false,
+                    isSpeaker: true,
+                    isSelf: true,
+                    avatar: '#FFD700'
+                }];
 
-            let progress = 10;
-            const interval = setInterval(() => {
-                progress += 10;
-                if (progress <= 80) {
-                    progressBarTwitter.style.width = progress + '%';
+                updateUI();
+                showToast(`✅ تم إنشاء الغرفة: ${state.roomId}`, 'success');
+                statusText.textContent = 'مباشر 🟢';
+                statusBadge.className = 'status-badge';
+
+                createRoomBtn.innerHTML = '<i class="fas fa-plus-circle"></i> غرفة جديدة';
+                createRoomBtn.disabled = false;
+                joinRoomBtn.style.display = 'none';
+                cohostPanelBtn.style.display = 'flex';
+
+                setTimeout(() => {
+                    shareSection.classList.add('active');
+                    inviteLinkInput.value =
+                        `${window.location.origin}${window.location.pathname}?room=${state.roomId}`;
+                }, 300);
+            }, 1000);
+        }
+
+        // ===== JOIN ROOM =====
+        function showJoinModal() {
+            document.getElementById('joinModal').classList.add('active');
+            document.getElementById('joinRoomIdInput').value = '';
+            document.getElementById('joinPasswordInput').value = '';
+            setTimeout(() => document.getElementById('joinRoomIdInput').focus(), 100);
+        }
+
+        function closeJoinModal() {
+            document.getElementById('joinModal').classList.remove('active');
+        }
+
+        function joinRoomWithPassword() {
+            const roomId = document.getElementById('joinRoomIdInput').value.trim().toUpperCase();
+            const password = document.getElementById('joinPasswordInput').value.trim();
+
+            if (!roomId) { showToast('الرجاء إدخال رمز الغرفة', 'error'); return; }
+
+            const btn = document.querySelector('#joinModal .modal-actions .btn-primary');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> جاري الانضمام...';
+
+            setTimeout(() => {
+                state.roomId = roomId;
+                state.isHost = false;
+                state.isCohost = false;
+                state.isActive = true;
+                state.cohosts = [];
+
+                const userId = generateParticipantId();
+                state.participants = [{
+                    id: userId,
+                    name: 'أنت',
+                    isHost: false,
+                    isCohost: false,
+                    isSpeaker: true,
+                    isSelf: true,
+                    avatar: '#6C63FF'
+                }];
+
+                // Simulate other participants
+                const count = 2 + Math.floor(Math.random() * 4);
+                for (let i = 0; i < count; i++) {
+                    const name = getRandomName();
+                    state.participants.push({
+                        id: generateParticipantId(),
+                        name: name,
+                        isHost: i === 0 && Math.random() > 0.5,
+                        isCohost: i === 1 && Math.random() > 0.6,
+                        isSpeaker: i % 2 === 0,
+                        isSelf: false,
+                        avatar: getRandomAvatar(name)
+                    });
                 }
-            }, 100);
 
-            try {
-                progressBarTwitter.style.width = '40%';
-                loadingTextTwitter.textContent = 'جاري الاتصال بالخادم...';
-
-                const nitterUrl = `https://nitter.net/${cleanUsername}`;
-
-                progressBarTwitter.style.width = '60%';
-                loadingTextTwitter.textContent = 'جاري تحليل الملف الشخصي...';
-
-                const response = await fetch(nitterUrl, {
-                    headers: {
-                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                    }
-                });
-
-                progressBarTwitter.style.width = '80%';
-                loadingTextTwitter.textContent = 'جاري تجهيز المعلومات...';
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                // If there's a host in participants, set it
+                const host = state.participants.find(p => p.isHost);
+                if (host) {
+                    host.name = 'المسؤول 👑';
                 }
 
-                const html = await response.text();
-                const userData = parseNitterHTML(html, cleanUsername);
+                updateUI();
+                showToast(`✅ تم الانضمام إلى الغرفة ${roomId}`, 'success');
+                statusText.textContent = 'مباشر 🟢';
+                statusBadge.className = 'status-badge';
+                closeJoinModal();
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> انضمام';
+                joinRoomBtn.style.display = 'none';
+                createRoomBtn.innerHTML = '<i class="fas fa-plus-circle"></i> غرفة جديدة';
 
-                if (!userData.name || userData.name === 'غير معروف') {
-                    throw new Error('لم يتم العثور على المستخدم');
+                // Show cohost panel if user is host or cohost
+                const user = state.participants.find(p => p.isSelf);
+                if (user && (user.isHost || user.isCohost)) {
+                    cohostPanelBtn.style.display = 'flex';
                 }
 
                 setTimeout(() => {
-                    clearInterval(interval);
-                    progressBarTwitter.style.width = '100%';
-                    loadingTextTwitter.textContent = 'تم العثور على المستخدم!';
+                    shareSection.classList.add('active');
+                    inviteLinkInput.value =
+                        `${window.location.origin}${window.location.pathname}?room=${state.roomId}`;
+                }, 300);
+            }, 1000);
+        }
 
-                    stats.total++;
-                    stats.twitter++;
-                    updateStats();
+        // ===== CO-HOST MANAGEMENT =====
+        function toggleCohostPanel() {
+            const panel = cohostPanel;
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            if (panel.style.display === 'block') renderCohostList();
+        }
 
-                    displayTwitterResultReal(userData, cleanUsername);
-                    showToast(`✅ تم العثور على المستخدم @${cleanUsername}`, 'twitter');
+        function renderCohostList() {
+            const cohosts = state.participants.filter(p => p.isCohost && !p.isSelf);
+            const nonCohosts = state.participants.filter(p => !p.isCohost && !p.isHost && !p.isSelf);
 
-                    setTimeout(() => {
-                        loadingTwitter.classList.remove('active');
-                        isProcessing = false;
-                        checkBtnTwitter.disabled = false;
-                        btnTextTwitter.textContent = 'بحث';
-                        progressBarTwitter.style.width = '0%';
-                    }, 300);
+            if (cohosts.length === 0 && nonCohosts.length === 0) {
+                cohostList.innerHTML =
+                    '<div style="text-align:center;padding:8px;color:var(--text-muted);font-size:0.7rem;">لا يوجد مشاركين لإضافتهم كمساعدين</div>';
+                return;
+            }
 
-                }, 400);
+            let html = '';
 
-            } catch (error) {
-                console.error('Error:', error);
+            // Current co-hosts
+            if (cohosts.length > 0) {
+                html +=
+                    `<div style="font-size:0.55rem;color:var(--cohost);font-weight:700;margin:4px 0;">المساعدين الحاليين</div>`;
+                cohosts.forEach(p => {
+                    html += `
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--bg-card);border-radius:6px;margin-bottom:3px;border:1px solid rgba(0,188,212,0.1);">
+                                    <span style="font-size:0.7rem;">${p.name}</span>
+                                    ${state.isHost ? `<button onclick="removeCohost('${p.id}')" style="background:transparent;border:none;color:var(--danger);cursor:pointer;font-size:0.6rem;"><i class="fas fa-user-minus"></i></button>` : ''}
+                                </div>
+                            `;
+                });
+            }
 
-                try {
-                    const fallbackData = await fetchTwitterFallback(cleanUsername);
-                    if (fallbackData && fallbackData.name && fallbackData.name !== 'غير معروف') {
-                        stats.total++;
-                        stats.twitter++;
-                        updateStats();
-                        displayTwitterResultReal(fallbackData, cleanUsername);
-                        showToast(`✅ تم العثور على المستخدم @${cleanUsername}`, 'twitter');
+            // Available to promote
+            const available = nonCohosts.filter(p => !p.isHost);
+            if (available.length > 0 && state.isHost) {
+                html += `<div style="font-size:0.55rem;color:var(--text-muted);font-weight:700;margin:4px 0;">إضافة مساعد</div>`;
+                available.forEach(p => {
+                    html += `
+                                <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 8px;background:var(--bg-card);border-radius:6px;margin-bottom:3px;border:1px solid var(--border);">
+                                    <span style="font-size:0.7rem;">${p.name}</span>
+                                    <button onclick="promoteToCohost('${p.id}')" style="background:transparent;border:none;color:var(--cohost);cursor:pointer;font-size:0.6rem;"><i class="fas fa-user-plus"></i></button>
+                                </div>
+                            `;
+                });
+            }
 
-                        setTimeout(() => {
-                            loadingTwitter.classList.remove('active');
-                            isProcessing = false;
-                            checkBtnTwitter.disabled = false;
-                            btnTextTwitter.textContent = 'بحث';
-                            progressBarTwitter.style.width = '0%';
-                        }, 300);
-                        return;
-                    }
-                } catch (fallbackError) {
-                    console.error('Fallback failed:', fallbackError);
+            cohostList.innerHTML = html;
+        }
+
+        function promoteToCohost(userId) {
+            const user = state.participants.find(p => p.id === userId);
+            if (!user || user.isHost) return;
+
+            user.isCohost = true;
+            state.cohosts.push(userId);
+            showToast(`✅ ${user.name} أصبح مساعداً`, 'cohost');
+            updateUI();
+            renderCohostList();
+        }
+
+        function removeCohost(userId) {
+            const user = state.participants.find(p => p.id === userId);
+            if (!user) return;
+
+            user.isCohost = false;
+            state.cohosts = state.cohosts.filter(id => id !== userId);
+            showToast(`❌ تم إلغاء صلاحيات ${user.name} كمساعد`, 'warning');
+            updateUI();
+            renderCohostList();
+        }
+
+        // ===== PARTICIPANT ACTIONS =====
+        function toggleParticipantMute(userId) {
+            const user = state.participants.find(p => p.id === userId);
+            if (!user || user.isHost) return;
+
+            user.isSpeaker = !user.isSpeaker;
+            showToast(`${user.isSpeaker ? '🎤 تم تفعيل' : '🔇 تم كتم'} ${user.name}`, user.isSpeaker ? 'success' :
+            'warning');
+            updateUI();
+        }
+
+        function kickParticipant(userId) {
+            const user = state.participants.find(p => p.id === userId);
+            if (!user || user.isHost || user.isSelf) return;
+
+            state.participants = state.participants.filter(p => p.id !== userId);
+            if (user.isCohost) {
+                state.cohosts = state.cohosts.filter(id => id !== userId);
+            }
+            showToast(`👋 تم طرد ${user.name}`, 'error');
+            updateUI();
+            renderCohostList();
+        }
+
+        // ===== TOGGLE MIC =====
+        function toggleMic() {
+            state.isMuted = !state.isMuted;
+            if (state.isMuted) {
+                toggleMicBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> إلغاء الكتم';
+                toggleMicBtn.className = 'btn btn-outline';
+                showToast('🎤 تم كتم الصوت', 'info');
+            } else {
+                toggleMicBtn.innerHTML = '<i class="fas fa-microphone"></i> كتم';
+                toggleMicBtn.className = 'btn btn-success';
+                showToast('🎤 تم إلغاء الكتم', 'success');
+            }
+        }
+
+        // ===== CLOSE ROOM =====
+        function closeRoom() {
+            if (!state.isActive) return;
+
+            const user = state.participants.find(p => p.isSelf);
+            if (state.isHost || (user && user.isCohost)) {
+                if (!confirm('هل أنت متأكد من إغلاق الغرفة؟ سيتم طرد جميع المشاركين.')) return;
+            } else {
+                if (!confirm('هل تريد مغادرة الغرفة؟')) return;
+            }
+
+            const isHostClosing = state.isHost || (user && user.isCohost);
+            showToast(isHostClosing ? '🔒 تم إغلاق الغرفة' : '👋 تم مغادرة الغرفة', 'warning');
+
+            state.isActive = false;
+            state.participants = [];
+            state.roomId = null;
+            state.isHost = false;
+            state.isCohost = false;
+            state.cohosts = [];
+            state.isMuted = false;
+
+            roomInfo.classList.remove('active');
+            shareSection.classList.remove('active');
+            joinRoomBtn.style.display = 'block';
+            createRoomBtn.innerHTML = '<i class="fas fa-plus-circle"></i> إنشاء الغرفة';
+            statusText.textContent = 'جاهز';
+            statusBadge.className = 'status-badge';
+            cohostPanelBtn.style.display = 'none';
+            cohostPanel.style.display = 'none';
+            toggleMicBtn.innerHTML = '<i class="fas fa-microphone"></i> كتم';
+            toggleMicBtn.className = 'btn btn-success';
+        }
+
+        // ===== UI UPDATE =====
+        function updateUI() {
+            roomInfo.classList.add('active');
+
+            const speakers = state.participants.filter(p => p.isSpeaker);
+            const hosts = state.participants.filter(p => p.isHost);
+            const cohosts = state.participants.filter(p => p.isCohost);
+
+            participantCount.textContent = state.participants.length;
+            speakerCount.textContent = speakers.length;
+            hostCount.textContent = hosts.length;
+            cohostCount.textContent = cohosts.length;
+            roomIdDisplay.textContent = `#${state.roomId || '---'}`;
+
+            // Render participants
+            participantsList.innerHTML = state.participants.map(p => {
+                let roleClass = 'listener';
+                let roleText = 'مستمع';
+                if (p.isHost) { roleClass = 'host';
+                    roleText = 'مسؤول'; } else if (p.isCohost) { roleClass = 'cohost';
+                    roleText = 'مساعد'; } else if (p.isSpeaker) { roleClass = 'speaker';
+                    roleText = 'متحدث'; }
+
+                const avatarClass = p.isHost ? 'host' : p.isCohost ? 'cohost' : p.isSelf ? 'self' : p.isSpeaker ?
+                    'speaker' : 'listener';
+                const avatarContent = p.isHost ? '👑' : p.isCohost ? '🤝' : p.name.charAt(0);
+
+                // Actions for host/cohost
+                let actions = '';
+                const user = state.participants.find(u => u.isSelf);
+                const canManage = user && (user.isHost || user.isCohost);
+
+                if (canManage && !p.isSelf && !p.isHost) {
+                    actions = `
+                                <div class="participant-actions">
+                                    <button class="speaker-btn" onclick="toggleParticipantMute('${p.id}')" title="${p.isSpeaker ? 'كتم' : 'تفعيل'}">
+                                        <i class="fas ${p.isSpeaker ? 'fa-microphone' : 'fa-microphone-slash'}"></i>
+                                    </button>
+                                    ${user.isHost ? `<button class="cohost-btn" onclick="promoteToCohost('${p.id}')" title="تعيين مساعد"><i class="fas fa-user-cog"></i></button>` : ''}
+                                    <button class="kick-btn" onclick="kickParticipant('${p.id}')" title="طرد"><i class="fas fa-times"></i></button>
+                                </div>
+                            `;
                 }
 
-                showToast('⚠️ تعذر العثور على المستخدم. تأكد من اسم المستخدم', 'error');
-
-                resultContentTwitter.innerHTML = `
-                            <div class="result-item full" style="text-align:center;padding:20px 0;border-bottom:none;">
-                                <div style="color:var(--danger);font-size:2rem;margin-bottom:12px;">
-                                    <i class="fas fa-exclamation-triangle"></i>
+                return `
+                            <div class="participant-item">
+                                <div class="avatar ${avatarClass}">${avatarContent}</div>
+                                <div class="name">
+                                    ${p.name}
+                                    ${p.isSelf ? '<span class="me">(أنت)</span>' : ''}
                                 </div>
-                                <div style="color:var(--text-secondary);font-size:0.9rem;">
-                                    تعذر العثور على المستخدم
-                                </div>
-                                <div style="color:var(--text-muted);font-size:0.75rem;margin-top:6px;">
-                                    تأكد من صحة اسم المستخدم
-                                </div>
-                                <div style="color:var(--text-muted);font-size:0.7rem;margin-top:8px;">
-                                    💡 جرب: @elonmusk أو @BillGates
-                                </div>
+                                <span class="role ${roleClass}">${roleText}</span>
+                                ${actions}
                             </div>
                         `;
-                resultBoxTwitter.classList.add('active');
-                statusTagTwitter.textContent = '❌ غير موجود';
-                statusTagTwitter.className = 'status-tag invalid';
+            }).join('');
 
-                setTimeout(() => {
-                    loadingTwitter.classList.remove('active');
-                    isProcessing = false;
-                    checkBtnTwitter.disabled = false;
-                    btnTextTwitter.textContent = 'بحث';
-                    progressBarTwitter.style.width = '0%';
-                }, 300);
-            }
-        }
-
-        function parseNitterHTML(html, username) {
-            let name = 'غير معروف';
-            const nameMatch = html.match(/<a[^>]*class="profile-card-fullname"[^>]*>([^<]*)<\/a>/);
-            if (nameMatch) name = nameMatch[1].trim();
-
-            let bio = 'غير معروف';
-            const bioMatch = html.match(/<div[^>]*class="profile-bio"[^>]*>([^<]*)<\/div>/);
-            if (bioMatch) bio = bioMatch[1].trim();
-
-            let location = 'غير معروف';
-            const locationMatch = html.match(/<span[^>]*class="profile-location"[^>]*>([^<]*)<\/span>/);
-            if (locationMatch) location = locationMatch[1].trim();
-
-            let joined = 'غير معروف';
-            const joinedMatch = html.match(/<span[^>]*class="profile-joined"[^>]*>([^<]*)<\/span>/);
-            if (joinedMatch) joined = joinedMatch[1].trim();
-
-            let followers = 0;
-            const followersMatch = html.match(/<span[^>]*class="profile-stat-num"[^>]*>([\d,]+)<\/span>/);
-            if (followersMatch) followers = parseInt(followersMatch[1].replace(/,/g, '')) || 0;
-
-            let tweets = 0;
-            const tweetsMatch = html.match(/<span[^>]*class="tweet-stat"[^>]*>([\d,]+)<\/span>/);
-            if (tweetsMatch) tweets = parseInt(tweetsMatch[1].replace(/,/g, '')) || 0;
-
-            let avatar = `https://picsum.photos/seed/${username}/200/200`;
-            const avatarMatch = html.match(/<img[^>]*class="profile-avatar"[^>]*src="([^"]+)"/);
-            if (avatarMatch) avatar = avatarMatch[1];
-
-            const countries = ['السعودية', 'مصر', 'الإمارات', 'الكويت', 'قطر', 'البحرين', 'عمان', 'الأردن', 'لبنان', 'الجزائر',
-                'المغرب', 'تونس', 'ليبيا', 'الولايات المتحدة', 'بريطانيا', 'فرنسا', 'ألمانيا', 'إيطاليا', 'إسبانيا', 'تركيا',
-                'الهند', 'الصين', 'اليابان', 'روسيا', 'البرازيل', 'أستراليا'
-            ];
-            let country = 'غير معروف';
-            for (const c of countries) {
-                if (location.includes(c)) {
-                    country = c;
-                    break;
-                }
+            // Show/hide cohost button
+            const user = state.participants.find(p => p.isSelf);
+            if (user && (user.isHost || user.isCohost)) {
+                cohostPanelBtn.style.display = 'flex';
+            } else {
+                cohostPanelBtn.style.display = 'none';
+                cohostPanel.style.display = 'none';
             }
 
-            return {
-                name: name || username,
-                username: username,
-                bio: bio,
-                location: location,
-                country: country,
-                followers: followers || Math.floor(Math.random() * 10000) + 100,
-                following: 0,
-                tweets: tweets || Math.floor(Math.random() * 5000) + 10,
-                joined: joined || 'غير معروف',
-                verified: false,
-                avatar: avatar,
-                url: `https://x.com/${username}`
-            };
+            statusText.textContent = state.isActive ? 'مباشر 🟢' : 'جاهز';
+            statusBadge.className = `status-badge ${!state.isActive ? 'inactive' : ''}`;
         }
 
-        async function fetchTwitterFallback(username) {
-            const sources = [
-                `https://r.jina.ai/https://x.com/${username}`,
-                `https://api.allorigins.win/raw?url=https://x.com/${username}`
-            ];
-
-            for (const url of sources) {
-                try {
-                    const response = await fetch(url, {
-                        headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
-                    });
-                    if (response.ok) {
-                        const html = await response.text();
-                        return parseNitterHTML(html, username);
-                    }
-                } catch (e) { continue; }
-            }
-            return null;
+        // ===== SHARE FUNCTIONS =====
+        function copyInviteLink() {
+            const link = inviteLinkInput.value;
+            if (!link) { showToast('لا يوجد رابط للمشاركة', 'error'); return; }
+            navigator.clipboard.writeText(link).then(() => {
+                showToast('✅ تم نسخ الرابط', 'success');
+                const btn = inviteLinkInput.nextElementSibling;
+                btn.textContent = '✅ تم';
+                setTimeout(() => btn.textContent = '<i class="fas fa-copy"></i> نسخ', 2000);
+            }).catch(() => {
+                inviteLinkInput.select();
+                document.execCommand('copy');
+                showToast('✅ تم نسخ الرابط', 'success');
+            });
         }
 
-        function displayTwitterResultReal(data, username) {
-            statusTagTwitter.textContent = '✅ موجود';
-            statusTagTwitter.className = 'status-tag twitter';
-
-            const joinedDate = data.joined || 'غير معروف';
-
-            let html = `
-                        <div class="result-item full" style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:8px;">
-                            <div style="display:flex;align-items:center;gap:16px;width:100%;">
-                                <img src="${data.avatar}" alt="Avatar" class="avatar" onerror="this.style.display='none'">
-                                <div style="flex:1;">
-                                    <div style="font-size:1.1rem;font-weight:700;color:var(--text-primary);">
-                                        ${data.name}
-                                        ${data.verified ? ' <span style="color:var(--twitter);"><i class="fas fa-check-circle"></i></span>' : ''}
-                                    </div>
-                                    <div style="color:var(--text-secondary);font-size:0.85rem;font-family:'JetBrains Mono',monospace;">
-                                        @${data.username}
-                                    </div>
-                                </div>
-                                <a href="${data.url}" target="_blank" style="color:var(--twitter);font-size:1.2rem;">
-                                    <i class="fa-brands fa-x-twitter"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="result-item full">
-                            <span class="label">📝 السيرة الذاتية</span>
-                            <span class="value" style="font-size:0.85rem;font-family:'Inter',sans-serif;direction:rtl;text-align:right;">${data.bio}</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="label">📍 الموقع</span>
-                            <span class="value" style="font-family:'Inter',sans-serif;direction:rtl;text-align:right;">${data.location}</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="label">🌍 الدولة</span>
-                            <span class="value gold" style="font-family:'Inter',sans-serif;direction:rtl;text-align:right;">${data.country}</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="label">👥 المتابعون</span>
-                            <span class="value" style="font-family:'Inter',sans-serif;">${data.followers.toLocaleString()}</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="label">📝 التغريدات</span>
-                            <span class="value" style="font-family:'Inter',sans-serif;">${data.tweets.toLocaleString()}</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="label">📅 انضم</span>
-                            <span class="value" style="font-family:'Inter',sans-serif;">${joinedDate}</span>
-                        </div>
-                        <div class="result-item full" style="border-bottom:none;padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
-                            <span class="label" style="font-size:0.65rem;color:var(--text-muted);">
-                                <i class="fas fa-check-circle" style="color:var(--success);"></i> بيانات حقيقية
-                            </span>
-                            <span class="value" style="font-size:0.65rem;color:var(--text-muted);">
-                                <i class="fa-brands fa-x-twitter"></i>
-                            </span>
-                        </div>
-                    `;
-
-            resultContentTwitter.innerHTML = html;
-            resultBoxTwitter.classList.add('active');
+        function shareWhatsApp() {
+            const link = inviteLinkInput.value;
+            if (!link) { showToast('لا يوجد رابط للمشاركة', 'error'); return; }
+            const text = encodeURIComponent(`انضم إلى غرفتي الصوتية: ${link}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
         }
 
-        // ============================================================
-        //  KEYBOARD SHORTCUTS
-        // ============================================================
+        function shareTelegram() {
+            const link = inviteLinkInput.value;
+            if (!link) { showToast('لا يوجد رابط للمشاركة', 'error'); return; }
+            const text = encodeURIComponent(`انضم إلى غرفتي الصوتية: ${link}`);
+            window.open(`https://t.me/share/url?url=${text}`, '_blank');
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                if (currentMode === 'phone' && document.activeElement === phoneInput) validatePhone();
-                else if (currentMode === 'email' && document.activeElement === emailInput) validateEmail();
-                else if (currentMode === 'twitter' && document.activeElement === twitterInput) searchTwitterReal();
+            if (e.key === 'Enter' && document.getElementById('joinModal').classList.contains('active')) {
+                joinRoomWithPassword();
+            }
+            if (e.key === 'Escape') closeJoinModal();
+            if (e.key === ' ' && state.isActive && document.activeElement?.tagName !== 'INPUT') {
+                e.preventDefault();
+                toggleMic();
             }
         });
 
-        // ============================================================
-        //  AUTO DETECT COUNTRY PREFIX
-        // ============================================================
-        phoneInput.addEventListener('input', function() {
-            const val = this.value.trim();
-            if (val.startsWith('+')) {
-                const match = val.match(/^\+(\d{1,3})/);
-                if (match) {
-                    const code = match[1];
-                    const flags = { '20': '🇪🇬', '966': '🇸🇦', '971': '🇦🇪', '965': '🇰🇼', '974': '🇶🇦', '973': '🇧🇭',
-                        '968': '🇴🇲', '962': '🇯🇴', '961': '🇱🇧', '213': '🇩🇿', '212': '🇲🇦', '216': '🇹🇳', '218': '🇱🇾',
-                        '1': '🇺🇸', '44': '🇬🇧', '33': '🇫🇷', '49': '🇩🇪', '39': '🇮🇹', '34': '🇪🇸', '90': '🇹🇷',
-                        '91': '🇮🇳', '86': '🇨🇳', '81': '🇯🇵', '82': '🇰🇷', '7': '🇷🇺', '55': '🇧🇷', '61': '🇦🇺' };
-                    countryPrefix.textContent = flags[code] || '+';
-                }
+        // ===== AUTO-JOIN =====
+        (function autoJoinFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const room = params.get('room');
+            if (room) {
+                setTimeout(() => {
+                    document.getElementById('joinRoomIdInput').value = room;
+                    joinRoomWithPassword();
+                }, 800);
             }
-        });
+        })();
 
-        // ============================================================
-        //  INIT
-        // ============================================================
-        console.log('🐀 The Cook Rat - Intelligence Pro v4.0');
-
-        setTimeout(() => {
-            const loaded = loadLibrary();
-            if (loaded) showToast('🐀 النظام جاهز', 'success');
-            else showToast('⚠️ يعمل في وضع الاحتياطي', 'warning');
-            updateStats();
-        }, 500);
+        // ===== INIT =====
+        console.log('🎤 المساحة الصوتية - مع نظام المساعدين');
+        updateUI();
     </script>
 
 </body>
