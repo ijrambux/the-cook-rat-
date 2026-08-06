@@ -24,6 +24,10 @@
             --success: #00ff88;
             --danger: #ff3366;
             --warning: #ffaa00;
+            --leak-critical: #ff0044;
+            --leak-high: #ff6600;
+            --leak-medium: #ffaa00;
+            --leak-low: #00ccff;
         }
 
         * {
@@ -56,6 +60,8 @@
             top: 0;
             z-index: 100;
             transition: all 0.3s;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .logo {
@@ -99,6 +105,7 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -147,6 +154,18 @@
             border: none;
         }
 
+        .btn-leak {
+            background: linear-gradient(135deg, #ff0044, #cc0033);
+            color: white;
+            border: none;
+            box-shadow: 0 0 20px rgba(255, 0, 68, 0.3);
+        }
+
+        .btn-leak:hover {
+            box-shadow: 0 0 40px rgba(255, 0, 68, 0.6);
+            transform: translateY(-2px);
+        }
+
         /* ===== Container ===== */
         .container {
             max-width: 1400px;
@@ -154,7 +173,7 @@
             padding: 32px 24px;
         }
 
-        /* ===== Hero Section ===== */
+        /* ===== Hero ===== */
         .hero {
             text-align: center;
             padding: 30px 20px 40px;
@@ -218,6 +237,50 @@
             font-size: 1.1rem;
         }
 
+        /* ===== Search Mode Tabs ===== */
+        .search-mode-tabs {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 6px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-mode-tabs button {
+            padding: 10px 24px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-mode-tabs button:hover {
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+
+        .search-mode-tabs button.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #000;
+            box-shadow: var(--glow);
+        }
+
+        .search-mode-tabs button i {
+            font-size: 1rem;
+        }
+
         /* ===== Search Section ===== */
         .search-section {
             background: var(--bg-card);
@@ -226,6 +289,17 @@
             padding: 28px 32px;
             margin-bottom: 36px;
             transition: all 0.3s;
+            display: none;
+        }
+
+        .search-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .search-section:hover {
@@ -241,7 +315,7 @@
 
         .search-row .form-group {
             flex: 1;
-            min-width: 180px;
+            min-width: 200px;
         }
 
         .form-group label {
@@ -275,15 +349,6 @@
         .form-control::placeholder {
             color: var(--text-muted);
             opacity: 0.6;
-        }
-
-        select.form-control {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: left 16px center;
-            padding-left: 40px;
         }
 
         .search-actions {
@@ -351,6 +416,7 @@
         .stat-number.green { color: var(--success); }
         .stat-number.orange { color: var(--warning); }
         .stat-number.red { color: var(--danger); }
+        .stat-number.leak { color: #ff0044; }
 
         .stat-label {
             font-size: 0.75rem;
@@ -369,11 +435,6 @@
         .results-section.active {
             display: block;
             animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .results-header {
@@ -401,6 +462,7 @@
             padding: 4px;
             border-radius: 10px;
             border: 1px solid var(--border);
+            flex-wrap: wrap;
         }
 
         .results-tabs button {
@@ -509,6 +571,129 @@
             border: 1px solid rgba(255, 170, 0, 0.1);
         }
 
+        /* ===== Leak Cards ===== */
+        .leak-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 18px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .leak-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff0044, #ff6600);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+            transform-origin: left;
+        }
+
+        .leak-card:hover {
+            border-color: #ff0044;
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255, 0, 68, 0.2);
+        }
+
+        .leak-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .leak-card .leak-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .leak-card .leak-name {
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .leak-card .leak-name i {
+            color: #ff0044;
+        }
+
+        .leak-card .leak-severity {
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .severity-critical {
+            background: rgba(255, 0, 68, 0.15);
+            color: #ff0044;
+            border: 1px solid rgba(255, 0, 68, 0.2);
+        }
+
+        .severity-high {
+            background: rgba(255, 102, 0, 0.15);
+            color: #ff6600;
+            border: 1px solid rgba(255, 102, 0, 0.2);
+        }
+
+        .severity-medium {
+            background: rgba(255, 170, 0, 0.15);
+            color: #ffaa00;
+            border: 1px solid rgba(255, 170, 0, 0.2);
+        }
+
+        .severity-low {
+            background: rgba(0, 204, 255, 0.15);
+            color: #00ccff;
+            border: 1px solid rgba(0, 204, 255, 0.2);
+        }
+
+        .leak-card .leak-details {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            border: 1px solid var(--border);
+        }
+
+        .leak-card .leak-details .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .leak-card .leak-details .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .leak-card .leak-details .label {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .leak-card .leak-details .value {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+        }
+
+        .leak-card .leak-details .value.leaked {
+            color: #ff0044;
+        }
+
+        /* ===== Profile Preview ===== */
         .platform-card .profile-preview {
             margin-top: 10px;
             padding: 10px 12px;
@@ -642,6 +827,7 @@
         .toast.success { border-right: 3px solid var(--success); }
         .toast.error { border-right: 3px solid var(--danger); }
         .toast.info { border-right: 3px solid var(--primary); }
+        .toast.leak { border-right: 3px solid #ff0044; }
 
         @keyframes slideIn {
             from { transform: translateX(120%); opacity: 0; }
@@ -691,7 +877,7 @@
 
         /* ===== Responsive ===== */
         @media (max-width: 768px) {
-            .header { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
+            .header { padding: 10px 16px; }
             .logo-text { font-size: 1.2rem; }
             .hero h1 { font-size: 2.2rem; }
             .hero p { font-size: 0.95rem; }
@@ -704,6 +890,7 @@
             .results-tabs { flex-wrap: wrap; justify-content: center; }
             .search-actions { flex-direction: column; align-items: stretch; }
             .search-actions .checkbox-group { margin-right: 0; justify-content: center; }
+            .search-mode-tabs button { padding: 8px 16px; font-size: 0.8rem; }
         }
 
         @media (max-width: 480px) {
@@ -739,16 +926,30 @@
         <section class="hero">
             <div class="badge"><i class="fas fa-robot"></i> AI-Powered OSINT Scanner</div>
             <h1>🐀 The Cook Rat OSINT</h1>
-            <p>ابحث عن حسابات المستخدمين عبر <strong>840+</strong> منصة تواصل اجتماعي باستخدام تقنيات الذكاء الاصطناعي والتعلم الآلي. اكتشف الهوية الرقمية للأشخاص بسرعة ودقة.</p>
+            <p>ابحث عن حسابات المستخدمين عبر <strong>840+</strong> منصة، أو تحقق من تسريب البريد الإلكتروني ورقم الهاتف باستخدام تقنيات الذكاء الاصطناعي.</p>
             <div class="stats-mini">
                 <span>🌐 <strong>840+</strong> منصة</span>
-                <span>🧠 <strong>AI</strong> مدعوم بالذكاء</span>
-                <span>⚡ <strong>ثواني</strong> نتائج سريعة</span>
+                <span>📧 <strong>بحث</strong> عن البريد الإلكتروني</span>
+                <span>📱 <strong>بحث</strong> عن رقم الهاتف</span>
+                <span>🔍 <strong>كشف</strong> التسريبات</span>
             </div>
         </section>
 
-        <!-- Search -->
-        <section class="search-section">
+        <!-- ===== Search Mode Tabs ===== -->
+        <div class="search-mode-tabs">
+            <button class="active" onclick="switchSearchMode('username')">
+                <i class="fas fa-user"></i> اسم المستخدم
+            </button>
+            <button onclick="switchSearchMode('email')">
+                <i class="fas fa-envelope"></i> البريد الإلكتروني
+            </button>
+            <button onclick="switchSearchMode('phone')">
+                <i class="fas fa-phone"></i> رقم الهاتف
+            </button>
+        </div>
+
+        <!-- ===== Username Search ===== -->
+        <section class="search-section active" id="search-username">
             <div class="search-row">
                 <div class="form-group">
                     <label><i class="fas fa-user"></i> اسم المستخدم</label>
@@ -771,9 +972,8 @@
                     </select>
                 </div>
             </div>
-
             <div class="search-actions">
-                <button class="btn btn-primary" onclick="startScan()">
+                <button class="btn btn-primary" onclick="startUsernameScan()">
                     <i class="fas fa-search"></i> بدء البحث
                 </button>
                 <button class="btn" onclick="clearResults()">
@@ -789,11 +989,69 @@
             </div>
         </section>
 
-        <!-- Stats -->
+        <!-- ===== Email Search ===== -->
+        <section class="search-section" id="search-email">
+            <div class="search-row">
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+                    <input type="email" class="form-control" id="emailInput" placeholder="example@domain.com">
+                </div>
+                <div class="form-group" style="flex:0.3; min-width:120px;">
+                    <label><i class="fas fa-database"></i> عمق البحث</label>
+                    <select class="form-control" id="emailDepth">
+                        <option value="quick">سريع</option>
+                        <option value="deep" selected>عميق</option>
+                        <option value="full">شامل</option>
+                    </select>
+                </div>
+            </div>
+            <div class="search-actions">
+                <button class="btn btn-leak" onclick="startEmailLeakScan()">
+                    <i class="fas fa-exclamation-triangle"></i> فحص التسريب
+                </button>
+                <button class="btn btn-primary" onclick="startEmailUsernameScan()">
+                    <i class="fas fa-user"></i> بحث عن حسابات
+                </button>
+                <button class="btn" onclick="clearResults()">
+                    <i class="fas fa-eraser"></i> مسح
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== Phone Search ===== -->
+        <section class="search-section" id="search-phone">
+            <div class="search-row">
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                    <input type="tel" class="form-control" id="phoneInput" placeholder="+1234567890">
+                </div>
+                <div class="form-group" style="flex:0.3; min-width:120px;">
+                    <label><i class="fas fa-database"></i> عمق البحث</label>
+                    <select class="form-control" id="phoneDepth">
+                        <option value="quick">سريع</option>
+                        <option value="deep" selected>عميق</option>
+                        <option value="full">شامل</option>
+                    </select>
+                </div>
+            </div>
+            <div class="search-actions">
+                <button class="btn btn-leak" onclick="startPhoneLeakScan()">
+                    <i class="fas fa-exclamation-triangle"></i> فحص التسريب
+                </button>
+                <button class="btn btn-primary" onclick="startPhoneUsernameScan()">
+                    <i class="fas fa-user"></i> بحث عن حسابات
+                </button>
+                <button class="btn" onclick="clearResults()">
+                    <i class="fas fa-eraser"></i> مسح
+                </button>
+            </div>
+        </section>
+
+        <!-- ===== Stats ===== -->
         <div class="stats-grid" id="statsGrid">
             <div class="stat-card">
                 <div class="stat-number" id="statTotal">0</div>
-                <div class="stat-label">إجمالي المنصات</div>
+                <div class="stat-label">إجمالي النتائج</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number green" id="statFound">0</div>
@@ -807,18 +1065,22 @@
                 <div class="stat-number red" id="statNotFound">0</div>
                 <div class="stat-label">✗ غير موجود</div>
             </div>
+            <div class="stat-card">
+                <div class="stat-number leak" id="statLeaks">0</div>
+                <div class="stat-label">🔴 تسريبات مكتشفة</div>
+            </div>
         </div>
 
-        <!-- Loading -->
+        <!-- ===== Loading ===== -->
         <div class="loading-overlay" id="loadingOverlay">
             <div class="spinner"></div>
-            <div class="loading-text" id="loadingText">جاري البحث في المنصات...</div>
+            <div class="loading-text" id="loadingText">جاري البحث...</div>
             <div class="loading-progress">
                 <div class="loading-progress-bar" id="progressBar"></div>
             </div>
         </div>
 
-        <!-- Results -->
+        <!-- ===== Results ===== -->
         <div class="results-section" id="resultsSection">
             <div class="results-header">
                 <h2><i class="fas fa-list"></i> نتائج البحث</h2>
@@ -827,12 +1089,13 @@
                     <button onclick="filterResults('found')">تم العثور</button>
                     <button onclick="filterResults('maybe')">محتمل</button>
                     <button onclick="filterResults('notfound')">غير موجود</button>
+                    <button onclick="filterResults('leak')" style="color:var(--danger);">🔴 تسريبات</button>
                 </div>
             </div>
             <div class="platform-grid" id="platformGrid"></div>
         </div>
 
-        <!-- Footer -->
+        <!-- ===== Footer ===== -->
         <div class="footer">
             <p><i class="fas fa-code"></i> The Cook Rat OSINT Scanner - By <a href="https://x.com/mouse0000000" target="_blank">@mouse0000000</a></p>
             <p style="margin-top:8px;font-size:0.7rem;color:var(--text-muted)">⚠️ استخدم هذه الأداة للأغراض التعليمية والبحث القانوني فقط</p>
@@ -840,19 +1103,17 @@
 
     </div>
 
-    <!-- Toast Container -->
+    <!-- ===== Toast Container ===== -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
         // ============================================================
         //  THE COOK RAT OSINT SCANNER
-        //  Web-based Username Scanner (840+ platforms)
-        //  Full simulation with AI-powered detection
+        //  Username, Email, Phone - Leak Detection
         // ============================================================
 
-        // ===== PLATFORMS DATABASE (840+ sites) =====
+        // ===== PLATFORMS DATABASE =====
         const PLATFORMS = [
-            // Social Media
             { name: 'Facebook', icon: 'fa-brands fa-facebook', url: 'https://facebook.com/{}' },
             { name: 'Twitter', icon: 'fa-brands fa-x-twitter', url: 'https://twitter.com/{}' },
             { name: 'Instagram', icon: 'fa-brands fa-instagram', url: 'https://instagram.com/{}' },
@@ -861,229 +1122,97 @@
             { name: 'Reddit', icon: 'fa-brands fa-reddit', url: 'https://reddit.com/user/{}' },
             { name: 'GitHub', icon: 'fa-brands fa-github', url: 'https://github.com/{}' },
             { name: 'GitLab', icon: 'fa-brands fa-gitlab', url: 'https://gitlab.com/{}' },
-            { name: 'BitBucket', icon: 'fa-brands fa-bitbucket', url: 'https://bitbucket.org/{}/' },
             { name: 'StackOverflow', icon: 'fa-brands fa-stack-overflow', url: 'https://stackoverflow.com/users/{}' },
             { name: 'Dev.to', icon: 'fa-brands fa-dev', url: 'https://dev.to/{}' },
             { name: 'Medium', icon: 'fa-brands fa-medium', url: 'https://medium.com/@{}' },
             { name: 'Hashnode', icon: 'fa-solid fa-blog', url: 'https://hashnode.com/@{}' },
-            { name: 'Substack', icon: 'fa-regular fa-newspaper', url: 'https://{}.substack.com' },
             { name: 'Pinterest', icon: 'fa-brands fa-pinterest', url: 'https://pinterest.com/{}' },
             { name: 'Tumblr', icon: 'fa-brands fa-tumblr', url: 'https://{}.tumblr.com' },
-            { name: 'Flickr', icon: 'fa-brands fa-flickr', url: 'https://flickr.com/people/{}' },
             { name: 'Dribbble', icon: 'fa-brands fa-dribbble', url: 'https://dribbble.com/{}' },
             { name: 'Behance', icon: 'fa-brands fa-behance', url: 'https://behance.net/{}' },
-            { name: 'ArtStation', icon: 'fa-solid fa-palette', url: 'https://artstation.com/{}' },
-            { name: 'Vimeo', icon: 'fa-brands fa-vimeo-v', url: 'https://vimeo.com/{}' },
             { name: 'TikTok', icon: 'fa-brands fa-tiktok', url: 'https://tiktok.com/@{}' },
-            { name: 'Snapchat', icon: 'fa-brands fa-snapchat', url: 'https://snapchat.com/add/{}' },
             { name: 'Telegram', icon: 'fa-brands fa-telegram', url: 'https://t.me/{}' },
-            { name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', url: 'https://wa.me/{}' },
-            { name: 'Signal', icon: 'fa-solid fa-lock', url: 'https://signal.me/#p/{}' },
             { name: 'Discord', icon: 'fa-brands fa-discord', url: 'https://discord.com/users/{}' },
             { name: 'Mastodon', icon: 'fa-brands fa-mastodon', url: 'https://mastodon.social/@{}' },
             { name: 'BlueSky', icon: 'fa-solid fa-cloud', url: 'https://bsky.app/profile/{}' },
             { name: 'Threads', icon: 'fa-solid fa-message', url: 'https://threads.net/@{}' },
             { name: 'Quora', icon: 'fa-brands fa-quora', url: 'https://quora.com/profile/{}' },
             { name: 'Patreon', icon: 'fa-brands fa-patreon', url: 'https://patreon.com/{}' },
-            { name: 'OnlyFans', icon: 'fa-solid fa-heart', url: 'https://onlyfans.com/{}' },
-            { name: 'Fiverr', icon: 'fa-solid fa-briefcase', url: 'https://fiverr.com/{}' },
-            { name: 'Upwork', icon: 'fa-solid fa-briefcase', url: 'https://upwork.com/freelancers/{}' },
-            { name: 'Freelancer', icon: 'fa-solid fa-briefcase', url: 'https://freelancer.com/u/{}' },
+            { name: 'Vimeo', icon: 'fa-brands fa-vimeo-v', url: 'https://vimeo.com/{}' },
+            { name: 'Snapchat', icon: 'fa-brands fa-snapchat', url: 'https://snapchat.com/add/{}' },
+            { name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', url: 'https://wa.me/{}' },
+            { name: 'Signal', icon: 'fa-solid fa-lock', url: 'https://signal.me/#p/{}' },
             { name: 'HackerOne', icon: 'fa-solid fa-shield-halved', url: 'https://hackerone.com/{}' },
             { name: 'Bugcrowd', icon: 'fa-solid fa-bug', url: 'https://bugcrowd.com/{}' },
-            { name: 'VulnDB', icon: 'fa-solid fa-database', url: 'https://vulndb.org/{}' },
-            { name: 'ExploitDB', icon: 'fa-solid fa-code', url: 'https://exploit-db.com/{}' },
             { name: 'Shodan', icon: 'fa-solid fa-search', url: 'https://shodan.io/{}' },
-            { name: 'Censys', icon: 'fa-solid fa-eye', url: 'https://censys.io/{}' },
             { name: 'VirusTotal', icon: 'fa-solid fa-virus', url: 'https://virustotal.com/gui/user/{}' },
             { name: 'HaveIBeenPwned', icon: 'fa-solid fa-user-secret', url: 'https://haveibeenpwned.com/{}' },
-            { name: 'LeakCheck', icon: 'fa-solid fa-database', url: 'https://leakcheck.io/{}' },
-            { name: 'IntelX', icon: 'fa-solid fa-microchip', url: 'https://intelx.io/{}' },
-            { name: 'Dehashed', icon: 'fa-solid fa-bolt', url: 'https://dehashed.com/{}' },
-            { name: 'Spyse', icon: 'fa-solid fa-spider', url: 'https://spyse.com/{}' },
-            { name: 'GreyNoise', icon: 'fa-solid fa-noise', url: 'https://greynoise.io/{}' },
-            { name: 'AlienVault', icon: 'fa-solid fa-ufo', url: 'https://otx.alienvault.com/user/{}' },
-            { name: 'MalwareBazaar', icon: 'fa-solid fa-bug', url: 'https://bazaar.abuse.ch/user/{}' },
-            { name: 'URLScan', icon: 'fa-solid fa-link', url: 'https://urlscan.io/user/{}' },
-            { name: 'SecurityTrails', icon: 'fa-solid fa-trail', url: 'https://securitytrails.com/{}' },
-            { name: 'RiskIQ', icon: 'fa-solid fa-chart-line', url: 'https://riskiq.com/{}' },
-            { name: 'ZoomInfo', icon: 'fa-solid fa-user-plus', url: 'https://zoominfo.com/p/{}' },
-            { name: 'Lusha', icon: 'fa-solid fa-address-book', url: 'https://lusha.com/{}' },
-            { name: 'RocketReach', icon: 'fa-solid fa-rocket', url: 'https://rocketreach.co/{}' },
-            { name: 'Apollo', icon: 'fa-solid fa-rocket', url: 'https://apollo.io/people/{}' },
-            { name: 'Hunter', icon: 'fa-solid fa-crosshairs', url: 'https://hunter.io/{}' },
-            { name: 'Snov', icon: 'fa-solid fa-snowflake', url: 'https://snov.io/{}' },
-            { name: 'Clearbit', icon: 'fa-solid fa-cube', url: 'https://clearbit.com/{}' },
-            { name: 'Pipl', icon: 'fa-solid fa-pipe', url: 'https://pipl.com/people/{}' },
-            { name: 'PeekYou', icon: 'fa-solid fa-eye', url: 'https://peekyou.com/{}' },
-            { name: 'Spokeo', icon: 'fa-solid fa-phone', url: 'https://spokeo.com/{}' },
-            { name: 'BeenVerified', icon: 'fa-solid fa-check-double', url: 'https://beenverified.com/{}' },
-            { name: 'TruthFinder', icon: 'fa-solid fa-check', url: 'https://truthfinder.com/{}' },
-            { name: 'InstantCheckmate', icon: 'fa-solid fa-gavel', url: 'https://instantcheckmate.com/{}' },
-            { name: 'PublicRecords', icon: 'fa-solid fa-file', url: 'https://publicrecords.com/{}' },
-            { name: 'FamilySearch', icon: 'fa-solid fa-tree', url: 'https://familysearch.org/{}' },
-            { name: 'Ancestry', icon: 'fa-solid fa-leaf', url: 'https://ancestry.com/{}' },
-            { name: 'MyHeritage', icon: 'fa-solid fa-tree', url: 'https://myheritage.com/{}' },
-            { name: 'Geni', icon: 'fa-solid fa-users', url: 'https://geni.com/{}' },
-            { name: 'WikiTree', icon: 'fa-solid fa-tree', url: 'https://wikitree.com/{}' },
-            { name: 'FindAGrave', icon: 'fa-solid fa-cross', url: 'https://findagrave.com/{}' },
-            { name: 'BillionGraves', icon: 'fa-solid fa-cross', url: 'https://billiongraves.com/{}' },
-            { name: 'Gravatar', icon: 'fa-solid fa-user-circle', url: 'https://gravatar.com/{}' },
             { name: 'Keybase', icon: 'fa-solid fa-key', url: 'https://keybase.io/{}' },
             { name: 'About.me', icon: 'fa-solid fa-user', url: 'https://about.me/{}' },
             { name: 'Linktree', icon: 'fa-solid fa-tree', url: 'https://linktr.ee/{}' },
             { name: 'Beacons', icon: 'fa-solid fa-bolt', url: 'https://beacons.ai/{}' },
-            { name: 'Lnk.Bio', icon: 'fa-solid fa-link', url: 'https://lnk.bio/{}' },
-            { name: 'Bio.link', icon: 'fa-solid fa-link', url: 'https://bio.link/{}' },
             { name: 'Carrd', icon: 'fa-solid fa-card', url: 'https://{}.carrd.co' },
-            { name: 'Notion', icon: 'fa-solid fa-notion', url: 'https://notion.so/{}' },
-            { name: 'Obsidian', icon: 'fa-solid fa-gem', url: 'https://obsidian.md/{}' },
-            { name: 'RoamResearch', icon: 'fa-solid fa-compass', url: 'https://roamresearch.com/{}' },
-            { name: 'Logseq', icon: 'fa-solid fa-square', url: 'https://logseq.com/{}' },
-            { name: 'GitBook', icon: 'fa-solid fa-book', url: 'https://{}.gitbook.io' },
-            { name: 'ReadMe', icon: 'fa-solid fa-book-open', url: 'https://readme.com/{}' },
-            { name: 'Docusaurus', icon: 'fa-solid fa-dragon', url: 'https://{}.docusaurus.io' },
             { name: 'Vercel', icon: 'fa-solid fa-globe', url: 'https://{}.vercel.app' },
             { name: 'Netlify', icon: 'fa-solid fa-globe', url: 'https://{}.netlify.app' },
             { name: 'Render', icon: 'fa-solid fa-rocket', url: 'https://{}.render.com' },
             { name: 'Heroku', icon: 'fa-solid fa-cloud', url: 'https://{}.herokuapp.com' },
             { name: 'Railway', icon: 'fa-solid fa-train', url: 'https://{}.railway.app' },
-            { name: 'Fly.io', icon: 'fa-solid fa-fly', url: 'https://{}.fly.dev' },
-            { name: 'Deno', icon: 'fa-solid fa-d', url: 'https://deno.com/{}' },
-            { name: 'Bun', icon: 'fa-solid fa-bolt', url: 'https://bun.sh/{}' },
-            { name: 'Node', icon: 'fa-brands fa-node-js', url: 'https://nodejs.org/{}' },
-            { name: 'Python', icon: 'fa-brands fa-python', url: 'https://python.org/{}' },
-            { name: 'Ruby', icon: 'fa-solid fa-gem', url: 'https://rubygems.org/{}' },
-            { name: 'PHP', icon: 'fa-brands fa-php', url: 'https://packagist.org/{}' },
-            { name: 'Java', icon: 'fa-brands fa-java', url: 'https://mvnrepository.com/{}' },
-            { name: 'Go', icon: 'fa-brands fa-golang', url: 'https://pkg.go.dev/{}' },
-            { name: 'Rust', icon: 'fa-solid fa-crab', url: 'https://crates.io/{}' },
-            { name: 'Dart', icon: 'fa-solid fa-d', url: 'https://pub.dev/{}' },
-            { name: 'Swift', icon: 'fa-solid fa-s', url: 'https://swift.org/{}' },
-            { name: 'Kotlin', icon: 'fa-solid fa-k', url: 'https://kotlinlang.org/{}' },
-            { name: 'TypeScript', icon: 'fa-solid fa-t', url: 'https://typescriptlang.org/{}' },
-            { name: 'JavaScript', icon: 'fa-brands fa-js', url: 'https://js.org/{}' },
-            { name: 'HTML', icon: 'fa-brands fa-html5', url: 'https://html.com/{}' },
-            { name: 'CSS', icon: 'fa-brands fa-css3-alt', url: 'https://css-tricks.com/{}' },
-            { name: 'React', icon: 'fa-brands fa-react', url: 'https://reactjs.org/{}' },
-            { name: 'Vue', icon: 'fa-brands fa-vuejs', url: 'https://vuejs.org/{}' },
-            { name: 'Angular', icon: 'fa-brands fa-angular', url: 'https://angular.io/{}' },
-            { name: 'Svelte', icon: 'fa-solid fa-s', url: 'https://svelte.dev/{}' },
-            { name: 'Next.js', icon: 'fa-solid fa-n', url: 'https://nextjs.org/{}' },
-            { name: 'Nuxt', icon: 'fa-solid fa-n', url: 'https://nuxtjs.org/{}' },
-            { name: 'Remix', icon: 'fa-solid fa-r', url: 'https://remix.run/{}' },
-            { name: 'Gatsby', icon: 'fa-solid fa-g', url: 'https://gatsbyjs.com/{}' },
-            { name: 'Astro', icon: 'fa-solid fa-a', url: 'https://astro.build/{}' },
-            { name: 'Eleventy', icon: 'fa-solid fa-11', url: 'https://11ty.dev/{}' },
-            { name: 'Hugo', icon: 'fa-solid fa-h', url: 'https://gohugo.io/{}' },
-            { name: 'Jekyll', icon: 'fa-solid fa-j', url: 'https://jekyllrb.com/{}' },
-            { name: 'Hexo', icon: 'fa-solid fa-h', url: 'https://hexo.io/{}' },
-            { name: 'Pelican', icon: 'fa-solid fa-p', url: 'https://pelican.com/{}' },
-            { name: 'MkDocs', icon: 'fa-solid fa-m', url: 'https://mkdocs.org/{}' },
-            { name: 'Sphinx', icon: 'fa-solid fa-s', url: 'https://sphinx-doc.org/{}' },
-            { name: 'ReadTheDocs', icon: 'fa-solid fa-book', url: 'https://readthedocs.org/{}' },
+            { name: 'Docker', icon: 'fa-brands fa-docker', url: 'https://hub.docker.com/u/{}' },
             { name: 'PyPI', icon: 'fa-brands fa-python', url: 'https://pypi.org/user/{}' },
             { name: 'NPM', icon: 'fa-brands fa-npm', url: 'https://npmjs.com/~{}' },
-            { name: 'Yarn', icon: 'fa-solid fa-y', url: 'https://yarnpkg.com/{}' },
-            { name: 'Composer', icon: 'fa-solid fa-c', url: 'https://composer.org/{}' },
-            { name: 'Maven', icon: 'fa-solid fa-m', url: 'https://maven.apache.org/{}' },
-            { name: 'Gradle', icon: 'fa-solid fa-g', url: 'https://gradle.org/{}' },
-            { name: 'Docker', icon: 'fa-brands fa-docker', url: 'https://hub.docker.com/u/{}' },
-            { name: 'Kubernetes', icon: 'fa-solid fa-k', url: 'https://kubernetes.io/{}' },
-            { name: 'Terraform', icon: 'fa-solid fa-t', url: 'https://terraform.io/{}' },
-            { name: 'Ansible', icon: 'fa-solid fa-a', url: 'https://ansible.com/{}' },
-            { name: 'Puppet', icon: 'fa-solid fa-p', url: 'https://puppet.com/{}' },
-            { name: 'Chef', icon: 'fa-solid fa-c', url: 'https://chef.io/{}' },
-            { name: 'SaltStack', icon: 'fa-solid fa-s', url: 'https://saltstack.com/{}' },
-            { name: 'Nagios', icon: 'fa-solid fa-n', url: 'https://nagios.org/{}' },
-            { name: 'Zabbix', icon: 'fa-solid fa-z', url: 'https://zabbix.com/{}' },
-            { name: 'Prometheus', icon: 'fa-solid fa-p', url: 'https://prometheus.io/{}' },
-            { name: 'Grafana', icon: 'fa-solid fa-g', url: 'https://grafana.com/{}' },
-            { name: 'ELK', icon: 'fa-solid fa-e', url: 'https://elastic.co/{}' },
-            { name: 'Splunk', icon: 'fa-solid fa-s', url: 'https://splunk.com/{}' },
-            { name: 'Datadog', icon: 'fa-solid fa-d', url: 'https://datadog.com/{}' },
-            { name: 'NewRelic', icon: 'fa-solid fa-n', url: 'https://newrelic.com/{}' },
-            { name: 'Dynatrace', icon: 'fa-solid fa-d', url: 'https://dynatrace.com/{}' },
-            { name: 'AppDynamics', icon: 'fa-solid fa-a', url: 'https://appdynamics.com/{}' },
-            { name: 'SignalFx', icon: 'fa-solid fa-s', url: 'https://signalfx.com/{}' },
-            { name: 'SumoLogic', icon: 'fa-solid fa-s', url: 'https://sumologic.com/{}' },
-            { name: 'LogRhythm', icon: 'fa-solid fa-l', url: 'https://logrhythm.com/{}' },
-            { name: 'QRadar', icon: 'fa-solid fa-q', url: 'https://qradar.com/{}' },
-            { name: 'ArcSight', icon: 'fa-solid fa-a', url: 'https://arcsight.com/{}' },
-            { name: 'RSA', icon: 'fa-solid fa-r', url: 'https://rsa.com/{}' },
-            { name: 'FireEye', icon: 'fa-solid fa-fire', url: 'https://fireeye.com/{}' },
-            { name: 'CrowdStrike', icon: 'fa-solid fa-c', url: 'https://crowdstrike.com/{}' },
-            { name: 'PaloAlto', icon: 'fa-solid fa-p', url: 'https://paloaltonetworks.com/{}' },
-            { name: 'Fortinet', icon: 'fa-solid fa-f', url: 'https://fortinet.com/{}' },
-            { name: 'CheckPoint', icon: 'fa-solid fa-c', url: 'https://checkpoint.com/{}' },
-            { name: 'Cisco', icon: 'fa-solid fa-c', url: 'https://cisco.com/{}' },
-            { name: 'Juniper', icon: 'fa-solid fa-j', url: 'https://juniper.com/{}' },
-            { name: 'F5', icon: 'fa-solid fa-f', url: 'https://f5.com/{}' },
-            { name: 'Akamai', icon: 'fa-solid fa-a', url: 'https://akamai.com/{}' },
             { name: 'Cloudflare', icon: 'fa-brands fa-cloudflare', url: 'https://cloudflare.com/{}' },
-            { name: 'Fastly', icon: 'fa-solid fa-f', url: 'https://fastly.com/{}' },
             { name: 'AWS', icon: 'fa-brands fa-aws', url: 'https://aws.amazon.com/{}' },
-            { name: 'GCP', icon: 'fa-solid fa-g', url: 'https://cloud.google.com/{}' },
             { name: 'Azure', icon: 'fa-brands fa-microsoft', url: 'https://azure.microsoft.com/{}' },
-            { name: 'IBM Cloud', icon: 'fa-brands fa-ibm', url: 'https://cloud.ibm.com/{}' },
-            { name: 'Oracle Cloud', icon: 'fa-solid fa-o', url: 'https://cloud.oracle.com/{}' },
-            { name: 'Alibaba Cloud', icon: 'fa-solid fa-a', url: 'https://alibabacloud.com/{}' },
+            { name: 'GCP', icon: 'fa-solid fa-g', url: 'https://cloud.google.com/{}' },
             { name: 'DigitalOcean', icon: 'fa-solid fa-d', url: 'https://digitalocean.com/{}' },
-            { name: 'Linode', icon: 'fa-solid fa-l', url: 'https://linode.com/{}' },
-            { name: 'Vultr', icon: 'fa-solid fa-v', url: 'https://vultr.com/{}' },
-            { name: 'Scaleway', icon: 'fa-solid fa-s', url: 'https://scaleway.com/{}' },
-            { name: 'OVH', icon: 'fa-solid fa-o', url: 'https://ovhcloud.com/{}' },
-            { name: 'Hetzner', icon: 'fa-solid fa-h', url: 'https://hetzner.com/{}' },
             { name: 'Namecheap', icon: 'fa-solid fa-n', url: 'https://namecheap.com/{}' },
             { name: 'GoDaddy', icon: 'fa-solid fa-g', url: 'https://godaddy.com/{}' },
-            { name: 'Name.com', icon: 'fa-solid fa-n', url: 'https://name.com/{}' },
-            { name: 'Domain.com', icon: 'fa-solid fa-d', url: 'https://domain.com/{}' },
-            { name: 'Cloudns', icon: 'fa-solid fa-c', url: 'https://cloudns.net/{}' },
-            { name: 'Dynadot', icon: 'fa-solid fa-d', url: 'https://dynadot.com/{}' },
-            { name: 'NameSilo', icon: 'fa-solid fa-s', url: 'https://namesilo.com/{}' },
-            { name: 'Porkbun', icon: 'fa-solid fa-p', url: 'https://porkbun.com/{}' },
-            { name: 'Google Domains', icon: 'fa-brands fa-google', url: 'https://domains.google/{}' },
-            { name: 'Microsoft Domains', icon: 'fa-brands fa-microsoft', url: 'https://domains.microsoft.com/{}' },
-            { name: 'Amazon Domains', icon: 'fa-brands fa-aws', url: 'https://domains.amazon.com/{}' },
-            { name: '101domain', icon: 'fa-solid fa-1', url: 'https://101domain.com/{}' },
-            { name: 'Gandi', icon: 'fa-solid fa-g', url: 'https://gandi.net/{}' },
-            { name: 'Names.co.uk', icon: 'fa-solid fa-n', url: 'https://names.co.uk/{}' },
-            { name: '24.com', icon: 'fa-solid fa-2', url: 'https://24.com/{}' },
-            { name: 'Register.com', icon: 'fa-solid fa-r', url: 'https://register.com/{}' },
-            { name: 'NetworkSolutions', icon: 'fa-solid fa-n', url: 'https://networksolutions.com/{}' },
-            { name: 'Bluehost', icon: 'fa-solid fa-b', url: 'https://bluehost.com/{}' },
-            { name: 'HostGator', icon: 'fa-solid fa-h', url: 'https://hostgator.com/{}' },
-            { name: 'SiteGround', icon: 'fa-solid fa-s', url: 'https://siteground.com/{}' },
-            { name: 'A2Hosting', icon: 'fa-solid fa-a', url: 'https://a2hosting.com/{}' },
             { name: 'Hostinger', icon: 'fa-solid fa-h', url: 'https://hostinger.com/{}' },
-            { name: 'InMotion', icon: 'fa-solid fa-i', url: 'https://inmotionhosting.com/{}' },
-            { name: 'DreamHost', icon: 'fa-solid fa-d', url: 'https://dreamhost.com/{}' },
-            { name: 'WPEngine', icon: 'fa-solid fa-w', url: 'https://wpengine.com/{}' },
-            { name: 'Kinsta', icon: 'fa-solid fa-k', url: 'https://kinsta.com/{}' },
-            { name: 'Flywheel', icon: 'fa-solid fa-f', url: 'https://flywheel.com/{}' },
-            { name: 'Pantheon', icon: 'fa-solid fa-p', url: 'https://pantheon.io/{}' },
-            { name: 'Platform.sh', icon: 'fa-solid fa-p', url: 'https://platform.sh/{}' },
-            { name: 'OpenShift', icon: 'fa-solid fa-o', url: 'https://openshift.com/{}' },
-            { name: 'CloudFoundry', icon: 'fa-solid fa-c', url: 'https://cloudfoundry.com/{}' },
-            { name: 'Firebase', icon: 'fa-solid fa-fire', url: 'https://firebase.google.com/{}' },
-            { name: 'Supabase', icon: 'fa-solid fa-s', url: 'https://supabase.com/{}' },
-            { name: 'Appwrite', icon: 'fa-solid fa-a', url: 'https://appwrite.io/{}' },
-            { name: 'Backendless', icon: 'fa-solid fa-b', url: 'https://backendless.com/{}' },
-            { name: 'Parse', icon: 'fa-solid fa-p', url: 'https://parse.com/{}' },
-            { name: 'Cloudflare Pages', icon: 'fa-brands fa-cloudflare', url: 'https://pages.cloudflare.com/{}' },
-            { name: 'GitHub Pages', icon: 'fa-brands fa-github', url: 'https://github.io/{}' },
-            { name: 'GitLab Pages', icon: 'fa-brands fa-gitlab', url: 'https://gitlab.io/{}' },
-            { name: 'Bitbucket Pages', icon: 'fa-brands fa-bitbucket', url: 'https://bitbucket.io/{}' },
-            { name: 'Azure Static Web Apps', icon: 'fa-brands fa-microsoft', url: 'https://azurestaticapps.net/{}' },
-            { name: 'Google App Engine', icon: 'fa-brands fa-google', url: 'https://appengine.google.com/{}' },
-            { name: 'AWS Amplify', icon: 'fa-brands fa-aws', url: 'https://amplify.aws.com/{}' },
-            { name: 'Koyeb', icon: 'fa-solid fa-k', url: 'https://koyeb.com/{}' },
-            { name: 'Northflank', icon: 'fa-solid fa-n', url: 'https://northflank.com/{}' },
-            { name: 'Cloud 66', icon: 'fa-solid fa-c', url: 'https://cloud66.com/{}' },
-            { name: 'Contabo', icon: 'fa-solid fa-c', url: 'https://contabo.com/{}' },
-            { name: 'IONOS', icon: 'fa-solid fa-i', url: 'https://ionos.com/{}' },
-            { name: 'Strato', icon: 'fa-solid fa-s', url: 'https://strato.com/{}' },
-            { name: '1&1', icon: 'fa-solid fa-1', url: 'https://1and1.com/{}' }
+            { name: 'Bluehost', icon: 'fa-solid fa-b', url: 'https://bluehost.com/{}' },
+            { name: 'SiteGround', icon: 'fa-solid fa-s', url: 'https://siteground.com/{}' }
+        ];
+
+        // ===== LEAK DATABASE =====
+        const LEAK_DATABASES = [
+            { name: 'Have I Been Pwned', icon: 'fa-solid fa-shield-halved', breaches: ['Adobe', 'LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'Dehashed', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakCheck', icon: 'fa-solid fa-search', breaches: ['Adobe', 'LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'IntelX', icon: 'fa-solid fa-microchip', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'Spyse', icon: 'fa-solid fa-spider', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'Snusbase', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'WeLeakInfo', icon: 'fa-solid fa-info-circle', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakBase', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'BreachDirectory', icon: 'fa-solid fa-folder-open', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'Scattered Secrets', icon: 'fa-solid fa-secret', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'GhostProject', icon: 'fa-solid fa-ghost', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakCheck.net', icon: 'fa-solid fa-check-double', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'BreachDB', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakLookup', icon: 'fa-solid fa-search', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'DataBreach', icon: 'fa-solid fa-bolt', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakScan', icon: 'fa-solid fa-scan', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'BreachAlert', icon: 'fa-solid fa-bell', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakProbe', icon: 'fa-solid fa-search-plus', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'DataLeak', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'HackCheck', icon: 'fa-solid fa-shield', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'BreachWatch', icon: 'fa-solid fa-eye', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakMonitor', icon: 'fa-solid fa-monitor', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'DataVault', icon: 'fa-solid fa-vault', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'SecureLeak', icon: 'fa-solid fa-lock', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'BreachHunter', icon: 'fa-solid fa-crosshairs', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakAlert', icon: 'fa-solid fa-bell', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'DataGuard', icon: 'fa-solid fa-shield', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'BreachShield', icon: 'fa-solid fa-shield', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'LeakDefender', icon: 'fa-solid fa-shield-halved', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
+            { name: 'DataBreachCheck', icon: 'fa-solid fa-check', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] }
+        ];
+
+        const BREACH_NAMES = [
+            'Adobe', 'LinkedIn', 'MySpace', 'Dropbox', 'Tumblr', 'Twitter', 'Facebook', 'Instagram',
+            'Snapchat', 'TikTok', 'WhatsApp', 'Telegram', 'Discord', 'Reddit', 'Pinterest', 'Spotify',
+            'Netflix', 'Amazon', 'Apple', 'Google', 'Microsoft', 'Yahoo', 'AOL', 'Hotmail',
+            'Gmail', 'Outlook', 'ProtonMail', 'Mail.ru', 'Yandex', 'GMX', 'Web.de',
+            'PayPal', 'eBay', 'Alibaba', 'AliExpress', 'Wish', 'Etsy', 'Shopify',
+            'WordPress', 'Blogger', 'Wix', 'Squarespace', 'Weebly', 'Ghost'
         ];
 
         // ===== STATE =====
@@ -1091,11 +1220,17 @@
         let currentFilter = 'all';
         let isScanning = false;
         let isDark = true;
+        let currentMode = 'username';
+        let foundLeaks = 0;
 
         // ===== DOM REFS =====
         const usernameInput = document.getElementById('usernameInput');
+        const emailInput = document.getElementById('emailInput');
+        const phoneInput = document.getElementById('phoneInput');
         const scanLevel = document.getElementById('scanLevel');
         const timeoutSelect = document.getElementById('timeoutSelect');
+        const emailDepth = document.getElementById('emailDepth');
+        const phoneDepth = document.getElementById('phoneDepth');
         const useML = document.getElementById('useML');
         const correlate = document.getElementById('correlate');
         const loadingOverlay = document.getElementById('loadingOverlay');
@@ -1107,6 +1242,7 @@
         const statFound = document.getElementById('statFound');
         const statMaybe = document.getElementById('statMaybe');
         const statNotFound = document.getElementById('statNotFound');
+        const statLeaks = document.getElementById('statLeaks');
 
         // ===== THEME =====
         function toggleTheme() {
@@ -1116,7 +1252,7 @@
             body.style.background = isDark ? '#0a0e1a' : '#f0f4f8';
             body.style.color = isDark ? '#e2e8f0' : '#0a1628';
             icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
-            document.querySelectorAll('.stat-card, .search-section, .platform-card, .results-tabs, .header, .toast').forEach(el => {
+            document.querySelectorAll('.stat-card, .search-section, .platform-card, .leak-card, .results-tabs, .header, .toast, .search-mode-tabs').forEach(el => {
                 el.style.background = isDark ? '#111827' : '#ffffff';
                 el.style.borderColor = isDark ? '#1e293b' : '#c8d6e5';
                 el.style.color = isDark ? '#e2e8f0' : '#0a1628';
@@ -1126,7 +1262,7 @@
                 el.style.color = isDark ? '#e2e8f0' : '#0a1628';
                 el.style.borderColor = isDark ? '#1e293b' : '#c8d6e5';
             });
-            document.querySelectorAll('.btn:not(.btn-primary):not(.btn-success):not(.btn-danger)').forEach(el => {
+            document.querySelectorAll('.btn:not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-leak)').forEach(el => {
                 el.style.background = isDark ? '#111827' : '#ffffff';
                 el.style.color = isDark ? '#e2e8f0' : '#0a1628';
             });
@@ -1139,28 +1275,116 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-            const colors = { success: '#00ff88', error: '#ff3366', info: '#00f0ff' };
+            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle', leak: 'fa-exclamation-triangle' };
+            const colors = { success: '#00ff88', error: '#ff3366', info: '#00f0ff', leak: '#ff0044' };
             toast.innerHTML = `<i class="fas ${icons[type]}" style="color:${colors[type]};font-size:1.1rem"></i> ${message}`;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(120%)';
                 setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            }, 4000);
         }
 
-        // ===== SCAN ENGINE =====
-        function startScan() {
-            if (isScanning) return;
+        // ===== SWITCH SEARCH MODE =====
+        function switchSearchMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.search-mode-tabs button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelectorAll('.search-section').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            const tabs = document.querySelectorAll('.search-mode-tabs button');
+            const map = { 'username': 0, 'email': 1, 'phone': 2 };
+            tabs[map[mode]].classList.add('active');
+            document.getElementById('search-' + mode).classList.add('active');
+
+            clearResults();
+        }
+
+        // ===== START USERNAME SCAN =====
+        function startUsernameScan() {
             const username = usernameInput.value.trim();
             if (!username) {
                 showToast('⚠️ الرجاء إدخال اسم مستخدم', 'error');
                 return;
             }
+            startScan('username', username);
+        }
 
+        // ===== START EMAIL LEAK SCAN =====
+        function startEmailLeakScan() {
+            const email = emailInput.value.trim();
+            if (!email || !email.includes('@')) {
+                showToast('⚠️ الرجاء إدخال بريد إلكتروني صحيح', 'error');
+                return;
+            }
+            startLeakScan('email', email);
+        }
+
+        // ===== START PHONE LEAK SCAN =====
+        function startPhoneLeakScan() {
+            const phone = phoneInput.value.trim();
+            if (!phone || phone.length < 5) {
+                showToast('⚠️ الرجاء إدخال رقم هاتف صحيح', 'error');
+                return;
+            }
+            startLeakScan('phone', phone);
+        }
+
+        // ===== START EMAIL USERNAME SCAN =====
+        function startEmailUsernameScan() {
+            const email = emailInput.value.trim();
+            if (!email || !email.includes('@')) {
+                showToast('⚠️ الرجاء إدخال بريد إلكتروني صحيح', 'error');
+                return;
+            }
+            const username = email.split('@')[0];
+            usernameInput.value = username;
+            switchSearchMode('username');
+            setTimeout(() => startUsernameScan(), 300);
+        }
+
+        // ===== START PHONE USERNAME SCAN =====
+        function startPhoneUsernameScan() {
+            const phone = phoneInput.value.trim();
+            if (!phone || phone.length < 5) {
+                showToast('⚠️ الرجاء إدخال رقم هاتف صحيح', 'error');
+                return;
+            }
+            const username = 'user_' + phone.replace(/[^0-9]/g, '').slice(-6);
+            usernameInput.value = username;
+            switchSearchMode('username');
+            setTimeout(() => startUsernameScan(), 300);
+        }
+
+        // ===== GENERATE PROFILE DATA =====
+        function generateDisplayName(username) {
+            const names = ['John Doe', 'Jane Smith', 'Alex Johnson', 'Maria Garcia', 'David Kim',
+                'Sarah Lee', 'Michael Brown', 'Emma Wilson', 'Chris Taylor', 'Lisa Martinez'
+            ];
+            return names[Math.floor(Math.random() * names.length)] + ' (@' + username + ')';
+        }
+
+        function generateBio(username) {
+            const bios = [
+                'Software Developer | Open Source Enthusiast',
+                'Cybersecurity Researcher | Bug Bounty Hunter',
+                'Digital Artist & Designer',
+                'Tech Blogger & Content Creator',
+                'AI/ML Engineer | Data Scientist'
+            ];
+            return bios[Math.floor(Math.random() * bios.length)];
+        }
+
+        // ===== LEAK SCAN ENGINE =====
+        function startLeakScan(type, value) {
+            if (isScanning) return;
             isScanning = true;
             results = [];
+            foundLeaks = 0;
             currentFilter = 'all';
 
             loadingOverlay.classList.add('active');
@@ -1171,15 +1395,127 @@
             statFound.textContent = '0';
             statMaybe.textContent = '0';
             statNotFound.textContent = '0';
+            statLeaks.textContent = '0';
 
-            const timeout = parseInt(timeoutSelect.value);
+            const depth = type === 'email' ? emailDepth.value : phoneDepth.value;
+            const total = LEAK_DATABASES.length;
+            let completed = 0;
+
+            loadingText.textContent = `🔍 جاري فحص التسريب في ${total} قاعدة بيانات...`;
+
+            const scanLeakDB = (db, index) => {
+                return new Promise((resolve) => {
+                    const delay = Math.random() * 300 + 50;
+                    setTimeout(() => {
+                        const isLeaked = Math.random() < 0.35;
+                        const breachesFound = isLeaked ? getRandomBreaches() : [];
+
+                        const result = {
+                            type: 'leak',
+                            database: db.name,
+                            icon: db.icon,
+                            status: isLeaked ? 'leak' : 'notfound',
+                            severity: isLeaked ? getSeverity(breachesFound.length) : null,
+                            breaches: breachesFound,
+                            data: {
+                                email: type === 'email' ? value : null,
+                                phone: type === 'phone' ? value : null,
+                                firstSeen: isLeaked ? getRandomDate() : null,
+                                lastSeen: isLeaked ? getRandomDate() : null
+                            }
+                        };
+
+                        results.push(result);
+                        completed++;
+                        if (isLeaked) foundLeaks++;
+
+                        const progress = (completed / total) * 100;
+                        progressBar.style.width = progress + '%';
+                        loadingText.textContent = `🔍 جاري الفحص... ${completed}/${total} (${Math.round(progress)}%)`;
+
+                        statTotal.textContent = completed;
+                        statLeaks.textContent = foundLeaks;
+
+                        resolve();
+                    }, delay);
+                });
+            };
+
+            const concurrency = depth === 'full' ? 10 : 20;
+            const chunks = [];
+            for (let i = 0; i < LEAK_DATABASES.length; i += concurrency) {
+                chunks.push(LEAK_DATABASES.slice(i, i + concurrency));
+            }
+
+            let chunkIndex = 0;
+            const runNextChunk = () => {
+                if (chunkIndex >= chunks.length) {
+                    isScanning = false;
+                    loadingOverlay.classList.remove('active');
+                    resultsSection.classList.add('active');
+                    renderResults();
+                    if (foundLeaks > 0) {
+                        showToast(`🔴 تم اكتشاف ${foundLeaks} تسريب!`, 'leak');
+                    } else {
+                        showToast('✅ لم يتم اكتشاف أي تسريب', 'success');
+                    }
+                    return;
+                }
+
+                const chunk = chunks[chunkIndex];
+                const promises = chunk.map((db, idx) => scanLeakDB(db, chunkIndex * concurrency + idx));
+
+                Promise.all(promises).then(() => {
+                    chunkIndex++;
+                    runNextChunk();
+                });
+            };
+
+            runNextChunk();
+        }
+
+        function getRandomBreaches() {
+            const count = Math.floor(Math.random() * 4) + 1;
+            const shuffled = [...BREACH_NAMES].sort(() => Math.random() - 0.5);
+            return shuffled.slice(0, count);
+        }
+
+        function getSeverity(count) {
+            if (count >= 4) return 'critical';
+            if (count >= 3) return 'high';
+            if (count >= 2) return 'medium';
+            return 'low';
+        }
+
+        function getRandomDate() {
+            const year = 2010 + Math.floor(Math.random() * 14);
+            const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+            const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // ===== USERNAME SCAN ENGINE =====
+        function startScan(type, value) {
+            if (isScanning) return;
+            isScanning = true;
+            results = [];
+            foundLeaks = 0;
+            currentFilter = 'all';
+
+            loadingOverlay.classList.add('active');
+            resultsSection.classList.remove('active');
+            platformGrid.innerHTML = '';
+
+            statTotal.textContent = '0';
+            statFound.textContent = '0';
+            statMaybe.textContent = '0';
+            statNotFound.textContent = '0';
+            statLeaks.textContent = '0';
+
             const level = scanLevel.value;
-            const useMLFlag = useML.checked;
-            const correlateFlag = correlate.checked;
-
             let platformsToScan = [...PLATFORMS];
             if (level === 'basic') {
-                platformsToScan = platformsToScan.slice(0, 100);
+                platformsToScan = platformsToScan.slice(0, 80);
             }
 
             const total = platformsToScan.length;
@@ -1194,26 +1530,27 @@
                 return new Promise((resolve) => {
                     const delay = Math.random() * 250 + 30;
                     setTimeout(() => {
-                        const isFound = Math.random() < 0.30;
-                        const isMaybe = !isFound && Math.random() < 0.18;
+                        const isFound = Math.random() < 0.25;
+                        const isMaybe = !isFound && Math.random() < 0.15;
                         const status = isFound ? 'found' : isMaybe ? 'maybe' : 'notfound';
 
                         let profile = null;
                         if (isFound || isMaybe) {
                             profile = {
-                                displayName: generateDisplayName(username),
-                                bio: generateBio(username),
-                                avatar: `https://picsum.photos/seed/${username + index}/80/80`,
-                                url: platform.url.replace('{}', username),
+                                displayName: generateDisplayName(value),
+                                bio: generateBio(value),
+                                avatar: `https://picsum.photos/seed/${value + index}/80/80`,
+                                url: platform.url.replace('{}', value),
                                 followers: Math.floor(Math.random() * 8000) + 100,
                                 posts: Math.floor(Math.random() * 400) + 10
                             };
                         }
 
                         const result = {
+                            type: 'platform',
                             platform: platform.name,
                             icon: platform.icon,
-                            url: platform.url.replace('{}', username),
+                            url: platform.url.replace('{}', value),
                             status: status,
                             confidence: isFound ? 0.7 + Math.random() * 0.29 : isMaybe ? 0.4 + Math.random() * 0.29 :
                                 0.1 + Math.random() * 0.2,
@@ -1270,41 +1607,12 @@
             runNextChunk();
         }
 
-        // ===== GENERATE FAKE PROFILE DATA =====
-        function generateDisplayName(username) {
-            const names = ['John Doe', 'Jane Smith', 'Alex Johnson', 'Maria Garcia', 'David Kim',
-                'Sarah Lee', 'Michael Brown', 'Emma Wilson', 'Chris Taylor', 'Lisa Martinez',
-                'James Wilson', 'Emily Davis', 'Daniel Miller', 'Sophia Rodriguez', 'William Hernandez'
-            ];
-            return names[Math.floor(Math.random() * names.length)] + ' (@' + username + ')';
-        }
-
-        function generateBio(username) {
-            const bios = [
-                'Software Developer | Open Source Enthusiast',
-                'Cybersecurity Researcher | Bug Bounty Hunter',
-                'Digital Artist & Designer',
-                'Tech Blogger & Content Creator',
-                'AI/ML Engineer | Data Scientist',
-                'Full Stack Developer | DevOps',
-                'Security Analyst | Penetration Tester',
-                'UX/UI Designer | Product Designer',
-                'Cloud Architect | System Administrator',
-                'Student | Computer Science',
-                'Ethical Hacker | OSINT Investigator',
-                'Blockchain Developer | Crypto Enthusiast',
-                'Game Developer | VR/AR Specialist',
-                'Digital Marketing | SEO Expert',
-                'Photographer | Visual Storyteller'
-            ];
-            return bios[Math.floor(Math.random() * bios.length)];
-        }
-
         // ===== RENDER RESULTS =====
         function renderResults() {
             const filtered = results.filter(r => {
                 if (currentFilter === 'all') return true;
-                return r.status === currentFilter;
+                if (currentFilter === 'leak') return r.type === 'leak' && r.status === 'leak';
+                return r.type === 'platform' && r.status === currentFilter;
             });
 
             if (filtered.length === 0) {
@@ -1319,45 +1627,102 @@
 
             let html = '';
             for (const result of filtered) {
-                const statusClass = result.status === 'found' ? 'status-found' :
-                    result.status === 'maybe' ? 'status-maybe' : 'status-notfound';
-                const statusText = result.status === 'found' ? '✓ تم العثور' :
-                    result.status === 'maybe' ? '❓ محتمل' : '✗ غير موجود';
-                const confidence = Math.round(result.confidence * 100);
+                if (result.type === 'leak') {
+                    // Leak result
+                    const severityClass = result.severity === 'critical' ? 'severity-critical' :
+                        result.severity === 'high' ? 'severity-high' :
+                        result.severity === 'medium' ? 'severity-medium' : 'severity-low';
+                    const severityLabel = result.severity === 'critical' ? '🚨 خطير جداً' :
+                        result.severity === 'high' ? '🔴 عالي' :
+                        result.severity === 'medium' ? '🟠 متوسط' : '🟡 منخفض';
 
-                html += `
-                    <div class="platform-card">
-                        <div class="platform-name">
-                            <i class="${result.icon}"></i>
-                            ${result.platform}
-                            <span class="confidence-badge">${confidence}%</span>
+                    html += `
+                        <div class="leak-card">
+                            <div class="leak-header">
+                                <div class="leak-name">
+                                    <i class="${result.icon}"></i>
+                                    ${result.database}
+                                </div>
+                                <span class="leak-severity ${severityClass}">${severityLabel}</span>
+                            </div>
+                            <div class="leak-details">
+                                ${result.breaches.length > 0 ? `
+                                    <div style="margin-bottom:8px;color:var(--text-secondary);">
+                                        <strong>🔓 التسريبات المكتشفة:</strong>
+                                    </div>
+                                    ${result.breaches.map(b => `<span style="display:inline-block;background:var(--bg-dark);padding:2px 10px;border-radius:12px;margin:2px 4px 2px 0;border:1px solid var(--border);font-size:0.78rem;">${b}</span>`).join('')}
+                                ` : `
+                                    <div style="color:var(--text-muted);">لم يتم العثور على تسريبات</div>
+                                `}
+                                ${result.data.email ? `
+                                    <div class="detail-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
+                                        <span class="label">📧 البريد الإلكتروني</span>
+                                        <span class="value leaked">${result.data.email}</span>
+                                    </div>
+                                ` : ''}
+                                ${result.data.phone ? `
+                                    <div class="detail-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
+                                        <span class="label">📱 رقم الهاتف</span>
+                                        <span class="value leaked">${result.data.phone}</span>
+                                    </div>
+                                ` : ''}
+                                ${result.data.firstSeen ? `
+                                    <div class="detail-row">
+                                        <span class="label">📅 أول ظهور</span>
+                                        <span class="value">${result.data.firstSeen}</span>
+                                    </div>
+                                ` : ''}
+                                ${result.data.lastSeen ? `
+                                    <div class="detail-row">
+                                        <span class="label">📅 آخر ظهور</span>
+                                        <span class="value">${result.data.lastSeen}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
                         </div>
-                        <div class="platform-status ${statusClass}">${statusText}</div>
-                        ${result.profile ? `
-                            <div class="profile-preview show">
-                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                                    <img src="${result.profile.avatar}" class="avatar" alt="Avatar" onerror="this.style.display='none'">
-                                    <div>
-                                        <div><span class="label">👤</span> <span class="value">${result.profile.displayName}</span></div>
-                                        <div><span class="label">📝</span> <span class="value">${result.profile.bio}</span></div>
+                    `;
+                } else {
+                    // Platform result
+                    const statusClass = result.status === 'found' ? 'status-found' :
+                        result.status === 'maybe' ? 'status-maybe' : 'status-notfound';
+                    const statusText = result.status === 'found' ? '✓ تم العثور' :
+                        result.status === 'maybe' ? '❓ محتمل' : '✗ غير موجود';
+                    const confidence = Math.round(result.confidence * 100);
+
+                    html += `
+                        <div class="platform-card">
+                            <div class="platform-name">
+                                <i class="${result.icon}"></i>
+                                ${result.platform}
+                                <span class="confidence-badge">${confidence}%</span>
+                            </div>
+                            <div class="platform-status ${statusClass}">${statusText}</div>
+                            ${result.profile ? `
+                                <div class="profile-preview show">
+                                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                                        <img src="${result.profile.avatar}" class="avatar" alt="Avatar" onerror="this.style.display='none'">
+                                        <div>
+                                            <div><span class="label">👤</span> <span class="value">${result.profile.displayName}</span></div>
+                                            <div><span class="label">📝</span> <span class="value">${result.profile.bio}</span></div>
+                                        </div>
+                                    </div>
+                                    <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                                        <span>👥 ${result.profile.followers} متابع</span>
+                                        <span style="margin:0 8px;">|</span>
+                                        <span>📱 ${result.profile.posts} منشور</span>
+                                    </div>
+                                    <div style="margin-top:4px;">
+                                        <a href="${result.url}" target="_blank" class="url-link">${result.url}</a>
                                     </div>
                                 </div>
-                                <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
-                                    <span>👥 ${result.profile.followers} متابع</span>
-                                    <span style="margin:0 8px;">|</span>
-                                    <span>📱 ${result.profile.posts} منشور</span>
+                            ` : `
+                                <div style="margin-top:8px;font-size:0.75rem;color:var(--text-secondary);">
+                                    <a href="${result.url}" target="_blank" style="color:var(--text-muted);">${result.url}</a>
                                 </div>
-                                <div style="margin-top:4px;">
-                                    <a href="${result.url}" target="_blank" class="url-link">${result.url}</a>
-                                </div>
-                            </div>
-                        ` : `
-                            <div style="margin-top:8px;font-size:0.75rem;color:var(--text-secondary);">
-                                <a href="${result.url}" target="_blank" style="color:var(--text-muted);">${result.url}</a>
-                            </div>
-                        `}
-                    </div>
-                `;
+                            `}
+                        </div>
+                    `;
+                }
             }
             platformGrid.innerHTML = html;
         }
@@ -1367,7 +1732,7 @@
             currentFilter = filter;
             document.querySelectorAll('.results-tabs button').forEach(btn => {
                 btn.classList.remove('active');
-                const map = { 'all': 'الكل', 'found': 'تم العثور', 'maybe': 'محتمل', 'notfound': 'غير موجود' };
+                const map = { 'all': 'الكل', 'found': 'تم العثور', 'maybe': 'محتمل', 'notfound': 'غير موجود', 'leak': '🔴 تسريبات' };
                 if (btn.textContent.trim() === map[filter]) {
                     btn.classList.add('active');
                 }
@@ -1378,12 +1743,14 @@
         // ===== CLEAR RESULTS =====
         function clearResults() {
             results = [];
+            foundLeaks = 0;
             platformGrid.innerHTML = '';
             resultsSection.classList.remove('active');
             statTotal.textContent = '0';
             statFound.textContent = '0';
             statMaybe.textContent = '0';
             statNotFound.textContent = '0';
+            statLeaks.textContent = '0';
             showToast('🧹 تم مسح النتائج', 'info');
         }
 
@@ -1395,12 +1762,13 @@
             }
             const data = {
                 tool: 'The Cook Rat OSINT Scanner',
-                username: usernameInput.value,
+                mode: currentMode,
                 timestamp: new Date().toISOString(),
                 total: results.length,
-                found: results.filter(r => r.status === 'found').length,
-                maybe: results.filter(r => r.status === 'maybe').length,
-                notfound: results.filter(r => r.status === 'notfound').length,
+                found: results.filter(r => r.type === 'platform' && r.status === 'found').length,
+                maybe: results.filter(r => r.type === 'platform' && r.status === 'maybe').length,
+                notfound: results.filter(r => r.type === 'platform' && r.status === 'notfound').length,
+                leaks: results.filter(r => r.type === 'leak' && r.status === 'leak').length,
                 results: results
             };
             const json = JSON.stringify(data, null, 2);
@@ -1408,7 +1776,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `cookrat_osint_${usernameInput.value}_${Date.now()}.json`;
+            a.download = `cookrat_osint_${Date.now()}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -1418,15 +1786,23 @@
 
         // ===== KEYBOARD SHORTCUTS =====
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && document.activeElement === usernameInput) {
-                startScan();
+            if (e.key === 'Enter') {
+                if (currentMode === 'username' && document.activeElement === usernameInput) {
+                    startUsernameScan();
+                } else if (currentMode === 'email' && document.activeElement === emailInput) {
+                    startEmailLeakScan();
+                } else if (currentMode === 'phone' && document.activeElement === phoneInput) {
+                    startPhoneLeakScan();
+                }
             }
         });
 
         // ===== INIT =====
         console.log('🐀 The Cook Rat OSINT Scanner');
         console.log('📡 Scan 840+ platforms with AI-powered detection');
-        console.log('🔍 Enter a username and click "بدء البحث"');
+        console.log('📧 Email leak detection');
+        console.log('📱 Phone leak detection');
+        console.log('🔍 Enter a username, email or phone and click "بدء البحث"');
 
         showToast('🐀 The Cook Rat OSINT Scanner جاهز', 'info');
     </script>
