@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aliens Eye | The Cook Rat</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👽</text></svg>">
+    <title>The Cook Rat OSINT Scanner</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐀</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -16,6 +16,7 @@
             --bg-card-hover: #1a2332;
             --text-primary: #e2e8f0;
             --text-secondary: #94a3b8;
+            --text-muted: #64748b;
             --border: #1e293b;
             --border-hover: #00f0ff;
             --glow: 0 0 20px rgba(0, 240, 255, 0.3);
@@ -38,20 +39,22 @@
             min-height: 100vh;
             background-image: radial-gradient(ellipse at 20% 80%, rgba(0, 240, 255, 0.05) 0%, transparent 60%),
                               radial-gradient(ellipse at 80% 20%, rgba(0, 240, 255, 0.03) 0%, transparent 50%);
+            transition: all 0.3s;
         }
 
         /* ===== Header ===== */
         .header {
-            background: rgba(17, 24, 39, 0.9);
+            background: rgba(17, 24, 39, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border);
-            padding: 16px 32px;
+            padding: 12px 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s;
         }
 
         .logo {
@@ -66,6 +69,12 @@
             border-radius: 12px;
             border: 2px solid var(--primary);
             box-shadow: var(--glow);
+            transition: all 0.3s;
+        }
+
+        .logo img:hover {
+            box-shadow: var(--glow-strong);
+            transform: scale(1.05);
         }
 
         .logo-text {
@@ -74,23 +83,25 @@
             background: linear-gradient(135deg, var(--primary), #00ccff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
         }
 
         .logo-sub {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-secondary);
             letter-spacing: 3px;
             text-transform: uppercase;
+            font-weight: 600;
         }
 
         .header-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
 
         .btn {
-            padding: 10px 22px;
+            padding: 9px 20px;
             border-radius: 10px;
             border: 1px solid var(--border);
             background: var(--bg-card);
@@ -102,6 +113,7 @@
             align-items: center;
             gap: 8px;
             font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
         }
 
         .btn:hover {
@@ -128,6 +140,12 @@
             border: none;
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00cc66);
+            color: #000;
+            border: none;
+        }
+
         /* ===== Container ===== */
         .container {
             max-width: 1400px;
@@ -138,20 +156,34 @@
         /* ===== Hero Section ===== */
         .hero {
             text-align: center;
-            padding: 40px 20px 50px;
+            padding: 30px 20px 40px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 40px;
+            margin-bottom: 36px;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: rgba(0, 240, 255, 0.08);
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
 
         .hero h1 {
-            font-size: 3.2rem;
+            font-size: 3.4rem;
             font-weight: 900;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             background: linear-gradient(135deg, var(--primary), #00ccff, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 300% 300%;
             animation: gradientMove 4s ease infinite;
+            letter-spacing: -1px;
         }
 
         @keyframes gradientMove {
@@ -161,30 +193,37 @@
 
         .hero p {
             color: var(--text-secondary);
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             max-width: 700px;
-            margin: 0 auto 30px;
+            margin: 0 auto 20px;
             line-height: 1.8;
         }
 
-        .hero .badge {
-            display: inline-block;
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: var(--primary);
-            margin-bottom: 20px;
+        .hero .stats-mini {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 20px;
         }
 
-        /* ===== Search Box ===== */
+        .hero .stats-mini span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .hero .stats-mini strong {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* ===== Search Section ===== */
         .search-section {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 40px;
+            padding: 28px 32px;
+            margin-bottom: 36px;
             transition: all 0.3s;
         }
 
@@ -201,66 +240,97 @@
 
         .search-row .form-group {
             flex: 1;
-            min-width: 200px;
+            min-width: 180px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 18px;
+            padding: 11px 16px;
             background: var(--bg-dark);
             border: 1px solid var(--border);
             border-radius: 10px;
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             transition: all 0.3s;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.08);
         }
 
         .form-control::placeholder {
-            color: var(--text-secondary);
-            opacity: 0.5;
+            color: var(--text-muted);
+            opacity: 0.6;
         }
 
         select.form-control {
             cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 16px center;
+            padding-left: 40px;
         }
 
         .search-actions {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 20px;
-            padding-top: 20px;
+            margin-top: 18px;
+            padding-top: 18px;
             border-top: 1px solid var(--border);
+            align-items: center;
+        }
+
+        .search-actions .checkbox-group {
+            display: flex;
+            gap: 16px;
+            margin-right: auto;
+            flex-wrap: wrap;
+        }
+
+        .search-actions .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .search-actions .checkbox-group input[type="checkbox"] {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
         }
 
         /* ===== Stats ===== */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-bottom: 36px;
         }
 
         .stat-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px 24px;
+            border-radius: 12px;
+            padding: 18px 20px;
             text-align: center;
             transition: all 0.3s;
         }
@@ -271,16 +341,23 @@
         }
 
         .stat-number {
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             font-weight: 900;
             color: var(--primary);
             font-family: 'JetBrains Mono', monospace;
         }
 
+        .stat-number.green { color: var(--success); }
+        .stat-number.orange { color: var(--warning); }
+        .stat-number.red { color: var(--danger); }
+
         .stat-label {
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: var(--text-secondary);
             margin-top: 4px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         /* ===== Results ===== */
@@ -290,6 +367,12 @@
 
         .results-section.active {
             display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .results-header {
@@ -298,11 +381,11 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .results-header h2 {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 700;
         }
 
@@ -312,7 +395,7 @@
 
         .results-tabs {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             background: var(--bg-card);
             padding: 4px;
             border-radius: 10px;
@@ -320,13 +403,14 @@
         }
 
         .results-tabs button {
-            padding: 8px 18px;
+            padding: 6px 14px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 7px;
             font-weight: 600;
+            font-size: 0.82rem;
             transition: all 0.3s;
             font-family: 'Inter', sans-serif;
         }
@@ -345,14 +429,14 @@
         .platform-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 16px;
+            gap: 14px;
         }
 
         .platform-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 18px 20px;
+            border-radius: 12px;
+            padding: 16px 18px;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
@@ -368,11 +452,12 @@
             background: linear-gradient(90deg, var(--primary), #00ccff);
             transform: scaleX(0);
             transition: transform 0.4s;
+            transform-origin: left;
         }
 
         .platform-card:hover {
             border-color: var(--border-hover);
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             box-shadow: var(--glow);
         }
 
@@ -382,7 +467,7 @@
 
         .platform-card .platform-name {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.95rem;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -391,44 +476,47 @@
         .platform-card .platform-name i {
             color: var(--primary);
             width: 20px;
+            font-size: 1rem;
         }
 
         .platform-card .platform-status {
             display: inline-block;
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 16px;
+            font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
-            margin-top: 10px;
+            margin-top: 8px;
+            letter-spacing: 0.5px;
         }
 
         .status-found {
-            background: rgba(0, 255, 136, 0.15);
+            background: rgba(0, 255, 136, 0.12);
             color: var(--success);
-            border: 1px solid rgba(0, 255, 136, 0.2);
+            border: 1px solid rgba(0, 255, 136, 0.15);
         }
 
         .status-notfound {
-            background: rgba(255, 51, 102, 0.1);
+            background: rgba(255, 51, 102, 0.08);
             color: var(--danger);
-            border: 1px solid rgba(255, 51, 102, 0.15);
+            border: 1px solid rgba(255, 51, 102, 0.1);
         }
 
         .status-maybe {
-            background: rgba(255, 170, 0, 0.1);
+            background: rgba(255, 170, 0, 0.08);
             color: var(--warning);
-            border: 1px solid rgba(255, 170, 0, 0.2);
+            border: 1px solid rgba(255, 170, 0, 0.1);
         }
 
         .platform-card .profile-preview {
-            margin-top: 12px;
-            padding: 12px;
+            margin-top: 10px;
+            padding: 10px 12px;
             background: var(--bg-dark);
             border-radius: 8px;
-            font-size: 0.82rem;
+            font-size: 0.78rem;
             color: var(--text-secondary);
             display: none;
+            border: 1px solid var(--border);
         }
 
         .platform-card .profile-preview.show {
@@ -438,6 +526,9 @@
         .platform-card .profile-preview .label {
             color: var(--text-muted);
             font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .platform-card .profile-preview .value {
@@ -446,19 +537,40 @@
         }
 
         .platform-card .profile-preview .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
             object-fit: cover;
             border: 1px solid var(--border);
-            margin-top: 8px;
+            margin-top: 6px;
+        }
+
+        .platform-card .profile-preview .url-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.75rem;
+            word-break: break-all;
+        }
+
+        .platform-card .profile-preview .url-link:hover {
+            text-decoration: underline;
+        }
+
+        .platform-card .confidence-badge {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-right: auto;
+            background: var(--bg-dark);
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
         }
 
         /* ===== Loading ===== */
         .loading-overlay {
             display: none;
             text-align: center;
-            padding: 60px 20px;
+            padding: 50px 20px;
         }
 
         .loading-overlay.active {
@@ -466,13 +578,13 @@
         }
 
         .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid var(--border);
-            border-top: 4px solid var(--primary);
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 24px;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 20px;
         }
 
         @keyframes spin {
@@ -481,12 +593,12 @@
 
         .loading-text {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         .loading-progress {
             max-width: 400px;
-            margin: 16px auto 0;
+            margin: 14px auto 0;
             height: 4px;
             background: var(--border);
             border-radius: 4px;
@@ -497,7 +609,7 @@
             height: 100%;
             background: linear-gradient(90deg, var(--primary), #00ccff);
             width: 0%;
-            transition: width 0.3s;
+            transition: width 0.3s ease;
         }
 
         /* ===== Toast ===== */
@@ -508,54 +620,98 @@
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .toast {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 20px;
+            border-radius: 10px;
+            padding: 12px 18px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             animation: slideIn 0.3s ease;
-            min-width: 280px;
+            min-width: 250px;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
-        .toast.success { border-right: 4px solid var(--success); }
-        .toast.error { border-right: 4px solid var(--danger); }
-        .toast.info { border-right: 4px solid var(--primary); }
+        .toast.success { border-right: 3px solid var(--success); }
+        .toast.error { border-right: 3px solid var(--danger); }
+        .toast.info { border-right: 3px solid var(--primary); }
 
         @keyframes slideIn {
             from { transform: translateX(120%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
 
+        /* ===== Empty State ===== */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 30px 20px 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            text-shadow: var(--glow-text);
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
         /* ===== Responsive ===== */
         @media (max-width: 768px) {
-            .header { padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
+            .header { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
             .logo-text { font-size: 1.2rem; }
             .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 0.95rem; }
             .search-row { flex-direction: column; }
             .search-row .form-group { min-width: auto; }
+            .search-section { padding: 20px; }
             .platform-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .container { padding: 16px; }
             .results-tabs { flex-wrap: wrap; justify-content: center; }
+            .search-actions { flex-direction: column; align-items: stretch; }
+            .search-actions .checkbox-group { margin-right: 0; justify-content: center; }
         }
 
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: 1fr; }
             .hero h1 { font-size: 1.8rem; }
+            .hero .stats-mini { gap: 12px; }
+            .results-header { flex-direction: column; align-items: stretch; }
+            .results-tabs { justify-content: center; }
         }
-
-        /* ===== Scrollbar ===== */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
     </style>
 </head>
 <body>
@@ -565,13 +721,13 @@
         <div class="logo">
             <img src="https://pbs.twimg.com/profile_images/2083986675873525760/_swZy6tJ_400x400.jpg" alt="The Cook Rat">
             <div>
-                <div class="logo-text">Aliens Eye</div>
-                <div class="logo-sub">by The Cook Rat</div>
+                <div class="logo-text">The Cook Rat</div>
+                <div class="logo-sub">OSINT Scanner</div>
             </div>
         </div>
         <div class="header-actions">
-            <button class="btn" onclick="toggleTheme()"><i class="fas fa-moon"></i></button>
-            <button class="btn" onclick="window.open('https://x.com/mouse0000000','_blank')"><i class="fa-brands fa-x-twitter"></i></button>
+            <button class="btn" onclick="toggleTheme()" title="تبديل الوضع"><i class="fas fa-moon" id="themeIcon"></i></button>
+            <button class="btn" onclick="window.open('https://x.com/mouse0000000','_blank')" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></button>
         </div>
     </header>
 
@@ -581,8 +737,13 @@
         <!-- Hero -->
         <section class="hero">
             <div class="badge"><i class="fas fa-robot"></i> AI-Powered OSINT Scanner</div>
-            <h1>👽 Aliens Eye</h1>
+            <h1>🐀 The Cook Rat OSINT</h1>
             <p>ابحث عن حسابات المستخدمين عبر <strong>840+</strong> منصة تواصل اجتماعي باستخدام تقنيات الذكاء الاصطناعي والتعلم الآلي. اكتشف الهوية الرقمية للأشخاص بسرعة ودقة.</p>
+            <div class="stats-mini">
+                <span>🌐 <strong>840+</strong> منصة</span>
+                <span>🧠 <strong>AI</strong> مدعوم بالذكاء</span>
+                <span>⚡ <strong>ثواني</strong> نتائج سريعة</span>
+            </div>
         </section>
 
         <!-- Search -->
@@ -600,12 +761,12 @@
                         <option value="aggressive">شامل (بطيء)</option>
                     </select>
                 </div>
-                <div class="form-group" style="flex:0.5; min-width:120px;">
+                <div class="form-group" style="flex:0.4; min-width:100px;">
                     <label><i class="fas fa-clock"></i> المهلة</label>
                     <select class="form-control" id="timeoutSelect">
-                        <option value="5000">5 ثواني</option>
-                        <option value="10000" selected>10 ثواني</option>
-                        <option value="20000">20 ثانية</option>
+                        <option value="5000">5 ث</option>
+                        <option value="10000" selected>10 ث</option>
+                        <option value="20000">20 ث</option>
                     </select>
                 </div>
             </div>
@@ -615,17 +776,15 @@
                     <i class="fas fa-search"></i> بدء البحث
                 </button>
                 <button class="btn" onclick="clearResults()">
-                    <i class="fas fa-eraser"></i> مسح النتائج
+                    <i class="fas fa-eraser"></i> مسح
                 </button>
-                <button class="btn" onclick="exportResults()">
-                    <i class="fas fa-download"></i> تصدير (JSON)
+                <button class="btn btn-success" onclick="exportResults()">
+                    <i class="fas fa-download"></i> تصدير JSON
                 </button>
-                <label style="display:flex;align-items:center;gap:8px;margin-right:auto;color:var(--text-secondary);font-size:0.85rem;cursor:pointer;">
-                    <input type="checkbox" id="useML" checked> استخدام الذكاء الاصطناعي
-                </label>
-                <label style="display:flex;align-items:center;gap:8px;color:var(--text-secondary);font-size:0.85rem;cursor:pointer;">
-                    <input type="checkbox" id="correlate"> التجميع التلقائي
-                </label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="useML" checked> الذكاء الاصطناعي</label>
+                    <label><input type="checkbox" id="correlate"> التجميع التلقائي</label>
+                </div>
             </div>
         </section>
 
@@ -636,15 +795,15 @@
                 <div class="stat-label">إجمالي المنصات</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="statFound" style="color:var(--success)">0</div>
+                <div class="stat-number green" id="statFound">0</div>
                 <div class="stat-label">✓ تم العثور</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="statMaybe" style="color:var(--warning)">0</div>
+                <div class="stat-number orange" id="statMaybe">0</div>
                 <div class="stat-label">❓ محتمل</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number" id="statNotFound" style="color:var(--danger)">0</div>
+                <div class="stat-number red" id="statNotFound">0</div>
                 <div class="stat-label">✗ غير موجود</div>
             </div>
         </div>
@@ -672,6 +831,12 @@
             <div class="platform-grid" id="platformGrid"></div>
         </div>
 
+        <!-- Footer -->
+        <div class="footer">
+            <p><i class="fas fa-code"></i> The Cook Rat OSINT Scanner - By <a href="https://x.com/mouse0000000" target="_blank">@mouse0000000</a></p>
+            <p style="margin-top:8px;font-size:0.7rem;color:var(--text-muted)">⚠️ استخدم هذه الأداة للأغراض التعليمية والبحث القانوني فقط</p>
+        </div>
+
     </div>
 
     <!-- Toast Container -->
@@ -679,302 +844,252 @@
 
     <script>
         // ============================================================
-        //  ALIENS EYE - The Cook Rat Edition
-        //  Web-based OSINT Username Scanner (840+ platforms)
+        //  THE COOK RAT OSINT SCANNER
+        //  Web-based Username Scanner (840+ platforms)
         //  Full simulation with AI-powered detection
         // ============================================================
 
         // ===== PLATFORMS DATABASE (840+ sites) =====
         const PLATFORMS = [
             // Social Media
-            { name: 'Facebook', icon: 'fa-brands fa-facebook', url: 'https://facebook.com/{}', category: 'social' },
-            { name: 'Twitter', icon: 'fa-brands fa-x-twitter', url: 'https://twitter.com/{}', category: 'social' },
-            { name: 'Instagram', icon: 'fa-brands fa-instagram', url: 'https://instagram.com/{}', category: 'social' },
-            { name: 'LinkedIn', icon: 'fa-brands fa-linkedin', url: 'https://linkedin.com/in/{}', category: 'social' },
-            { name: 'YouTube', icon: 'fa-brands fa-youtube', url: 'https://youtube.com/@{}', category: 'social' },
-            { name: 'Reddit', icon: 'fa-brands fa-reddit', url: 'https://reddit.com/user/{}', category: 'social' },
-            { name: 'GitHub', icon: 'fa-brands fa-github', url: 'https://github.com/{}', category: 'dev' },
-            { name: 'GitLab', icon: 'fa-brands fa-gitlab', url: 'https://gitlab.com/{}', category: 'dev' },
-            { name: 'BitBucket', icon: 'fa-brands fa-bitbucket', url: 'https://bitbucket.org/{}/', category: 'dev' },
-            { name: 'StackOverflow', icon: 'fa-brands fa-stack-overflow', url: 'https://stackoverflow.com/users/{}', category: 'dev' },
-            { name: 'Dev.to', icon: 'fa-brands fa-dev', url: 'https://dev.to/{}', category: 'dev' },
-            { name: 'Medium', icon: 'fa-brands fa-medium', url: 'https://medium.com/@{}', category: 'blog' },
-            { name: 'Hashnode', icon: 'fa-solid fa-blog', url: 'https://hashnode.com/@{}', category: 'blog' },
-            { name: 'Substack', icon: 'fa-regular fa-newspaper', url: 'https://{}.substack.com', category: 'blog' },
-            { name: 'Pinterest', icon: 'fa-brands fa-pinterest', url: 'https://pinterest.com/{}', category: 'social' },
-            { name: 'Tumblr', icon: 'fa-brands fa-tumblr', url: 'https://{}.tumblr.com', category: 'social' },
-            { name: 'Flickr', icon: 'fa-brands fa-flickr', url: 'https://flickr.com/people/{}', category: 'social' },
-            { name: 'Dribbble', icon: 'fa-brands fa-dribbble', url: 'https://dribbble.com/{}', category: 'design' },
-            { name: 'Behance', icon: 'fa-brands fa-behance', url: 'https://behance.net/{}', category: 'design' },
-            { name: 'ArtStation', icon: 'fa-solid fa-palette', url: 'https://artstation.com/{}', category: 'design' },
-            { name: 'Vimeo', icon: 'fa-brands fa-vimeo-v', url: 'https://vimeo.com/{}', category: 'video' },
-            { name: 'TikTok', icon: 'fa-brands fa-tiktok', url: 'https://tiktok.com/@{}', category: 'social' },
-            { name: 'Snapchat', icon: 'fa-brands fa-snapchat', url: 'https://snapchat.com/add/{}', category: 'social' },
-            { name: 'Telegram', icon: 'fa-brands fa-telegram', url: 'https://t.me/{}', category: 'social' },
-            { name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', url: 'https://wa.me/{}', category: 'social' },
-            { name: 'Signal', icon: 'fa-solid fa-lock', url: 'https://signal.me/#p/{}', category: 'social' },
-            { name: 'Discord', icon: 'fa-brands fa-discord', url: 'https://discord.com/users/{}', category: 'social' },
-            { name: 'Mastodon', icon: 'fa-brands fa-mastodon', url: 'https://mastodon.social/@{}', category: 'social' },
-            { name: 'BlueSky', icon: 'fa-solid fa-cloud', url: 'https://bsky.app/profile/{}', category: 'social' },
-            { name: 'Threads', icon: 'fa-solid fa-message', url: 'https://threads.net/@{}', category: 'social' },
-            { name: 'Quora', icon: 'fa-brands fa-quora', url: 'https://quora.com/profile/{}', category: 'social' },
-            { name: 'Patreon', icon: 'fa-brands fa-patreon', url: 'https://patreon.com/{}', category: 'social' },
-            { name: 'OnlyFans', icon: 'fa-solid fa-heart', url: 'https://onlyfans.com/{}', category: 'social' },
-            { name: 'Fiverr', icon: 'fa-solid fa-briefcase', url: 'https://fiverr.com/{}', category: 'work' },
-            { name: 'Upwork', icon: 'fa-solid fa-briefcase', url: 'https://upwork.com/freelancers/{}', category: 'work' },
-            { name: 'Freelancer', icon: 'fa-solid fa-briefcase', url: 'https://freelancer.com/u/{}', category: 'work' },
-            { name: 'HackerOne', icon: 'fa-solid fa-shield-halved', url: 'https://hackerone.com/{}', category: 'security' },
-            { name: 'Bugcrowd', icon: 'fa-solid fa-bug', url: 'https://bugcrowd.com/{}', category: 'security' },
-            { name: 'VulnDB', icon: 'fa-solid fa-database', url: 'https://vulndb.org/{}', category: 'security' },
-            { name: 'ExploitDB', icon: 'fa-solid fa-code', url: 'https://exploit-db.com/{}', category: 'security' },
-            { name: 'Shodan', icon: 'fa-solid fa-search', url: 'https://shodan.io/{}', category: 'security' },
-            { name: 'Censys', icon: 'fa-solid fa-eye', url: 'https://censys.io/{}', category: 'security' },
-            { name: 'VirusTotal', icon: 'fa-solid fa-virus', url: 'https://virustotal.com/gui/user/{}', category: 'security' },
-            { name: 'HaveIBeenPwned', icon: 'fa-solid fa-user-secret', url: 'https://haveibeenpwned.com/{}', category: 'security' },
-            { name: 'LeakCheck', icon: 'fa-solid fa-database', url: 'https://leakcheck.io/{}', category: 'security' },
-            { name: 'IntelX', icon: 'fa-solid fa-microchip', url: 'https://intelx.io/{}', category: 'security' },
-            { name: 'Dehashed', icon: 'fa-solid fa-bolt', url: 'https://dehashed.com/{}', category: 'security' },
-            { name: 'Spyse', icon: 'fa-solid fa-spider', url: 'https://spyse.com/{}', category: 'security' },
-            { name: 'GreyNoise', icon: 'fa-solid fa-noise', url: 'https://greynoise.io/{}', category: 'security' },
-            { name: 'AlienVault', icon: 'fa-solid fa-ufo', url: 'https://otx.alienvault.com/user/{}', category: 'security' },
-            { name: 'MalwareBazaar', icon: 'fa-solid fa-bug', url: 'https://bazaar.abuse.ch/user/{}', category: 'security' },
-            { name: 'URLScan', icon: 'fa-solid fa-link', url: 'https://urlscan.io/user/{}', category: 'security' },
-            { name: 'SecurityTrails', icon: 'fa-solid fa-trail', url: 'https://securitytrails.com/{}', category: 'security' },
-            { name: 'RiskIQ', icon: 'fa-solid fa-chart-line', url: 'https://riskiq.com/{}', category: 'security' },
-            { name: 'ZoomInfo', icon: 'fa-solid fa-user-plus', url: 'https://zoominfo.com/p/{}', category: 'business' },
-            { name: 'Lusha', icon: 'fa-solid fa-address-book', url: 'https://lusha.com/{}', category: 'business' },
-            { name: 'RocketReach', icon: 'fa-solid fa-rocket', url: 'https://rocketreach.co/{}', category: 'business' },
-            { name: 'Apollo', icon: 'fa-solid fa-rocket', url: 'https://apollo.io/people/{}', category: 'business' },
-            { name: 'Hunter', icon: 'fa-solid fa-crosshairs', url: 'https://hunter.io/{}', category: 'business' },
-            { name: 'Snov', icon: 'fa-solid fa-snowflake', url: 'https://snov.io/{}', category: 'business' },
-            { name: 'Clearbit', icon: 'fa-solid fa-cube', url: 'https://clearbit.com/{}', category: 'business' },
-            { name: 'Pipl', icon: 'fa-solid fa-pipe', url: 'https://pipl.com/people/{}', category: 'search' },
-            { name: 'PeekYou', icon: 'fa-solid fa-eye', url: 'https://peekyou.com/{}', category: 'search' },
-            { name: 'Spokeo', icon: 'fa-solid fa-phone', url: 'https://spokeo.com/{}', category: 'search' },
-            { name: 'BeenVerified', icon: 'fa-solid fa-check-double', url: 'https://beenverified.com/{}', category: 'search' },
-            { name: 'TruthFinder', icon: 'fa-solid fa-check', url: 'https://truthfinder.com/{}', category: 'search' },
-            { name: 'InstantCheckmate', icon: 'fa-solid fa-gavel', url: 'https://instantcheckmate.com/{}', category: 'search' },
-            { name: 'PublicRecords', icon: 'fa-solid fa-file', url: 'https://publicrecords.com/{}', category: 'search' },
-            { name: 'FamilySearch', icon: 'fa-solid fa-tree', url: 'https://familysearch.org/{}', category: 'search' },
-            { name: 'Ancestry', icon: 'fa-solid fa-leaf', url: 'https://ancestry.com/{}', category: 'search' },
-            { name: 'MyHeritage', icon: 'fa-solid fa-tree', url: 'https://myheritage.com/{}', category: 'search' },
-            { name: 'Geni', icon: 'fa-solid fa-users', url: 'https://geni.com/{}', category: 'search' },
-            { name: 'WikiTree', icon: 'fa-solid fa-tree', url: 'https://wikitree.com/{}', category: 'search' },
-            { name: 'FindAGrave', icon: 'fa-solid fa-cross', url: 'https://findagrave.com/{}', category: 'search' },
-            { name: 'BillionGraves', icon: 'fa-solid fa-cross', url: 'https://billiongraves.com/{}', category: 'search' },
-            { name: 'Gravatar', icon: 'fa-solid fa-user-circle', url: 'https://gravatar.com/{}', category: 'social' },
-            { name: 'Keybase', icon: 'fa-solid fa-key', url: 'https://keybase.io/{}', category: 'social' },
-            { name: 'About.me', icon: 'fa-solid fa-user', url: 'https://about.me/{}', category: 'social' },
-            { name: 'Linktree', icon: 'fa-solid fa-tree', url: 'https://linktr.ee/{}', category: 'social' },
-            { name: 'Beacons', icon: 'fa-solid fa-bolt', url: 'https://beacons.ai/{}', category: 'social' },
-            { name: 'Lnk.Bio', icon: 'fa-solid fa-link', url: 'https://lnk.bio/{}', category: 'social' },
-            { name: 'Bio.link', icon: 'fa-solid fa-link', url: 'https://bio.link/{}', category: 'social' },
-            { name: 'Carrd', icon: 'fa-solid fa-card', url: 'https://{}.carrd.co', category: 'social' },
-            { name: 'Notion', icon: 'fa-solid fa-notion', url: 'https://notion.so/{}', category: 'social' },
-            { name: 'Obsidian', icon: 'fa-solid fa-gem', url: 'https://obsidian.md/{}', category: 'social' },
-            { name: 'RoamResearch', icon: 'fa-solid fa-compass', url: 'https://roamresearch.com/{}', category: 'social' },
-            { name: 'Logseq', icon: 'fa-solid fa-square', url: 'https://logseq.com/{}', category: 'social' },
-            { name: 'GitBook', icon: 'fa-solid fa-book', url: 'https://{}.gitbook.io', category: 'dev' },
-            { name: 'ReadMe', icon: 'fa-solid fa-book-open', url: 'https://readme.com/{}', category: 'dev' },
-            { name: 'Docusaurus', icon: 'fa-solid fa-dragon', url: 'https://{}.docusaurus.io', category: 'dev' },
-            { name: 'Vercel', icon: 'fa-solid fa-globe', url: 'https://{}.vercel.app', category: 'dev' },
-            { name: 'Netlify', icon: 'fa-solid fa-globe', url: 'https://{}.netlify.app', category: 'dev' },
-            { name: 'Render', icon: 'fa-solid fa-rocket', url: 'https://{}.render.com', category: 'dev' },
-            { name: 'Heroku', icon: 'fa-solid fa-cloud', url: 'https://{}.herokuapp.com', category: 'dev' },
-            { name: 'Railway', icon: 'fa-solid fa-train', url: 'https://{}.railway.app', category: 'dev' },
-            { name: 'Fly.io', icon: 'fa-solid fa-fly', url: 'https://{}.fly.dev', category: 'dev' },
-            { name: 'Deno', icon: 'fa-solid fa-d', url: 'https://deno.com/{}', category: 'dev' },
-            { name: 'Bun', icon: 'fa-solid fa-bolt', url: 'https://bun.sh/{}', category: 'dev' },
-            { name: 'Node', icon: 'fa-brands fa-node-js', url: 'https://nodejs.org/{}', category: 'dev' },
-            { name: 'Python', icon: 'fa-brands fa-python', url: 'https://python.org/{}', category: 'dev' },
-            { name: 'Ruby', icon: 'fa-solid fa-gem', url: 'https://rubygems.org/{}', category: 'dev' },
-            { name: 'PHP', icon: 'fa-brands fa-php', url: 'https://packagist.org/{}', category: 'dev' },
-            { name: 'Java', icon: 'fa-brands fa-java', url: 'https://mvnrepository.com/{}', category: 'dev' },
-            { name: 'Go', icon: 'fa-brands fa-golang', url: 'https://pkg.go.dev/{}', category: 'dev' },
-            { name: 'Rust', icon: 'fa-solid fa-crab', url: 'https://crates.io/{}', category: 'dev' },
-            { name: 'Dart', icon: 'fa-solid fa-d', url: 'https://pub.dev/{}', category: 'dev' },
-            { name: 'Swift', icon: 'fa-solid fa-s', url: 'https://swift.org/{}', category: 'dev' },
-            { name: 'Kotlin', icon: 'fa-solid fa-k', url: 'https://kotlinlang.org/{}', category: 'dev' },
-            { name: 'TypeScript', icon: 'fa-solid fa-t', url: 'https://typescriptlang.org/{}', category: 'dev' },
-            { name: 'JavaScript', icon: 'fa-brands fa-js', url: 'https://js.org/{}', category: 'dev' },
-            { name: 'HTML', icon: 'fa-brands fa-html5', url: 'https://html.com/{}', category: 'dev' },
-            { name: 'CSS', icon: 'fa-brands fa-css3-alt', url: 'https://css-tricks.com/{}', category: 'dev' },
-            { name: 'React', icon: 'fa-brands fa-react', url: 'https://reactjs.org/{}', category: 'dev' },
-            { name: 'Vue', icon: 'fa-brands fa-vuejs', url: 'https://vuejs.org/{}', category: 'dev' },
-            { name: 'Angular', icon: 'fa-brands fa-angular', url: 'https://angular.io/{}', category: 'dev' },
-            { name: 'Svelte', icon: 'fa-solid fa-s', url: 'https://svelte.dev/{}', category: 'dev' },
-            { name: 'Next.js', icon: 'fa-solid fa-n', url: 'https://nextjs.org/{}', category: 'dev' },
-            { name: 'Nuxt', icon: 'fa-solid fa-n', url: 'https://nuxtjs.org/{}', category: 'dev' },
-            { name: 'Remix', icon: 'fa-solid fa-r', url: 'https://remix.run/{}', category: 'dev' },
-            { name: 'Gatsby', icon: 'fa-solid fa-g', url: 'https://gatsbyjs.com/{}', category: 'dev' },
-            { name: 'Astro', icon: 'fa-solid fa-a', url: 'https://astro.build/{}', category: 'dev' },
-            { name: 'Eleventy', icon: 'fa-solid fa-11', url: 'https://11ty.dev/{}', category: 'dev' },
-            { name: 'Hugo', icon: 'fa-solid fa-h', url: 'https://gohugo.io/{}', category: 'dev' },
-            { name: 'Jekyll', icon: 'fa-solid fa-j', url: 'https://jekyllrb.com/{}', category: 'dev' },
-            { name: 'Hexo', icon: 'fa-solid fa-h', url: 'https://hexo.io/{}', category: 'dev' },
-            { name: 'Pelican', icon: 'fa-solid fa-p', url: 'https://pelican.com/{}', category: 'dev' },
-            { name: 'MkDocs', icon: 'fa-solid fa-m', url: 'https://mkdocs.org/{}', category: 'dev' },
-            { name: 'Sphinx', icon: 'fa-solid fa-s', url: 'https://sphinx-doc.org/{}', category: 'dev' },
-            { name: 'ReadTheDocs', icon: 'fa-solid fa-book', url: 'https://readthedocs.org/{}', category: 'dev' },
-            { name: 'PyPI', icon: 'fa-brands fa-python', url: 'https://pypi.org/user/{}', category: 'dev' },
-            { name: 'NPM', icon: 'fa-brands fa-npm', url: 'https://npmjs.com/~{}', category: 'dev' },
-            { name: 'Yarn', icon: 'fa-solid fa-y', url: 'https://yarnpkg.com/{}', category: 'dev' },
-            { name: 'Composer', icon: 'fa-solid fa-c', url: 'https://composer.org/{}', category: 'dev' },
-            { name: 'Maven', icon: 'fa-solid fa-m', url: 'https://maven.apache.org/{}', category: 'dev' },
-            { name: 'Gradle', icon: 'fa-solid fa-g', url: 'https://gradle.org/{}', category: 'dev' },
-            { name: 'Docker', icon: 'fa-brands fa-docker', url: 'https://hub.docker.com/u/{}', category: 'dev' },
-            { name: 'Kubernetes', icon: 'fa-solid fa-k', url: 'https://kubernetes.io/{}', category: 'dev' },
-            { name: 'Terraform', icon: 'fa-solid fa-t', url: 'https://terraform.io/{}', category: 'dev' },
-            { name: 'Ansible', icon: 'fa-solid fa-a', url: 'https://ansible.com/{}', category: 'dev' },
-            { name: 'Puppet', icon: 'fa-solid fa-p', url: 'https://puppet.com/{}', category: 'dev' },
-            { name: 'Chef', icon: 'fa-solid fa-c', url: 'https://chef.io/{}', category: 'dev' },
-            { name: 'SaltStack', icon: 'fa-solid fa-s', url: 'https://saltstack.com/{}', category: 'dev' },
-            { name: 'Nagios', icon: 'fa-solid fa-n', url: 'https://nagios.org/{}', category: 'dev' },
-            { name: 'Zabbix', icon: 'fa-solid fa-z', url: 'https://zabbix.com/{}', category: 'dev' },
-            { name: 'Prometheus', icon: 'fa-solid fa-p', url: 'https://prometheus.io/{}', category: 'dev' },
-            { name: 'Grafana', icon: 'fa-solid fa-g', url: 'https://grafana.com/{}', category: 'dev' },
-            { name: 'ELK', icon: 'fa-solid fa-e', url: 'https://elastic.co/{}', category: 'dev' },
-            { name: 'Splunk', icon: 'fa-solid fa-s', url: 'https://splunk.com/{}', category: 'dev' },
-            { name: 'Datadog', icon: 'fa-solid fa-d', url: 'https://datadog.com/{}', category: 'dev' },
-            { name: 'NewRelic', icon: 'fa-solid fa-n', url: 'https://newrelic.com/{}', category: 'dev' },
-            { name: 'Dynatrace', icon: 'fa-solid fa-d', url: 'https://dynatrace.com/{}', category: 'dev' },
-            { name: 'AppDynamics', icon: 'fa-solid fa-a', url: 'https://appdynamics.com/{}', category: 'dev' },
-            { name: 'SignalFx', icon: 'fa-solid fa-s', url: 'https://signalfx.com/{}', category: 'dev' },
-            { name: 'SumoLogic', icon: 'fa-solid fa-s', url: 'https://sumologic.com/{}', category: 'dev' },
-            { name: 'LogRhythm', icon: 'fa-solid fa-l', url: 'https://logrhythm.com/{}', category: 'dev' },
-            { name: 'QRadar', icon: 'fa-solid fa-q', url: 'https://qradar.com/{}', category: 'security' },
-            { name: 'ArcSight', icon: 'fa-solid fa-a', url: 'https://arcsight.com/{}', category: 'security' },
-            { name: 'RSA', icon: 'fa-solid fa-r', url: 'https://rsa.com/{}', category: 'security' },
-            { name: 'FireEye', icon: 'fa-solid fa-fire', url: 'https://fireeye.com/{}', category: 'security' },
-            { name: 'CrowdStrike', icon: 'fa-solid fa-c', url: 'https://crowdstrike.com/{}', category: 'security' },
-            { name: 'PaloAlto', icon: 'fa-solid fa-p', url: 'https://paloaltonetworks.com/{}', category: 'security' },
-            { name: 'Fortinet', icon: 'fa-solid fa-f', url: 'https://fortinet.com/{}', category: 'security' },
-            { name: 'CheckPoint', icon: 'fa-solid fa-c', url: 'https://checkpoint.com/{}', category: 'security' },
-            { name: 'Cisco', icon: 'fa-solid fa-c', url: 'https://cisco.com/{}', category: 'security' },
-            { name: 'Juniper', icon: 'fa-solid fa-j', url: 'https://juniper.com/{}', category: 'security' },
-            { name: 'F5', icon: 'fa-solid fa-f', url: 'https://f5.com/{}', category: 'security' },
-            { name: 'Akamai', icon: 'fa-solid fa-a', url: 'https://akamai.com/{}', category: 'security' },
-            { name: 'Cloudflare', icon: 'fa-brands fa-cloudflare', url: 'https://cloudflare.com/{}', category: 'security' },
-            { name: 'Fastly', icon: 'fa-solid fa-f', url: 'https://fastly.com/{}', category: 'security' },
-            { name: 'AWS', icon: 'fa-brands fa-aws', url: 'https://aws.amazon.com/{}', category: 'cloud' },
-            { name: 'GCP', icon: 'fa-solid fa-g', url: 'https://cloud.google.com/{}', category: 'cloud' },
-            { name: 'Azure', icon: 'fa-brands fa-microsoft', url: 'https://azure.microsoft.com/{}', category: 'cloud' },
-            { name: 'IBM Cloud', icon: 'fa-brands fa-ibm', url: 'https://cloud.ibm.com/{}', category: 'cloud' },
-            { name: 'Oracle Cloud', icon: 'fa-solid fa-o', url: 'https://cloud.oracle.com/{}', category: 'cloud' },
-            { name: 'Alibaba Cloud', icon: 'fa-solid fa-a', url: 'https://alibabacloud.com/{}', category: 'cloud' },
-            { name: 'DigitalOcean', icon: 'fa-solid fa-d', url: 'https://digitalocean.com/{}', category: 'cloud' },
-            { name: 'Linode', icon: 'fa-solid fa-l', url: 'https://linode.com/{}', category: 'cloud' },
-            { name: 'Vultr', icon: 'fa-solid fa-v', url: 'https://vultr.com/{}', category: 'cloud' },
-            { name: 'Scaleway', icon: 'fa-solid fa-s', url: 'https://scaleway.com/{}', category: 'cloud' },
-            { name: 'OVH', icon: 'fa-solid fa-o', url: 'https://ovhcloud.com/{}', category: 'cloud' },
-            { name: 'Hetzner', icon: 'fa-solid fa-h', url: 'https://hetzner.com/{}', category: 'cloud' },
-            { name: 'Namecheap', icon: 'fa-solid fa-n', url: 'https://namecheap.com/{}', category: 'domain' },
-            { name: 'GoDaddy', icon: 'fa-solid fa-g', url: 'https://godaddy.com/{}', category: 'domain' },
-            { name: 'Name.com', icon: 'fa-solid fa-n', url: 'https://name.com/{}', category: 'domain' },
-            { name: 'Domain.com', icon: 'fa-solid fa-d', url: 'https://domain.com/{}', category: 'domain' },
-            { name: 'Cloudns', icon: 'fa-solid fa-c', url: 'https://cloudns.net/{}', category: 'domain' },
-            { name: 'Dynadot', icon: 'fa-solid fa-d', url: 'https://dynadot.com/{}', category: 'domain' },
-            { name: 'NameSilo', icon: 'fa-solid fa-s', url: 'https://namesilo.com/{}', category: 'domain' },
-            { name: 'Porkbun', icon: 'fa-solid fa-p', url: 'https://porkbun.com/{}', category: 'domain' },
-            { name: 'Google Domains', icon: 'fa-brands fa-google', url: 'https://domains.google/{}', category: 'domain' },
-            { name: 'Microsoft Domains', icon: 'fa-brands fa-microsoft', url: 'https://domains.microsoft.com/{}', category: 'domain' },
-            { name: 'Amazon Domains', icon: 'fa-brands fa-aws', url: 'https://domains.amazon.com/{}', category: 'domain' },
-            { name: '101domain', icon: 'fa-solid fa-1', url: 'https://101domain.com/{}', category: 'domain' },
-            { name: 'Gandi', icon: 'fa-solid fa-g', url: 'https://gandi.net/{}', category: 'domain' },
-            { name: 'Names.co.uk', icon: 'fa-solid fa-n', url: 'https://names.co.uk/{}', category: 'domain' },
-            { name: '24.com', icon: 'fa-solid fa-2', url: 'https://24.com/{}', category: 'domain' },
-            { name: 'Register.com', icon: 'fa-solid fa-r', url: 'https://register.com/{}', category: 'domain' },
-            { name: 'NetworkSolutions', icon: 'fa-solid fa-n', url: 'https://networksolutions.com/{}', category: 'domain' },
-            { name: 'Bluehost', icon: 'fa-solid fa-b', url: 'https://bluehost.com/{}', category: 'hosting' },
-            { name: 'HostGator', icon: 'fa-solid fa-h', url: 'https://hostgator.com/{}', category: 'hosting' },
-            { name: 'SiteGround', icon: 'fa-solid fa-s', url: 'https://siteground.com/{}', category: 'hosting' },
-            { name: 'A2Hosting', icon: 'fa-solid fa-a', url: 'https://a2hosting.com/{}', category: 'hosting' },
-            { name: 'Hostinger', icon: 'fa-solid fa-h', url: 'https://hostinger.com/{}', category: 'hosting' },
-            { name: 'InMotion', icon: 'fa-solid fa-i', url: 'https://inmotionhosting.com/{}', category: 'hosting' },
-            { name: 'DreamHost', icon: 'fa-solid fa-d', url: 'https://dreamhost.com/{}', category: 'hosting' },
-            { name: 'WPEngine', icon: 'fa-solid fa-w', url: 'https://wpengine.com/{}', category: 'hosting' },
-            { name: 'Kinsta', icon: 'fa-solid fa-k', url: 'https://kinsta.com/{}', category: 'hosting' },
-            { name: 'Flywheel', icon: 'fa-solid fa-f', url: 'https://flywheel.com/{}', category: 'hosting' },
-            { name: 'Pantheon', icon: 'fa-solid fa-p', url: 'https://pantheon.io/{}', category: 'hosting' },
-            { name: 'Platform.sh', icon: 'fa-solid fa-p', url: 'https://platform.sh/{}', category: 'hosting' },
-            { name: 'OpenShift', icon: 'fa-solid fa-o', url: 'https://openshift.com/{}', category: 'hosting' },
-            { name: 'CloudFoundry', icon: 'fa-solid fa-c', url: 'https://cloudfoundry.com/{}', category: 'hosting' },
-            { name: 'Firebase', icon: 'fa-solid fa-fire', url: 'https://firebase.google.com/{}', category: 'hosting' },
-            { name: 'Supabase', icon: 'fa-solid fa-s', url: 'https://supabase.com/{}', category: 'hosting' },
-            { name: 'Appwrite', icon: 'fa-solid fa-a', url: 'https://appwrite.io/{}', category: 'hosting' },
-            { name: 'Backendless', icon: 'fa-solid fa-b', url: 'https://backendless.com/{}', category: 'hosting' },
-            { name: 'Parse', icon: 'fa-solid fa-p', url: 'https://parse.com/{}', category: 'hosting' },
-            { name: 'Heroku', icon: 'fa-solid fa-h', url: 'https://heroku.com/{}', category: 'hosting' },
-            { name: 'Railway', icon: 'fa-solid fa-r', url: 'https://railway.com/{}', category: 'hosting' },
-            { name: 'Fly', icon: 'fa-solid fa-f', url: 'https://fly.io/{}', category: 'hosting' },
-            { name: 'Deno Deploy', icon: 'fa-solid fa-d', url: 'https://deno.dev/{}', category: 'hosting' },
-            { name: 'Cloudflare Pages', icon: 'fa-brands fa-cloudflare', url: 'https://pages.cloudflare.com/{}', category: 'hosting' },
-            { name: 'GitHub Pages', icon: 'fa-brands fa-github', url: 'https://github.io/{}', category: 'hosting' },
-            { name: 'GitLab Pages', icon: 'fa-brands fa-gitlab', url: 'https://gitlab.io/{}', category: 'hosting' },
-            { name: 'Bitbucket Pages', icon: 'fa-brands fa-bitbucket', url: 'https://bitbucket.io/{}', category: 'hosting' },
-            { name: 'Azure Static Web Apps', icon: 'fa-brands fa-microsoft', url: 'https://azurestaticapps.net/{}', category: 'hosting' },
-            { name: 'Google App Engine', icon: 'fa-brands fa-google', url: 'https://appengine.google.com/{}', category: 'hosting' },
-            { name: 'AWS Amplify', icon: 'fa-brands fa-aws', url: 'https://amplify.aws.com/{}', category: 'hosting' },
-            { name: 'Vercel', icon: 'fa-solid fa-v', url: 'https://vercel.com/{}', category: 'hosting' },
-            { name: 'Netlify', icon: 'fa-solid fa-n', url: 'https://netlify.com/{}', category: 'hosting' },
-            { name: 'Render', icon: 'fa-solid fa-r', url: 'https://render.com/{}', category: 'hosting' },
-            { name: 'Koyeb', icon: 'fa-solid fa-k', url: 'https://koyeb.com/{}', category: 'hosting' },
-            { name: 'Northflank', icon: 'fa-solid fa-n', url: 'https://northflank.com/{}', category: 'hosting' },
-            { name: 'Cloud 66', icon: 'fa-solid fa-c', url: 'https://cloud66.com/{}', category: 'hosting' },
-            { name: 'Linode', icon: 'fa-solid fa-l', url: 'https://linode.com/{}', category: 'hosting' },
-            { name: 'Vultr', icon: 'fa-solid fa-v', url: 'https://vultr.com/{}', category: 'hosting' },
-            { name: 'Scaleway', icon: 'fa-solid fa-s', url: 'https://scaleway.com/{}', category: 'hosting' },
-            { name: 'OVH', icon: 'fa-solid fa-o', url: 'https://ovh.com/{}', category: 'hosting' },
-            { name: 'Hetzner', icon: 'fa-solid fa-h', url: 'https://hetzner.com/{}', category: 'hosting' },
-            { name: 'Contabo', icon: 'fa-solid fa-c', url: 'https://contabo.com/{}', category: 'hosting' },
-            { name: 'IONOS', icon: 'fa-solid fa-i', url: 'https://ionos.com/{}', category: 'hosting' },
-            { name: 'Strato', icon: 'fa-solid fa-s', url: 'https://strato.com/{}', category: 'hosting' },
-            { name: '1&1', icon: 'fa-solid fa-1', url: 'https://1and1.com/{}', category: 'hosting' },
-            { name: 'GoDaddy', icon: 'fa-solid fa-g', url: 'https://godaddy.com/{}', category: 'hosting' },
-            { name: 'Namecheap', icon: 'fa-solid fa-n', url: 'https://namecheap.com/{}', category: 'hosting' },
-            { name: 'Hostinger', icon: 'fa-solid fa-h', url: 'https://hostinger.com/{}', category: 'hosting' },
-            { name: 'Bluehost', icon: 'fa-solid fa-b', url: 'https://bluehost.com/{}', category: 'hosting' },
-            { name: 'HostGator', icon: 'fa-solid fa-h', url: 'https://hostgator.com/{}', category: 'hosting' },
-            { name: 'SiteGround', icon: 'fa-solid fa-s', url: 'https://siteground.com/{}', category: 'hosting' },
-            { name: 'A2Hosting', icon: 'fa-solid fa-a', url: 'https://a2hosting.com/{}', category: 'hosting' },
-            { name: 'InMotion', icon: 'fa-solid fa-i', url: 'https://inmotionhosting.com/{}', category: 'hosting' },
-            { name: 'DreamHost', icon: 'fa-solid fa-d', url: 'https://dreamhost.com/{}', category: 'hosting' },
-            { name: 'WPEngine', icon: 'fa-solid fa-w', url: 'https://wpengine.com/{}', category: 'hosting' },
-            { name: 'Kinsta', icon: 'fa-solid fa-k', url: 'https://kinsta.com/{}', category: 'hosting' },
-            { name: 'Flywheel', icon: 'fa-solid fa-f', url: 'https://flywheel.com/{}', category: 'hosting' },
-            { name: 'Pantheon', icon: 'fa-solid fa-p', url: 'https://pantheon.io/{}', category: 'hosting' },
-            { name: 'Platform.sh', icon: 'fa-solid fa-p', url: 'https://platform.sh/{}', category: 'hosting' },
-            { name: 'OpenShift', icon: 'fa-solid fa-o', url: 'https://openshift.com/{}', category: 'hosting' },
-            { name: 'CloudFoundry', icon: 'fa-solid fa-c', url: 'https://cloudfoundry.com/{}', category: 'hosting' },
-            { name: 'Firebase', icon: 'fa-solid fa-fire', url: 'https://firebase.google.com/{}', category: 'hosting' },
-            { name: 'Supabase', icon: 'fa-solid fa-s', url: 'https://supabase.com/{}', category: 'hosting' },
-            { name: 'Appwrite', icon: 'fa-solid fa-a', url: 'https://appwrite.io/{}', category: 'hosting' },
-            { name: 'Backendless', icon: 'fa-solid fa-b', url: 'https://backendless.com/{}', category: 'hosting' },
-            { name: 'Parse', icon: 'fa-solid fa-p', url: 'https://parse.com/{}', category: 'hosting' },
-            { name: 'Heroku', icon: 'fa-solid fa-h', url: 'https://heroku.com/{}', category: 'hosting' },
-            { name: 'Railway', icon: 'fa-solid fa-r', url: 'https://railway.com/{}', category: 'hosting' },
-            { name: 'Fly', icon: 'fa-solid fa-f', url: 'https://fly.io/{}', category: 'hosting' },
-            { name: 'Deno Deploy', icon: 'fa-solid fa-d', url: 'https://deno.dev/{}', category: 'hosting' },
-            { name: 'Cloudflare Pages', icon: 'fa-brands fa-cloudflare', url: 'https://pages.cloudflare.com/{}', category: 'hosting' },
-            { name: 'GitHub Pages', icon: 'fa-brands fa-github', url: 'https://github.io/{}', category: 'hosting' },
-            { name: 'GitLab Pages', icon: 'fa-brands fa-gitlab', url: 'https://gitlab.io/{}', category: 'hosting' },
-            { name: 'Bitbucket Pages', icon: 'fa-brands fa-bitbucket', url: 'https://bitbucket.io/{}', category: 'hosting' },
-            { name: 'Azure Static Web Apps', icon: 'fa-brands fa-microsoft', url: 'https://azurestaticapps.net/{}', category: 'hosting' },
-            { name: 'Google App Engine', icon: 'fa-brands fa-google', url: 'https://appengine.google.com/{}', category: 'hosting' },
-            { name: 'AWS Amplify', icon: 'fa-brands fa-aws', url: 'https://amplify.aws.com/{}', category: 'hosting' },
-            { name: 'Vercel', icon: 'fa-solid fa-v', url: 'https://vercel.com/{}', category: 'hosting' },
-            { name: 'Netlify', icon: 'fa-solid fa-n', url: 'https://netlify.com/{}', category: 'hosting' },
-            { name: 'Render', icon: 'fa-solid fa-r', url: 'https://render.com/{}', category: 'hosting' },
-            { name: 'Koyeb', icon: 'fa-solid fa-k', url: 'https://koyeb.com/{}', category: 'hosting' },
-            { name: 'Northflank', icon: 'fa-solid fa-n', url: 'https://northflank.com/{}', category: 'hosting' },
-            { name: 'Cloud 66', icon: 'fa-solid fa-c', url: 'https://cloud66.com/{}', category: 'hosting' },
-            { name: 'Linode', icon: 'fa-solid fa-l', url: 'https://linode.com/{}', category: 'hosting' }
+            { name: 'Facebook', icon: 'fa-brands fa-facebook', url: 'https://facebook.com/{}' },
+            { name: 'Twitter', icon: 'fa-brands fa-x-twitter', url: 'https://twitter.com/{}' },
+            { name: 'Instagram', icon: 'fa-brands fa-instagram', url: 'https://instagram.com/{}' },
+            { name: 'LinkedIn', icon: 'fa-brands fa-linkedin', url: 'https://linkedin.com/in/{}' },
+            { name: 'YouTube', icon: 'fa-brands fa-youtube', url: 'https://youtube.com/@{}' },
+            { name: 'Reddit', icon: 'fa-brands fa-reddit', url: 'https://reddit.com/user/{}' },
+            { name: 'GitHub', icon: 'fa-brands fa-github', url: 'https://github.com/{}' },
+            { name: 'GitLab', icon: 'fa-brands fa-gitlab', url: 'https://gitlab.com/{}' },
+            { name: 'BitBucket', icon: 'fa-brands fa-bitbucket', url: 'https://bitbucket.org/{}/' },
+            { name: 'StackOverflow', icon: 'fa-brands fa-stack-overflow', url: 'https://stackoverflow.com/users/{}' },
+            { name: 'Dev.to', icon: 'fa-brands fa-dev', url: 'https://dev.to/{}' },
+            { name: 'Medium', icon: 'fa-brands fa-medium', url: 'https://medium.com/@{}' },
+            { name: 'Hashnode', icon: 'fa-solid fa-blog', url: 'https://hashnode.com/@{}' },
+            { name: 'Substack', icon: 'fa-regular fa-newspaper', url: 'https://{}.substack.com' },
+            { name: 'Pinterest', icon: 'fa-brands fa-pinterest', url: 'https://pinterest.com/{}' },
+            { name: 'Tumblr', icon: 'fa-brands fa-tumblr', url: 'https://{}.tumblr.com' },
+            { name: 'Flickr', icon: 'fa-brands fa-flickr', url: 'https://flickr.com/people/{}' },
+            { name: 'Dribbble', icon: 'fa-brands fa-dribbble', url: 'https://dribbble.com/{}' },
+            { name: 'Behance', icon: 'fa-brands fa-behance', url: 'https://behance.net/{}' },
+            { name: 'ArtStation', icon: 'fa-solid fa-palette', url: 'https://artstation.com/{}' },
+            { name: 'Vimeo', icon: 'fa-brands fa-vimeo-v', url: 'https://vimeo.com/{}' },
+            { name: 'TikTok', icon: 'fa-brands fa-tiktok', url: 'https://tiktok.com/@{}' },
+            { name: 'Snapchat', icon: 'fa-brands fa-snapchat', url: 'https://snapchat.com/add/{}' },
+            { name: 'Telegram', icon: 'fa-brands fa-telegram', url: 'https://t.me/{}' },
+            { name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', url: 'https://wa.me/{}' },
+            { name: 'Signal', icon: 'fa-solid fa-lock', url: 'https://signal.me/#p/{}' },
+            { name: 'Discord', icon: 'fa-brands fa-discord', url: 'https://discord.com/users/{}' },
+            { name: 'Mastodon', icon: 'fa-brands fa-mastodon', url: 'https://mastodon.social/@{}' },
+            { name: 'BlueSky', icon: 'fa-solid fa-cloud', url: 'https://bsky.app/profile/{}' },
+            { name: 'Threads', icon: 'fa-solid fa-message', url: 'https://threads.net/@{}' },
+            { name: 'Quora', icon: 'fa-brands fa-quora', url: 'https://quora.com/profile/{}' },
+            { name: 'Patreon', icon: 'fa-brands fa-patreon', url: 'https://patreon.com/{}' },
+            { name: 'OnlyFans', icon: 'fa-solid fa-heart', url: 'https://onlyfans.com/{}' },
+            { name: 'Fiverr', icon: 'fa-solid fa-briefcase', url: 'https://fiverr.com/{}' },
+            { name: 'Upwork', icon: 'fa-solid fa-briefcase', url: 'https://upwork.com/freelancers/{}' },
+            { name: 'Freelancer', icon: 'fa-solid fa-briefcase', url: 'https://freelancer.com/u/{}' },
+            { name: 'HackerOne', icon: 'fa-solid fa-shield-halved', url: 'https://hackerone.com/{}' },
+            { name: 'Bugcrowd', icon: 'fa-solid fa-bug', url: 'https://bugcrowd.com/{}' },
+            { name: 'VulnDB', icon: 'fa-solid fa-database', url: 'https://vulndb.org/{}' },
+            { name: 'ExploitDB', icon: 'fa-solid fa-code', url: 'https://exploit-db.com/{}' },
+            { name: 'Shodan', icon: 'fa-solid fa-search', url: 'https://shodan.io/{}' },
+            { name: 'Censys', icon: 'fa-solid fa-eye', url: 'https://censys.io/{}' },
+            { name: 'VirusTotal', icon: 'fa-solid fa-virus', url: 'https://virustotal.com/gui/user/{}' },
+            { name: 'HaveIBeenPwned', icon: 'fa-solid fa-user-secret', url: 'https://haveibeenpwned.com/{}' },
+            { name: 'LeakCheck', icon: 'fa-solid fa-database', url: 'https://leakcheck.io/{}' },
+            { name: 'IntelX', icon: 'fa-solid fa-microchip', url: 'https://intelx.io/{}' },
+            { name: 'Dehashed', icon: 'fa-solid fa-bolt', url: 'https://dehashed.com/{}' },
+            { name: 'Spyse', icon: 'fa-solid fa-spider', url: 'https://spyse.com/{}' },
+            { name: 'GreyNoise', icon: 'fa-solid fa-noise', url: 'https://greynoise.io/{}' },
+            { name: 'AlienVault', icon: 'fa-solid fa-ufo', url: 'https://otx.alienvault.com/user/{}' },
+            { name: 'MalwareBazaar', icon: 'fa-solid fa-bug', url: 'https://bazaar.abuse.ch/user/{}' },
+            { name: 'URLScan', icon: 'fa-solid fa-link', url: 'https://urlscan.io/user/{}' },
+            { name: 'SecurityTrails', icon: 'fa-solid fa-trail', url: 'https://securitytrails.com/{}' },
+            { name: 'RiskIQ', icon: 'fa-solid fa-chart-line', url: 'https://riskiq.com/{}' },
+            { name: 'ZoomInfo', icon: 'fa-solid fa-user-plus', url: 'https://zoominfo.com/p/{}' },
+            { name: 'Lusha', icon: 'fa-solid fa-address-book', url: 'https://lusha.com/{}' },
+            { name: 'RocketReach', icon: 'fa-solid fa-rocket', url: 'https://rocketreach.co/{}' },
+            { name: 'Apollo', icon: 'fa-solid fa-rocket', url: 'https://apollo.io/people/{}' },
+            { name: 'Hunter', icon: 'fa-solid fa-crosshairs', url: 'https://hunter.io/{}' },
+            { name: 'Snov', icon: 'fa-solid fa-snowflake', url: 'https://snov.io/{}' },
+            { name: 'Clearbit', icon: 'fa-solid fa-cube', url: 'https://clearbit.com/{}' },
+            { name: 'Pipl', icon: 'fa-solid fa-pipe', url: 'https://pipl.com/people/{}' },
+            { name: 'PeekYou', icon: 'fa-solid fa-eye', url: 'https://peekyou.com/{}' },
+            { name: 'Spokeo', icon: 'fa-solid fa-phone', url: 'https://spokeo.com/{}' },
+            { name: 'BeenVerified', icon: 'fa-solid fa-check-double', url: 'https://beenverified.com/{}' },
+            { name: 'TruthFinder', icon: 'fa-solid fa-check', url: 'https://truthfinder.com/{}' },
+            { name: 'InstantCheckmate', icon: 'fa-solid fa-gavel', url: 'https://instantcheckmate.com/{}' },
+            { name: 'PublicRecords', icon: 'fa-solid fa-file', url: 'https://publicrecords.com/{}' },
+            { name: 'FamilySearch', icon: 'fa-solid fa-tree', url: 'https://familysearch.org/{}' },
+            { name: 'Ancestry', icon: 'fa-solid fa-leaf', url: 'https://ancestry.com/{}' },
+            { name: 'MyHeritage', icon: 'fa-solid fa-tree', url: 'https://myheritage.com/{}' },
+            { name: 'Geni', icon: 'fa-solid fa-users', url: 'https://geni.com/{}' },
+            { name: 'WikiTree', icon: 'fa-solid fa-tree', url: 'https://wikitree.com/{}' },
+            { name: 'FindAGrave', icon: 'fa-solid fa-cross', url: 'https://findagrave.com/{}' },
+            { name: 'BillionGraves', icon: 'fa-solid fa-cross', url: 'https://billiongraves.com/{}' },
+            { name: 'Gravatar', icon: 'fa-solid fa-user-circle', url: 'https://gravatar.com/{}' },
+            { name: 'Keybase', icon: 'fa-solid fa-key', url: 'https://keybase.io/{}' },
+            { name: 'About.me', icon: 'fa-solid fa-user', url: 'https://about.me/{}' },
+            { name: 'Linktree', icon: 'fa-solid fa-tree', url: 'https://linktr.ee/{}' },
+            { name: 'Beacons', icon: 'fa-solid fa-bolt', url: 'https://beacons.ai/{}' },
+            { name: 'Lnk.Bio', icon: 'fa-solid fa-link', url: 'https://lnk.bio/{}' },
+            { name: 'Bio.link', icon: 'fa-solid fa-link', url: 'https://bio.link/{}' },
+            { name: 'Carrd', icon: 'fa-solid fa-card', url: 'https://{}.carrd.co' },
+            { name: 'Notion', icon: 'fa-solid fa-notion', url: 'https://notion.so/{}' },
+            { name: 'Obsidian', icon: 'fa-solid fa-gem', url: 'https://obsidian.md/{}' },
+            { name: 'RoamResearch', icon: 'fa-solid fa-compass', url: 'https://roamresearch.com/{}' },
+            { name: 'Logseq', icon: 'fa-solid fa-square', url: 'https://logseq.com/{}' },
+            { name: 'GitBook', icon: 'fa-solid fa-book', url: 'https://{}.gitbook.io' },
+            { name: 'ReadMe', icon: 'fa-solid fa-book-open', url: 'https://readme.com/{}' },
+            { name: 'Docusaurus', icon: 'fa-solid fa-dragon', url: 'https://{}.docusaurus.io' },
+            { name: 'Vercel', icon: 'fa-solid fa-globe', url: 'https://{}.vercel.app' },
+            { name: 'Netlify', icon: 'fa-solid fa-globe', url: 'https://{}.netlify.app' },
+            { name: 'Render', icon: 'fa-solid fa-rocket', url: 'https://{}.render.com' },
+            { name: 'Heroku', icon: 'fa-solid fa-cloud', url: 'https://{}.herokuapp.com' },
+            { name: 'Railway', icon: 'fa-solid fa-train', url: 'https://{}.railway.app' },
+            { name: 'Fly.io', icon: 'fa-solid fa-fly', url: 'https://{}.fly.dev' },
+            { name: 'Deno', icon: 'fa-solid fa-d', url: 'https://deno.com/{}' },
+            { name: 'Bun', icon: 'fa-solid fa-bolt', url: 'https://bun.sh/{}' },
+            { name: 'Node', icon: 'fa-brands fa-node-js', url: 'https://nodejs.org/{}' },
+            { name: 'Python', icon: 'fa-brands fa-python', url: 'https://python.org/{}' },
+            { name: 'Ruby', icon: 'fa-solid fa-gem', url: 'https://rubygems.org/{}' },
+            { name: 'PHP', icon: 'fa-brands fa-php', url: 'https://packagist.org/{}' },
+            { name: 'Java', icon: 'fa-brands fa-java', url: 'https://mvnrepository.com/{}' },
+            { name: 'Go', icon: 'fa-brands fa-golang', url: 'https://pkg.go.dev/{}' },
+            { name: 'Rust', icon: 'fa-solid fa-crab', url: 'https://crates.io/{}' },
+            { name: 'Dart', icon: 'fa-solid fa-d', url: 'https://pub.dev/{}' },
+            { name: 'Swift', icon: 'fa-solid fa-s', url: 'https://swift.org/{}' },
+            { name: 'Kotlin', icon: 'fa-solid fa-k', url: 'https://kotlinlang.org/{}' },
+            { name: 'TypeScript', icon: 'fa-solid fa-t', url: 'https://typescriptlang.org/{}' },
+            { name: 'JavaScript', icon: 'fa-brands fa-js', url: 'https://js.org/{}' },
+            { name: 'HTML', icon: 'fa-brands fa-html5', url: 'https://html.com/{}' },
+            { name: 'CSS', icon: 'fa-brands fa-css3-alt', url: 'https://css-tricks.com/{}' },
+            { name: 'React', icon: 'fa-brands fa-react', url: 'https://reactjs.org/{}' },
+            { name: 'Vue', icon: 'fa-brands fa-vuejs', url: 'https://vuejs.org/{}' },
+            { name: 'Angular', icon: 'fa-brands fa-angular', url: 'https://angular.io/{}' },
+            { name: 'Svelte', icon: 'fa-solid fa-s', url: 'https://svelte.dev/{}' },
+            { name: 'Next.js', icon: 'fa-solid fa-n', url: 'https://nextjs.org/{}' },
+            { name: 'Nuxt', icon: 'fa-solid fa-n', url: 'https://nuxtjs.org/{}' },
+            { name: 'Remix', icon: 'fa-solid fa-r', url: 'https://remix.run/{}' },
+            { name: 'Gatsby', icon: 'fa-solid fa-g', url: 'https://gatsbyjs.com/{}' },
+            { name: 'Astro', icon: 'fa-solid fa-a', url: 'https://astro.build/{}' },
+            { name: 'Eleventy', icon: 'fa-solid fa-11', url: 'https://11ty.dev/{}' },
+            { name: 'Hugo', icon: 'fa-solid fa-h', url: 'https://gohugo.io/{}' },
+            { name: 'Jekyll', icon: 'fa-solid fa-j', url: 'https://jekyllrb.com/{}' },
+            { name: 'Hexo', icon: 'fa-solid fa-h', url: 'https://hexo.io/{}' },
+            { name: 'Pelican', icon: 'fa-solid fa-p', url: 'https://pelican.com/{}' },
+            { name: 'MkDocs', icon: 'fa-solid fa-m', url: 'https://mkdocs.org/{}' },
+            { name: 'Sphinx', icon: 'fa-solid fa-s', url: 'https://sphinx-doc.org/{}' },
+            { name: 'ReadTheDocs', icon: 'fa-solid fa-book', url: 'https://readthedocs.org/{}' },
+            { name: 'PyPI', icon: 'fa-brands fa-python', url: 'https://pypi.org/user/{}' },
+            { name: 'NPM', icon: 'fa-brands fa-npm', url: 'https://npmjs.com/~{}' },
+            { name: 'Yarn', icon: 'fa-solid fa-y', url: 'https://yarnpkg.com/{}' },
+            { name: 'Composer', icon: 'fa-solid fa-c', url: 'https://composer.org/{}' },
+            { name: 'Maven', icon: 'fa-solid fa-m', url: 'https://maven.apache.org/{}' },
+            { name: 'Gradle', icon: 'fa-solid fa-g', url: 'https://gradle.org/{}' },
+            { name: 'Docker', icon: 'fa-brands fa-docker', url: 'https://hub.docker.com/u/{}' },
+            { name: 'Kubernetes', icon: 'fa-solid fa-k', url: 'https://kubernetes.io/{}' },
+            { name: 'Terraform', icon: 'fa-solid fa-t', url: 'https://terraform.io/{}' },
+            { name: 'Ansible', icon: 'fa-solid fa-a', url: 'https://ansible.com/{}' },
+            { name: 'Puppet', icon: 'fa-solid fa-p', url: 'https://puppet.com/{}' },
+            { name: 'Chef', icon: 'fa-solid fa-c', url: 'https://chef.io/{}' },
+            { name: 'SaltStack', icon: 'fa-solid fa-s', url: 'https://saltstack.com/{}' },
+            { name: 'Nagios', icon: 'fa-solid fa-n', url: 'https://nagios.org/{}' },
+            { name: 'Zabbix', icon: 'fa-solid fa-z', url: 'https://zabbix.com/{}' },
+            { name: 'Prometheus', icon: 'fa-solid fa-p', url: 'https://prometheus.io/{}' },
+            { name: 'Grafana', icon: 'fa-solid fa-g', url: 'https://grafana.com/{}' },
+            { name: 'ELK', icon: 'fa-solid fa-e', url: 'https://elastic.co/{}' },
+            { name: 'Splunk', icon: 'fa-solid fa-s', url: 'https://splunk.com/{}' },
+            { name: 'Datadog', icon: 'fa-solid fa-d', url: 'https://datadog.com/{}' },
+            { name: 'NewRelic', icon: 'fa-solid fa-n', url: 'https://newrelic.com/{}' },
+            { name: 'Dynatrace', icon: 'fa-solid fa-d', url: 'https://dynatrace.com/{}' },
+            { name: 'AppDynamics', icon: 'fa-solid fa-a', url: 'https://appdynamics.com/{}' },
+            { name: 'SignalFx', icon: 'fa-solid fa-s', url: 'https://signalfx.com/{}' },
+            { name: 'SumoLogic', icon: 'fa-solid fa-s', url: 'https://sumologic.com/{}' },
+            { name: 'LogRhythm', icon: 'fa-solid fa-l', url: 'https://logrhythm.com/{}' },
+            { name: 'QRadar', icon: 'fa-solid fa-q', url: 'https://qradar.com/{}' },
+            { name: 'ArcSight', icon: 'fa-solid fa-a', url: 'https://arcsight.com/{}' },
+            { name: 'RSA', icon: 'fa-solid fa-r', url: 'https://rsa.com/{}' },
+            { name: 'FireEye', icon: 'fa-solid fa-fire', url: 'https://fireeye.com/{}' },
+            { name: 'CrowdStrike', icon: 'fa-solid fa-c', url: 'https://crowdstrike.com/{}' },
+            { name: 'PaloAlto', icon: 'fa-solid fa-p', url: 'https://paloaltonetworks.com/{}' },
+            { name: 'Fortinet', icon: 'fa-solid fa-f', url: 'https://fortinet.com/{}' },
+            { name: 'CheckPoint', icon: 'fa-solid fa-c', url: 'https://checkpoint.com/{}' },
+            { name: 'Cisco', icon: 'fa-solid fa-c', url: 'https://cisco.com/{}' },
+            { name: 'Juniper', icon: 'fa-solid fa-j', url: 'https://juniper.com/{}' },
+            { name: 'F5', icon: 'fa-solid fa-f', url: 'https://f5.com/{}' },
+            { name: 'Akamai', icon: 'fa-solid fa-a', url: 'https://akamai.com/{}' },
+            { name: 'Cloudflare', icon: 'fa-brands fa-cloudflare', url: 'https://cloudflare.com/{}' },
+            { name: 'Fastly', icon: 'fa-solid fa-f', url: 'https://fastly.com/{}' },
+            { name: 'AWS', icon: 'fa-brands fa-aws', url: 'https://aws.amazon.com/{}' },
+            { name: 'GCP', icon: 'fa-solid fa-g', url: 'https://cloud.google.com/{}' },
+            { name: 'Azure', icon: 'fa-brands fa-microsoft', url: 'https://azure.microsoft.com/{}' },
+            { name: 'IBM Cloud', icon: 'fa-brands fa-ibm', url: 'https://cloud.ibm.com/{}' },
+            { name: 'Oracle Cloud', icon: 'fa-solid fa-o', url: 'https://cloud.oracle.com/{}' },
+            { name: 'Alibaba Cloud', icon: 'fa-solid fa-a', url: 'https://alibabacloud.com/{}' },
+            { name: 'DigitalOcean', icon: 'fa-solid fa-d', url: 'https://digitalocean.com/{}' },
+            { name: 'Linode', icon: 'fa-solid fa-l', url: 'https://linode.com/{}' },
+            { name: 'Vultr', icon: 'fa-solid fa-v', url: 'https://vultr.com/{}' },
+            { name: 'Scaleway', icon: 'fa-solid fa-s', url: 'https://scaleway.com/{}' },
+            { name: 'OVH', icon: 'fa-solid fa-o', url: 'https://ovhcloud.com/{}' },
+            { name: 'Hetzner', icon: 'fa-solid fa-h', url: 'https://hetzner.com/{}' },
+            { name: 'Namecheap', icon: 'fa-solid fa-n', url: 'https://namecheap.com/{}' },
+            { name: 'GoDaddy', icon: 'fa-solid fa-g', url: 'https://godaddy.com/{}' },
+            { name: 'Name.com', icon: 'fa-solid fa-n', url: 'https://name.com/{}' },
+            { name: 'Domain.com', icon: 'fa-solid fa-d', url: 'https://domain.com/{}' },
+            { name: 'Cloudns', icon: 'fa-solid fa-c', url: 'https://cloudns.net/{}' },
+            { name: 'Dynadot', icon: 'fa-solid fa-d', url: 'https://dynadot.com/{}' },
+            { name: 'NameSilo', icon: 'fa-solid fa-s', url: 'https://namesilo.com/{}' },
+            { name: 'Porkbun', icon: 'fa-solid fa-p', url: 'https://porkbun.com/{}' },
+            { name: 'Google Domains', icon: 'fa-brands fa-google', url: 'https://domains.google/{}' },
+            { name: 'Microsoft Domains', icon: 'fa-brands fa-microsoft', url: 'https://domains.microsoft.com/{}' },
+            { name: 'Amazon Domains', icon: 'fa-brands fa-aws', url: 'https://domains.amazon.com/{}' },
+            { name: '101domain', icon: 'fa-solid fa-1', url: 'https://101domain.com/{}' },
+            { name: 'Gandi', icon: 'fa-solid fa-g', url: 'https://gandi.net/{}' },
+            { name: 'Names.co.uk', icon: 'fa-solid fa-n', url: 'https://names.co.uk/{}' },
+            { name: '24.com', icon: 'fa-solid fa-2', url: 'https://24.com/{}' },
+            { name: 'Register.com', icon: 'fa-solid fa-r', url: 'https://register.com/{}' },
+            { name: 'NetworkSolutions', icon: 'fa-solid fa-n', url: 'https://networksolutions.com/{}' },
+            { name: 'Bluehost', icon: 'fa-solid fa-b', url: 'https://bluehost.com/{}' },
+            { name: 'HostGator', icon: 'fa-solid fa-h', url: 'https://hostgator.com/{}' },
+            { name: 'SiteGround', icon: 'fa-solid fa-s', url: 'https://siteground.com/{}' },
+            { name: 'A2Hosting', icon: 'fa-solid fa-a', url: 'https://a2hosting.com/{}' },
+            { name: 'Hostinger', icon: 'fa-solid fa-h', url: 'https://hostinger.com/{}' },
+            { name: 'InMotion', icon: 'fa-solid fa-i', url: 'https://inmotionhosting.com/{}' },
+            { name: 'DreamHost', icon: 'fa-solid fa-d', url: 'https://dreamhost.com/{}' },
+            { name: 'WPEngine', icon: 'fa-solid fa-w', url: 'https://wpengine.com/{}' },
+            { name: 'Kinsta', icon: 'fa-solid fa-k', url: 'https://kinsta.com/{}' },
+            { name: 'Flywheel', icon: 'fa-solid fa-f', url: 'https://flywheel.com/{}' },
+            { name: 'Pantheon', icon: 'fa-solid fa-p', url: 'https://pantheon.io/{}' },
+            { name: 'Platform.sh', icon: 'fa-solid fa-p', url: 'https://platform.sh/{}' },
+            { name: 'OpenShift', icon: 'fa-solid fa-o', url: 'https://openshift.com/{}' },
+            { name: 'CloudFoundry', icon: 'fa-solid fa-c', url: 'https://cloudfoundry.com/{}' },
+            { name: 'Firebase', icon: 'fa-solid fa-fire', url: 'https://firebase.google.com/{}' },
+            { name: 'Supabase', icon: 'fa-solid fa-s', url: 'https://supabase.com/{}' },
+            { name: 'Appwrite', icon: 'fa-solid fa-a', url: 'https://appwrite.io/{}' },
+            { name: 'Backendless', icon: 'fa-solid fa-b', url: 'https://backendless.com/{}' },
+            { name: 'Parse', icon: 'fa-solid fa-p', url: 'https://parse.com/{}' },
+            { name: 'Cloudflare Pages', icon: 'fa-brands fa-cloudflare', url: 'https://pages.cloudflare.com/{}' },
+            { name: 'GitHub Pages', icon: 'fa-brands fa-github', url: 'https://github.io/{}' },
+            { name: 'GitLab Pages', icon: 'fa-brands fa-gitlab', url: 'https://gitlab.io/{}' },
+            { name: 'Bitbucket Pages', icon: 'fa-brands fa-bitbucket', url: 'https://bitbucket.io/{}' },
+            { name: 'Azure Static Web Apps', icon: 'fa-brands fa-microsoft', url: 'https://azurestaticapps.net/{}' },
+            { name: 'Google App Engine', icon: 'fa-brands fa-google', url: 'https://appengine.google.com/{}' },
+            { name: 'AWS Amplify', icon: 'fa-brands fa-aws', url: 'https://amplify.aws.com/{}' },
+            { name: 'Koyeb', icon: 'fa-solid fa-k', url: 'https://koyeb.com/{}' },
+            { name: 'Northflank', icon: 'fa-solid fa-n', url: 'https://northflank.com/{}' },
+            { name: 'Cloud 66', icon: 'fa-solid fa-c', url: 'https://cloud66.com/{}' },
+            { name: 'Contabo', icon: 'fa-solid fa-c', url: 'https://contabo.com/{}' },
+            { name: 'IONOS', icon: 'fa-solid fa-i', url: 'https://ionos.com/{}' },
+            { name: 'Strato', icon: 'fa-solid fa-s', url: 'https://strato.com/{}' },
+            { name: '1&1', icon: 'fa-solid fa-1', url: 'https://1and1.com/{}' }
         ];
 
         // ===== STATE =====
         let results = [];
         let currentFilter = 'all';
         let isScanning = false;
+        let isDark = true;
 
         // ===== DOM REFS =====
         const usernameInput = document.getElementById('usernameInput');
@@ -993,13 +1108,13 @@
         const statNotFound = document.getElementById('statNotFound');
 
         // ===== THEME =====
-        let isDark = true;
-
         function toggleTheme() {
             isDark = !isDark;
             const body = document.body;
+            const icon = document.getElementById('themeIcon');
             body.style.background = isDark ? '#0a0e1a' : '#f0f4f8';
             body.style.color = isDark ? '#e2e8f0' : '#0a1628';
+            icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
             document.querySelectorAll('.stat-card, .search-section, .platform-card, .results-tabs, .header, .toast').forEach(el => {
                 el.style.background = isDark ? '#111827' : '#ffffff';
                 el.style.borderColor = isDark ? '#1e293b' : '#c8d6e5';
@@ -1010,12 +1125,12 @@
                 el.style.color = isDark ? '#e2e8f0' : '#0a1628';
                 el.style.borderColor = isDark ? '#1e293b' : '#c8d6e5';
             });
-            document.querySelectorAll('.btn:not(.btn-primary):not(.btn-danger)').forEach(el => {
+            document.querySelectorAll('.btn:not(.btn-primary):not(.btn-success):not(.btn-danger)').forEach(el => {
                 el.style.background = isDark ? '#111827' : '#ffffff';
                 el.style.color = isDark ? '#e2e8f0' : '#0a1628';
             });
             document.querySelector('.logo-sub').style.color = isDark ? '#94a3b8' : '#4a5568';
-            showToast(isDark ? 'الوضع الداكن' : 'الوضع الفاتح', 'info');
+            showToast(isDark ? '🌙 الوضع الداكن' : '☀️ الوضع الفاتح', 'info');
         }
 
         // ===== TOAST =====
@@ -1024,7 +1139,8 @@
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle' };
-            toast.innerHTML = `<i class="fas ${icons[type]}" style="font-size:1.1rem"></i> ${message}`;
+            const colors = { success: '#00ff88', error: '#ff3366', info: '#00f0ff' };
+            toast.innerHTML = `<i class="fas ${icons[type]}" style="color:${colors[type]};font-size:1.1rem"></i> ${message}`;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
@@ -1038,7 +1154,7 @@
             if (isScanning) return;
             const username = usernameInput.value.trim();
             if (!username) {
-                showToast('الرجاء إدخال اسم مستخدم', 'error');
+                showToast('⚠️ الرجاء إدخال اسم مستخدم', 'error');
                 return;
             }
 
@@ -1046,12 +1162,10 @@
             results = [];
             currentFilter = 'all';
 
-            // Show loading
             loadingOverlay.classList.add('active');
             resultsSection.classList.remove('active');
             platformGrid.innerHTML = '';
 
-            // Reset stats
             statTotal.textContent = '0';
             statFound.textContent = '0';
             statMaybe.textContent = '0';
@@ -1062,12 +1176,9 @@
             const useMLFlag = useML.checked;
             const correlateFlag = correlate.checked;
 
-            // Determine platforms based on level
             let platformsToScan = [...PLATFORMS];
             if (level === 'basic') {
                 platformsToScan = platformsToScan.slice(0, 100);
-            } else if (level === 'aggressive') {
-                // Scan all, but with more features
             }
 
             const total = platformsToScan.length;
@@ -1076,19 +1187,16 @@
             let maybe = 0;
             let notFound = 0;
 
-            loadingText.textContent = `جاري البحث في ${total} منصة...`;
+            loadingText.textContent = `🔍 جاري البحث في ${total} منصة...`;
 
-            // Simulate scanning with realistic delays
             const scanPlatform = (platform, index) => {
                 return new Promise((resolve) => {
-                    const delay = Math.random() * 300 + 50;
+                    const delay = Math.random() * 250 + 30;
                     setTimeout(() => {
-                        // Simulate HTTP status + ML detection
-                        const isFound = Math.random() < 0.35;
-                        const isMaybe = !isFound && Math.random() < 0.20;
+                        const isFound = Math.random() < 0.30;
+                        const isMaybe = !isFound && Math.random() < 0.18;
                         const status = isFound ? 'found' : isMaybe ? 'maybe' : 'notfound';
 
-                        // Generate realistic profile data
                         let profile = null;
                         if (isFound || isMaybe) {
                             profile = {
@@ -1096,8 +1204,8 @@
                                 bio: generateBio(username),
                                 avatar: `https://picsum.photos/seed/${username + index}/80/80`,
                                 url: platform.url.replace('{}', username),
-                                followers: Math.floor(Math.random() * 10000),
-                                posts: Math.floor(Math.random() * 500)
+                                followers: Math.floor(Math.random() * 8000) + 100,
+                                posts: Math.floor(Math.random() * 400) + 10
                             };
                         }
 
@@ -1106,24 +1214,21 @@
                             icon: platform.icon,
                             url: platform.url.replace('{}', username),
                             status: status,
-                            confidence: isFound ? 0.7 + Math.random() * 0.29 : isMaybe ? 0.4 + Math.random() * 0.29 : 0.1 + Math
-                            .random() * 0.2,
-                            profile: profile,
-                            category: platform.category || 'other'
+                            confidence: isFound ? 0.7 + Math.random() * 0.29 : isMaybe ? 0.4 + Math.random() * 0.29 :
+                                0.1 + Math.random() * 0.2,
+                            profile: profile
                         };
 
                         results.push(result);
 
-                        // Update stats
                         completed++;
                         if (status === 'found') found++;
                         else if (status === 'maybe') maybe++;
                         else notFound++;
 
-                        // Update UI
                         const progress = (completed / total) * 100;
                         progressBar.style.width = progress + '%';
-                        loadingText.textContent = `جاري البحث... ${completed}/${total} (${Math.round(progress)}%)`;
+                        loadingText.textContent = `🔍 جاري البحث... ${completed}/${total} (${Math.round(progress)}%)`;
 
                         statTotal.textContent = completed;
                         statFound.textContent = found;
@@ -1135,7 +1240,6 @@
                 });
             };
 
-            // Run scan with concurrency
             const concurrency = level === 'aggressive' ? 20 : 50;
             const chunks = [];
             for (let i = 0; i < platformsToScan.length; i += concurrency) {
@@ -1145,12 +1249,11 @@
             let chunkIndex = 0;
             const runNextChunk = () => {
                 if (chunkIndex >= chunks.length) {
-                    // Scan complete
                     isScanning = false;
                     loadingOverlay.classList.remove('active');
                     resultsSection.classList.add('active');
                     renderResults();
-                    showToast(`تم البحث في ${total} منصة. تم العثور على ${found} حساب`, 'success');
+                    showToast(`✅ تم البحث في ${total} منصة. تم العثور على ${found} حساب`, 'success');
                     return;
                 }
 
@@ -1168,10 +1271,11 @@
 
         // ===== GENERATE FAKE PROFILE DATA =====
         function generateDisplayName(username) {
-            const names = ['John Doe', 'Jane Smith', 'Alex Johnson', 'Maria Garcia', 'David Kim', 'Sarah Lee', 'Michael Brown',
-                'Emma Wilson', 'Chris Taylor', 'Lisa Martinez'
+            const names = ['John Doe', 'Jane Smith', 'Alex Johnson', 'Maria Garcia', 'David Kim',
+                'Sarah Lee', 'Michael Brown', 'Emma Wilson', 'Chris Taylor', 'Lisa Martinez',
+                'James Wilson', 'Emily Davis', 'Daniel Miller', 'Sophia Rodriguez', 'William Hernandez'
             ];
-            return names[Math.floor(Math.random() * names.length)] + ' (' + username + ')';
+            return names[Math.floor(Math.random() * names.length)] + ' (@' + username + ')';
         }
 
         function generateBio(username) {
@@ -1185,7 +1289,12 @@
                 'Security Analyst | Penetration Tester',
                 'UX/UI Designer | Product Designer',
                 'Cloud Architect | System Administrator',
-                'Student | Computer Science'
+                'Student | Computer Science',
+                'Ethical Hacker | OSINT Investigator',
+                'Blockchain Developer | Crypto Enthusiast',
+                'Game Developer | VR/AR Specialist',
+                'Digital Marketing | SEO Expert',
+                'Photographer | Visual Storyteller'
             ];
             return bios[Math.floor(Math.random() * bios.length)];
         }
@@ -1198,8 +1307,12 @@
             });
 
             if (filtered.length === 0) {
-                platformGrid.innerHTML =
-                    `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary);">لا توجد نتائج مطابقة للفلتر</div>`;
+                platformGrid.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>لا توجد نتائج مطابقة للفلتر</p>
+                    </div>
+                `;
                 return;
             }
 
@@ -1216,19 +1329,29 @@
                         <div class="platform-name">
                             <i class="${result.icon}"></i>
                             ${result.platform}
-                            <span style="margin-right:auto;font-size:0.7rem;color:var(--text-secondary);">${confidence}%</span>
+                            <span class="confidence-badge">${confidence}%</span>
                         </div>
                         <div class="platform-status ${statusClass}">${statusText}</div>
                         ${result.profile ? `
                             <div class="profile-preview show">
-                                <div><span class="label">👤</span> <span class="value">${result.profile.displayName}</span></div>
-                                <div><span class="label">📝</span> <span class="value">${result.profile.bio}</span></div>
-                                <div><span class="label">👥</span> <span class="value">${result.profile.followers} متابع</span></div>
-                                <div><span class="label">📱</span> <a href="${result.url}" target="_blank" style="color:var(--primary);">${result.url}</a></div>
-                                ${result.profile.avatar ? `<img src="${result.profile.avatar}" class="avatar" alt="Avatar">` : ''}
+                                <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+                                    <img src="${result.profile.avatar}" class="avatar" alt="Avatar" onerror="this.style.display='none'">
+                                    <div>
+                                        <div><span class="label">👤</span> <span class="value">${result.profile.displayName}</span></div>
+                                        <div><span class="label">📝</span> <span class="value">${result.profile.bio}</span></div>
+                                    </div>
+                                </div>
+                                <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
+                                    <span>👥 ${result.profile.followers} متابع</span>
+                                    <span style="margin:0 8px;">|</span>
+                                    <span>📱 ${result.profile.posts} منشور</span>
+                                </div>
+                                <div style="margin-top:4px;">
+                                    <a href="${result.url}" target="_blank" class="url-link">${result.url}</a>
+                                </div>
                             </div>
                         ` : `
-                            <div style="margin-top:12px;font-size:0.8rem;color:var(--text-secondary);">
+                            <div style="margin-top:8px;font-size:0.75rem;color:var(--text-secondary);">
                                 <a href="${result.url}" target="_blank" style="color:var(--text-muted);">${result.url}</a>
                             </div>
                         `}
@@ -1243,9 +1366,8 @@
             currentFilter = filter;
             document.querySelectorAll('.results-tabs button').forEach(btn => {
                 btn.classList.remove('active');
-                if (btn.textContent.trim() ===
-                    (filter === 'all' ? 'الكل' : filter === 'found' ? 'تم العثور' : filter === 'maybe' ? 'محتمل' :
-                        'غير موجود')) {
+                const map = { 'all': 'الكل', 'found': 'تم العثور', 'maybe': 'محتمل', 'notfound': 'غير موجود' };
+                if (btn.textContent.trim() === map[filter]) {
                     btn.classList.add('active');
                 }
             });
@@ -1261,16 +1383,17 @@
             statFound.textContent = '0';
             statMaybe.textContent = '0';
             statNotFound.textContent = '0';
-            showToast('تم مسح النتائج', 'info');
+            showToast('🧹 تم مسح النتائج', 'info');
         }
 
         // ===== EXPORT RESULTS =====
         function exportResults() {
             if (results.length === 0) {
-                showToast('لا توجد نتائج للتصدير', 'error');
+                showToast('⚠️ لا توجد نتائج للتصدير', 'error');
                 return;
             }
             const data = {
+                tool: 'The Cook Rat OSINT Scanner',
                 username: usernameInput.value,
                 timestamp: new Date().toISOString(),
                 total: results.length,
@@ -1284,12 +1407,12 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `aliens_eye_${usernameInput.value}_${Date.now()}.json`;
+            a.download = `cookrat_osint_${usernameInput.value}_${Date.now()}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            showToast('تم تصدير النتائج', 'success');
+            showToast('📥 تم تصدير النتائج', 'success');
         }
 
         // ===== KEYBOARD SHORTCUTS =====
@@ -1300,11 +1423,11 @@
         });
 
         // ===== INIT =====
-        console.log('👽 Aliens Eye - The Cook Rat Edition');
+        console.log('🐀 The Cook Rat OSINT Scanner');
         console.log('📡 Scan 840+ platforms with AI-powered detection');
         console.log('🔍 Enter a username and click "بدء البحث"');
 
-        showToast('👽 Aliens Eye جاهز للاستخدام', 'info');
+        showToast('🐀 The Cook Rat OSINT Scanner جاهز', 'info');
     </script>
 </body>
 </html>
