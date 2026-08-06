@@ -3,298 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Cook Rat OSINT Scanner</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐀</text></svg>">
+    <title>The Cook Rat - Phone Validator (Real API)</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --primary: #00f0ff;
-            --primary-dark: #0099cc;
             --bg-dark: #0a0e1a;
             --bg-card: #111827;
-            --bg-card-hover: #1a2332;
             --text-primary: #e2e8f0;
             --text-secondary: #94a3b8;
-            --text-muted: #64748b;
             --border: #1e293b;
-            --border-hover: #00f0ff;
-            --glow: 0 0 20px rgba(0, 240, 255, 0.3);
-            --glow-strong: 0 0 40px rgba(0, 240, 255, 0.5);
             --success: #00ff88;
             --danger: #ff3366;
             --warning: #ffaa00;
-            --leak-critical: #ff0044;
-            --leak-high: #ff6600;
-            --leak-medium: #ffaa00;
-            --leak-low: #00ccff;
+            --glow: 0 0 20px rgba(0, 240, 255, 0.3);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
-            background-image: 
-                radial-gradient(ellipse at 20% 80%, rgba(0, 240, 255, 0.05) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 20%, rgba(0, 240, 255, 0.03) 0%, transparent 50%);
-            transition: all 0.3s;
+            padding: 40px 20px;
+            background-image: radial-gradient(ellipse at 20% 80%, rgba(0, 240, 255, 0.05) 0%, transparent 60%);
         }
 
-        /* ===== Header ===== */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         .header {
-            background: rgba(17, 24, 39, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-            padding: 12px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: all 0.3s;
-            flex-wrap: wrap;
-            gap: 10px;
+            text-align: center;
+            margin-bottom: 40px;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
+        .header .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
         }
 
-        .logo img {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            border: 2px solid var(--primary);
-            box-shadow: var(--glow);
-            transition: all 0.3s;
-        }
-
-        .logo img:hover {
-            box-shadow: var(--glow-strong);
-            transform: scale(1.05);
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
+        .header h1 {
+            font-size: 2.4rem;
             font-weight: 900;
             background: linear-gradient(135deg, var(--primary), #00ccff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
         }
 
-        .logo-sub {
-            font-size: 0.65rem;
+        .header p {
             color: var(--text-secondary);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 8px;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--glow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.5;
         }
 
         .btn {
-            padding: 9px 20px;
+            padding: 12px 28px;
             border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-primary);
+            border: none;
+            font-weight: 700;
             cursor: pointer;
-            font-weight: 600;
             transition: all 0.3s;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-        }
-
-        .btn:hover {
-            border-color: var(--primary);
-            box-shadow: var(--glow);
-            transform: translateY(-2px);
+            font-size: 0.95rem;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, var(--primary), #0099cc);
             color: #000;
-            border: none;
             box-shadow: var(--glow);
+            width: 100%;
+            justify-content: center;
         }
 
         .btn-primary:hover {
-            box-shadow: var(--glow-strong);
             transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
         }
 
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger), #cc0044);
-            color: white;
-            border: none;
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-success {
             background: linear-gradient(135deg, var(--success), #00cc66);
             color: #000;
-            border: none;
         }
 
-        .btn-leak {
-            background: linear-gradient(135deg, #ff0044, #cc0033);
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger), #cc0044);
             color: white;
-            border: none;
-            box-shadow: 0 0 20px rgba(255, 0, 68, 0.3);
         }
 
-        .btn-leak:hover {
-            box-shadow: 0 0 40px rgba(255, 0, 68, 0.6);
-            transform: translateY(-2px);
-        }
-
-        /* ===== Container ===== */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 32px 24px;
-        }
-
-        /* ===== Hero ===== */
-        .hero {
-            text-align: center;
-            padding: 30px 20px 40px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 36px;
-        }
-
-        .hero .badge {
-            display: inline-block;
-            background: rgba(0, 240, 255, 0.08);
-            border: 1px solid rgba(0, 240, 255, 0.15);
-            padding: 5px 16px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            color: var(--primary);
-            margin-bottom: 16px;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .hero h1 {
-            font-size: 3.4rem;
-            font-weight: 900;
-            margin-bottom: 14px;
-            background: linear-gradient(135deg, var(--primary), #00ccff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 300% 300%;
-            animation: gradientMove 4s ease infinite;
-            letter-spacing: -1px;
-        }
-
-        @keyframes gradientMove {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            max-width: 700px;
-            margin: 0 auto 20px;
-            line-height: 1.8;
-        }
-
-        .hero .stats-mini {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
+        .result-box {
             margin-top: 20px;
-        }
-
-        .hero .stats-mini span {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .hero .stats-mini strong {
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
-
-        /* ===== Search Mode Tabs ===== */
-        .search-mode-tabs {
-            display: flex;
-            gap: 8px;
-            background: var(--bg-card);
-            padding: 6px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .search-mode-tabs button {
-            padding: 10px 24px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
+            padding: 20px;
+            background: var(--bg-dark);
             border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .search-mode-tabs button:hover {
-            color: var(--text-primary);
-            background: var(--bg-card-hover);
-        }
-
-        .search-mode-tabs button.active {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: #000;
-            box-shadow: var(--glow);
-        }
-
-        .search-mode-tabs button i {
-            font-size: 1rem;
-        }
-
-        /* ===== Search Section ===== */
-        .search-section {
-            background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px 32px;
-            margin-bottom: 36px;
-            transition: all 0.3s;
             display: none;
         }
 
-        .search-section.active {
+        .result-box.active {
             display: block;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.4s ease;
         }
 
         @keyframes fadeIn {
@@ -302,503 +171,129 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .search-section:hover {
-            border-color: var(--border-hover);
-            box-shadow: var(--glow);
-        }
-
-        .search-row {
+        .result-box .row {
             display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
         }
 
-        .search-row .form-group {
-            flex: 1;
-            min-width: 200px;
+        .result-box .row:last-child {
+            border-bottom: none;
         }
 
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 6px;
+        .result-box .label {
             color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 600;
+            font-size: 0.85rem;
         }
 
-        .form-control {
-            width: 100%;
-            padding: 11px 16px;
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+        .result-box .value {
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.92rem;
-            transition: all 0.3s;
+            font-size: 0.9rem;
         }
 
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.08);
+        .result-box .value.valid {
+            color: var(--success);
         }
 
-        .form-control::placeholder {
-            color: var(--text-muted);
-            opacity: 0.6;
+        .result-box .value.invalid {
+            color: var(--danger);
         }
 
-        .search-actions {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-top: 18px;
-            padding-top: 18px;
-            border-top: 1px solid var(--border);
-            align-items: center;
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
         }
 
-        .search-actions .checkbox-group {
-            display: flex;
-            gap: 16px;
-            margin-right: auto;
-            flex-wrap: wrap;
+        .badge-success {
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.2);
         }
 
-        .search-actions .checkbox-group label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            cursor: pointer;
+        .badge-danger {
+            background: rgba(255, 51, 102, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.2);
         }
 
-        .search-actions .checkbox-group input[type="checkbox"] {
-            accent-color: var(--primary);
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
+        .badge-warning {
+            background: rgba(255, 170, 0, 0.15);
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 0, 0.2);
         }
 
-        /* ===== Stats ===== */
-        .stats-grid {
+        .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 16px;
-            margin-bottom: 36px;
+            margin-top: 20px;
         }
 
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px 20px;
+        .stat-item {
             text-align: center;
-            transition: all 0.3s;
+            padding: 16px;
+            background: var(--bg-dark);
+            border-radius: 10px;
+            border: 1px solid var(--border);
         }
 
-        .stat-card:hover {
-            border-color: var(--border-hover);
-            box-shadow: var(--glow);
-        }
-
-        .stat-number {
-            font-size: 2.2rem;
+        .stat-item .number {
+            font-size: 1.8rem;
             font-weight: 900;
             color: var(--primary);
             font-family: 'JetBrains Mono', monospace;
         }
 
-        .stat-number.green { color: var(--success); }
-        .stat-number.orange { color: var(--warning); }
-        .stat-number.red { color: var(--danger); }
-        .stat-number.leak { color: #ff0044; }
-
-        .stat-label {
+        .stat-item .label {
             font-size: 0.75rem;
             color: var(--text-secondary);
             margin-top: 4px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
-        /* ===== Results ===== */
-        .results-section {
-            display: none;
-        }
-
-        .results-section.active {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .results-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .results-header h2 {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-
-        .results-header h2 i {
-            color: var(--primary);
-        }
-
-        .results-tabs {
-            display: flex;
-            gap: 6px;
-            background: var(--bg-card);
-            padding: 4px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            flex-wrap: wrap;
-        }
-
-        .results-tabs button {
-            padding: 6px 14px;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
-            border-radius: 7px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            transition: all 0.3s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .results-tabs button.active {
-            background: var(--primary);
-            color: #000;
-            box-shadow: var(--glow);
-        }
-
-        .results-tabs button:hover:not(.active) {
-            color: var(--text-primary);
-        }
-
-        /* ===== Platform Cards ===== */
-        .platform-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 14px;
-        }
-
-        .platform-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px 18px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .platform-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--primary), #00ccff);
-            transform: scaleX(0);
-            transition: transform 0.4s;
-            transform-origin: left;
-        }
-
-        .platform-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-3px);
-            box-shadow: var(--glow);
-        }
-
-        .platform-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .platform-card .platform-name {
-            font-weight: 700;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .platform-card .platform-name i {
-            color: var(--primary);
-            width: 20px;
-            font-size: 1rem;
-        }
-
-        .platform-card .platform-status {
-            display: inline-block;
-            padding: 2px 10px;
-            border-radius: 16px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        .status-found {
-            background: rgba(0, 255, 136, 0.12);
-            color: var(--success);
-            border: 1px solid rgba(0, 255, 136, 0.15);
-        }
-
-        .status-notfound {
-            background: rgba(255, 51, 102, 0.08);
-            color: var(--danger);
-            border: 1px solid rgba(255, 51, 102, 0.1);
-        }
-
-        .status-maybe {
-            background: rgba(255, 170, 0, 0.08);
-            color: var(--warning);
-            border: 1px solid rgba(255, 170, 0, 0.1);
-        }
-
-        /* ===== Leak Cards ===== */
-        .leak-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 16px 18px;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .leak-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #ff0044, #ff6600);
-            transform: scaleX(0);
-            transition: transform 0.4s;
-            transform-origin: left;
-        }
-
-        .leak-card:hover {
-            border-color: #ff0044;
-            transform: translateY(-3px);
-            box-shadow: 0 0 30px rgba(255, 0, 68, 0.2);
-        }
-
-        .leak-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .leak-card .leak-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .leak-card .leak-name {
-            font-weight: 700;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .leak-card .leak-name i {
-            color: #ff0044;
-        }
-
-        .leak-card .leak-severity {
-            padding: 3px 12px;
-            border-radius: 12px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .severity-critical {
-            background: rgba(255, 0, 68, 0.15);
-            color: #ff0044;
-            border: 1px solid rgba(255, 0, 68, 0.2);
-        }
-
-        .severity-high {
-            background: rgba(255, 102, 0, 0.15);
-            color: #ff6600;
-            border: 1px solid rgba(255, 102, 0, 0.2);
-        }
-
-        .severity-medium {
-            background: rgba(255, 170, 0, 0.15);
-            color: #ffaa00;
-            border: 1px solid rgba(255, 170, 0, 0.2);
-        }
-
-        .severity-low {
-            background: rgba(0, 204, 255, 0.15);
-            color: #00ccff;
-            border: 1px solid rgba(0, 204, 255, 0.2);
-        }
-
-        .leak-card .leak-details {
-            margin-top: 12px;
-            padding: 12px;
-            background: var(--bg-dark);
-            border-radius: 8px;
-            font-size: 0.82rem;
-            border: 1px solid var(--border);
-        }
-
-        .leak-card .leak-details .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .leak-card .leak-details .detail-row:last-child {
-            border-bottom: none;
-        }
-
-        .leak-card .leak-details .label {
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-
-        .leak-card .leak-details .value {
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.78rem;
-        }
-
-        .leak-card .leak-details .value.leaked {
-            color: #ff0044;
-        }
-
-        /* ===== Profile Preview ===== */
-        .platform-card .profile-preview {
-            margin-top: 10px;
-            padding: 10px 12px;
-            background: var(--bg-dark);
-            border-radius: 8px;
-            font-size: 0.78rem;
-            color: var(--text-secondary);
-            display: none;
-            border: 1px solid var(--border);
-        }
-
-        .platform-card .profile-preview.show {
-            display: block;
-        }
-
-        .platform-card .profile-preview .label {
-            color: var(--text-muted);
-            font-weight: 600;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .platform-card .profile-preview .value {
-            color: var(--text-primary);
-            word-break: break-all;
-        }
-
-        .platform-card .profile-preview .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-            margin-top: 6px;
-        }
-
-        .platform-card .profile-preview .url-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 0.75rem;
-            word-break: break-all;
-        }
-
-        .platform-card .profile-preview .url-link:hover {
-            text-decoration: underline;
-        }
-
-        .platform-card .confidence-badge {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-right: auto;
-            background: var(--bg-dark);
-            padding: 2px 8px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        /* ===== Loading ===== */
-        .loading-overlay {
+        .loading {
             display: none;
             text-align: center;
-            padding: 50px 20px;
+            padding: 30px 0;
         }
 
-        .loading-overlay.active {
+        .loading.active {
             display: block;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 3px solid var(--border);
             border-top: 3px solid var(--primary);
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
-            margin: 0 auto 20px;
+            margin: 0 auto 16px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .loading-text {
+        .api-info {
+            font-size: 0.75rem;
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg-dark);
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
-        .loading-progress {
-            max-width: 400px;
-            margin: 14px auto 0;
-            height: 4px;
-            background: var(--border);
-            border-radius: 4px;
-            overflow: hidden;
+        .api-info i {
+            color: var(--primary);
         }
 
-        .loading-progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), #00ccff);
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-
-        /* ===== Toast ===== */
         .toast-container {
             position: fixed;
             bottom: 24px;
@@ -827,32 +322,15 @@
         .toast.success { border-right: 3px solid var(--success); }
         .toast.error { border-right: 3px solid var(--danger); }
         .toast.info { border-right: 3px solid var(--primary); }
-        .toast.leak { border-right: 3px solid #ff0044; }
 
         @keyframes slideIn {
             from { transform: translateX(120%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
 
-        /* ===== Empty State ===== */
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--text-secondary);
-        }
-
-        .empty-state i {
-            font-size: 3rem;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        /* ===== Footer ===== */
         .footer {
             text-align: center;
-            padding: 30px 20px 20px;
+            padding: 30px 20px 10px;
             border-top: 1px solid var(--border);
             margin-top: 40px;
             color: var(--text-muted);
@@ -862,949 +340,339 @@
         .footer a {
             color: var(--primary);
             text-decoration: none;
-            font-weight: 600;
         }
 
-        .footer a:hover {
-            text-shadow: var(--glow-text);
-        }
-
-        /* ===== Scrollbar ===== */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
-
-        /* ===== Responsive ===== */
-        @media (max-width: 768px) {
-            .header { padding: 10px 16px; }
-            .logo-text { font-size: 1.2rem; }
-            .hero h1 { font-size: 2.2rem; }
-            .hero p { font-size: 0.95rem; }
-            .search-row { flex-direction: column; }
-            .search-row .form-group { min-width: auto; }
-            .search-section { padding: 20px; }
-            .platform-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .container { padding: 16px; }
-            .results-tabs { flex-wrap: wrap; justify-content: center; }
-            .search-actions { flex-direction: column; align-items: stretch; }
-            .search-actions .checkbox-group { margin-right: 0; justify-content: center; }
-            .search-mode-tabs button { padding: 8px 16px; font-size: 0.8rem; }
-        }
-
-        @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 1.8rem; }
-            .hero .stats-mini { gap: 12px; }
-            .results-header { flex-direction: column; align-items: stretch; }
-            .results-tabs { justify-content: center; }
+        @media (max-width: 600px) {
+            body { padding: 20px 12px; }
+            .header h1 { font-size: 1.8rem; }
+            .card { padding: 20px; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .result-box .row { flex-direction: column; gap: 4px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== Header ===== -->
-    <header class="header">
-        <div class="logo">
-            <img src="https://pbs.twimg.com/profile_images/2083986675873525760/_swZy6tJ_400x400.jpg" alt="The Cook Rat">
-            <div>
-                <div class="logo-text">The Cook Rat</div>
-                <div class="logo-sub">OSINT Scanner</div>
-            </div>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">🐀</div>
+        <h1>The Cook Rat Phone Validator</h1>
+        <p>تحقق من صحة رقم الهاتف مع <strong>NumVerify API</strong> (100 طلب/شهر)</p>
+        <div style="margin-top:12px;">
+            <span class="badge badge-success"><i class="fas fa-check-circle"></i> API Key: bfdb5d86...4fb7</span>
+            <span class="badge badge-warning" style="margin-right:8px;"><i class="fas fa-chart-bar"></i> 0/100 طلب</span>
         </div>
-        <div class="header-actions">
-            <button class="btn" onclick="toggleTheme()" title="تبديل الوضع"><i class="fas fa-moon" id="themeIcon"></i></button>
-            <button class="btn" onclick="window.open('https://x.com/mouse0000000','_blank')" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></button>
-        </div>
-    </header>
-
-    <!-- ===== Main ===== -->
-    <div class="container">
-
-        <!-- Hero -->
-        <section class="hero">
-            <div class="badge"><i class="fas fa-robot"></i> AI-Powered OSINT Scanner</div>
-            <h1>🐀 The Cook Rat OSINT</h1>
-            <p>ابحث عن حسابات المستخدمين عبر <strong>840+</strong> منصة، أو تحقق من تسريب البريد الإلكتروني ورقم الهاتف باستخدام تقنيات الذكاء الاصطناعي.</p>
-            <div class="stats-mini">
-                <span>🌐 <strong>840+</strong> منصة</span>
-                <span>📧 <strong>بحث</strong> عن البريد الإلكتروني</span>
-                <span>📱 <strong>بحث</strong> عن رقم الهاتف</span>
-                <span>🔍 <strong>كشف</strong> التسريبات</span>
-            </div>
-        </section>
-
-        <!-- ===== Search Mode Tabs ===== -->
-        <div class="search-mode-tabs">
-            <button class="active" onclick="switchSearchMode('username')">
-                <i class="fas fa-user"></i> اسم المستخدم
-            </button>
-            <button onclick="switchSearchMode('email')">
-                <i class="fas fa-envelope"></i> البريد الإلكتروني
-            </button>
-            <button onclick="switchSearchMode('phone')">
-                <i class="fas fa-phone"></i> رقم الهاتف
-            </button>
-        </div>
-
-        <!-- ===== Username Search ===== -->
-        <section class="search-section active" id="search-username">
-            <div class="search-row">
-                <div class="form-group">
-                    <label><i class="fas fa-user"></i> اسم المستخدم</label>
-                    <input type="text" class="form-control" id="usernameInput" placeholder="أدخل اسم المستخدم...">
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-layer-group"></i> مستوى البحث</label>
-                    <select class="form-control" id="scanLevel">
-                        <option value="basic">أساسي (سريع)</option>
-                        <option value="advanced" selected>متقدم (دقيق)</option>
-                        <option value="aggressive">شامل (بطيء)</option>
-                    </select>
-                </div>
-                <div class="form-group" style="flex:0.4; min-width:100px;">
-                    <label><i class="fas fa-clock"></i> المهلة</label>
-                    <select class="form-control" id="timeoutSelect">
-                        <option value="5000">5 ث</option>
-                        <option value="10000" selected>10 ث</option>
-                        <option value="20000">20 ث</option>
-                    </select>
-                </div>
-            </div>
-            <div class="search-actions">
-                <button class="btn btn-primary" onclick="startUsernameScan()">
-                    <i class="fas fa-search"></i> بدء البحث
-                </button>
-                <button class="btn" onclick="clearResults()">
-                    <i class="fas fa-eraser"></i> مسح
-                </button>
-                <button class="btn btn-success" onclick="exportResults()">
-                    <i class="fas fa-download"></i> تصدير JSON
-                </button>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" id="useML" checked> الذكاء الاصطناعي</label>
-                    <label><input type="checkbox" id="correlate"> التجميع التلقائي</label>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== Email Search ===== -->
-        <section class="search-section" id="search-email">
-            <div class="search-row">
-                <div class="form-group">
-                    <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
-                    <input type="email" class="form-control" id="emailInput" placeholder="example@domain.com">
-                </div>
-                <div class="form-group" style="flex:0.3; min-width:120px;">
-                    <label><i class="fas fa-database"></i> عمق البحث</label>
-                    <select class="form-control" id="emailDepth">
-                        <option value="quick">سريع</option>
-                        <option value="deep" selected>عميق</option>
-                        <option value="full">شامل</option>
-                    </select>
-                </div>
-            </div>
-            <div class="search-actions">
-                <button class="btn btn-leak" onclick="startEmailLeakScan()">
-                    <i class="fas fa-exclamation-triangle"></i> فحص التسريب
-                </button>
-                <button class="btn btn-primary" onclick="startEmailUsernameScan()">
-                    <i class="fas fa-user"></i> بحث عن حسابات
-                </button>
-                <button class="btn" onclick="clearResults()">
-                    <i class="fas fa-eraser"></i> مسح
-                </button>
-            </div>
-        </section>
-
-        <!-- ===== Phone Search ===== -->
-        <section class="search-section" id="search-phone">
-            <div class="search-row">
-                <div class="form-group">
-                    <label><i class="fas fa-phone"></i> رقم الهاتف</label>
-                    <input type="tel" class="form-control" id="phoneInput" placeholder="+1234567890">
-                </div>
-                <div class="form-group" style="flex:0.3; min-width:120px;">
-                    <label><i class="fas fa-database"></i> عمق البحث</label>
-                    <select class="form-control" id="phoneDepth">
-                        <option value="quick">سريع</option>
-                        <option value="deep" selected>عميق</option>
-                        <option value="full">شامل</option>
-                    </select>
-                </div>
-            </div>
-            <div class="search-actions">
-                <button class="btn btn-leak" onclick="startPhoneLeakScan()">
-                    <i class="fas fa-exclamation-triangle"></i> فحص التسريب
-                </button>
-                <button class="btn btn-primary" onclick="startPhoneUsernameScan()">
-                    <i class="fas fa-user"></i> بحث عن حسابات
-                </button>
-                <button class="btn" onclick="clearResults()">
-                    <i class="fas fa-eraser"></i> مسح
-                </button>
-            </div>
-        </section>
-
-        <!-- ===== Stats ===== -->
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card">
-                <div class="stat-number" id="statTotal">0</div>
-                <div class="stat-label">إجمالي النتائج</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number green" id="statFound">0</div>
-                <div class="stat-label">✓ تم العثور</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number orange" id="statMaybe">0</div>
-                <div class="stat-label">❓ محتمل</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number red" id="statNotFound">0</div>
-                <div class="stat-label">✗ غير موجود</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number leak" id="statLeaks">0</div>
-                <div class="stat-label">🔴 تسريبات مكتشفة</div>
-            </div>
-        </div>
-
-        <!-- ===== Loading ===== -->
-        <div class="loading-overlay" id="loadingOverlay">
-            <div class="spinner"></div>
-            <div class="loading-text" id="loadingText">جاري البحث...</div>
-            <div class="loading-progress">
-                <div class="loading-progress-bar" id="progressBar"></div>
-            </div>
-        </div>
-
-        <!-- ===== Results ===== -->
-        <div class="results-section" id="resultsSection">
-            <div class="results-header">
-                <h2><i class="fas fa-list"></i> نتائج البحث</h2>
-                <div class="results-tabs">
-                    <button class="active" onclick="filterResults('all')">الكل</button>
-                    <button onclick="filterResults('found')">تم العثور</button>
-                    <button onclick="filterResults('maybe')">محتمل</button>
-                    <button onclick="filterResults('notfound')">غير موجود</button>
-                    <button onclick="filterResults('leak')" style="color:var(--danger);">🔴 تسريبات</button>
-                </div>
-            </div>
-            <div class="platform-grid" id="platformGrid"></div>
-        </div>
-
-        <!-- ===== Footer ===== -->
-        <div class="footer">
-            <p><i class="fas fa-code"></i> The Cook Rat OSINT Scanner - By <a href="https://x.com/mouse0000000" target="_blank">@mouse0000000</a></p>
-            <p style="margin-top:8px;font-size:0.7rem;color:var(--text-muted)">⚠️ استخدم هذه الأداة للأغراض التعليمية والبحث القانوني فقط</p>
-        </div>
-
     </div>
 
-    <!-- ===== Toast Container ===== -->
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- Main Card -->
+    <div class="card">
+        <div class="form-group">
+            <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+            <input type="text" class="form-control" id="phoneInput" placeholder="أدخل رقم الهاتف مع مفتاح الدولة... مثال: +201234567890">
+        </div>
 
-    <script>
-        // ============================================================
-        //  THE COOK RAT OSINT SCANNER
-        //  Username, Email, Phone - Leak Detection
-        // ============================================================
+        <button class="btn btn-primary" id="checkBtn" onclick="validatePhone()">
+            <i class="fas fa-search"></i> التحقق من الرقم
+        </button>
 
-        // ===== PLATFORMS DATABASE =====
-        const PLATFORMS = [
-            { name: 'Facebook', icon: 'fa-brands fa-facebook', url: 'https://facebook.com/{}' },
-            { name: 'Twitter', icon: 'fa-brands fa-x-twitter', url: 'https://twitter.com/{}' },
-            { name: 'Instagram', icon: 'fa-brands fa-instagram', url: 'https://instagram.com/{}' },
-            { name: 'LinkedIn', icon: 'fa-brands fa-linkedin', url: 'https://linkedin.com/in/{}' },
-            { name: 'YouTube', icon: 'fa-brands fa-youtube', url: 'https://youtube.com/@{}' },
-            { name: 'Reddit', icon: 'fa-brands fa-reddit', url: 'https://reddit.com/user/{}' },
-            { name: 'GitHub', icon: 'fa-brands fa-github', url: 'https://github.com/{}' },
-            { name: 'GitLab', icon: 'fa-brands fa-gitlab', url: 'https://gitlab.com/{}' },
-            { name: 'StackOverflow', icon: 'fa-brands fa-stack-overflow', url: 'https://stackoverflow.com/users/{}' },
-            { name: 'Dev.to', icon: 'fa-brands fa-dev', url: 'https://dev.to/{}' },
-            { name: 'Medium', icon: 'fa-brands fa-medium', url: 'https://medium.com/@{}' },
-            { name: 'Hashnode', icon: 'fa-solid fa-blog', url: 'https://hashnode.com/@{}' },
-            { name: 'Pinterest', icon: 'fa-brands fa-pinterest', url: 'https://pinterest.com/{}' },
-            { name: 'Tumblr', icon: 'fa-brands fa-tumblr', url: 'https://{}.tumblr.com' },
-            { name: 'Dribbble', icon: 'fa-brands fa-dribbble', url: 'https://dribbble.com/{}' },
-            { name: 'Behance', icon: 'fa-brands fa-behance', url: 'https://behance.net/{}' },
-            { name: 'TikTok', icon: 'fa-brands fa-tiktok', url: 'https://tiktok.com/@{}' },
-            { name: 'Telegram', icon: 'fa-brands fa-telegram', url: 'https://t.me/{}' },
-            { name: 'Discord', icon: 'fa-brands fa-discord', url: 'https://discord.com/users/{}' },
-            { name: 'Mastodon', icon: 'fa-brands fa-mastodon', url: 'https://mastodon.social/@{}' },
-            { name: 'BlueSky', icon: 'fa-solid fa-cloud', url: 'https://bsky.app/profile/{}' },
-            { name: 'Threads', icon: 'fa-solid fa-message', url: 'https://threads.net/@{}' },
-            { name: 'Quora', icon: 'fa-brands fa-quora', url: 'https://quora.com/profile/{}' },
-            { name: 'Patreon', icon: 'fa-brands fa-patreon', url: 'https://patreon.com/{}' },
-            { name: 'Vimeo', icon: 'fa-brands fa-vimeo-v', url: 'https://vimeo.com/{}' },
-            { name: 'Snapchat', icon: 'fa-brands fa-snapchat', url: 'https://snapchat.com/add/{}' },
-            { name: 'WhatsApp', icon: 'fa-brands fa-whatsapp', url: 'https://wa.me/{}' },
-            { name: 'Signal', icon: 'fa-solid fa-lock', url: 'https://signal.me/#p/{}' },
-            { name: 'HackerOne', icon: 'fa-solid fa-shield-halved', url: 'https://hackerone.com/{}' },
-            { name: 'Bugcrowd', icon: 'fa-solid fa-bug', url: 'https://bugcrowd.com/{}' },
-            { name: 'Shodan', icon: 'fa-solid fa-search', url: 'https://shodan.io/{}' },
-            { name: 'VirusTotal', icon: 'fa-solid fa-virus', url: 'https://virustotal.com/gui/user/{}' },
-            { name: 'HaveIBeenPwned', icon: 'fa-solid fa-user-secret', url: 'https://haveibeenpwned.com/{}' },
-            { name: 'Keybase', icon: 'fa-solid fa-key', url: 'https://keybase.io/{}' },
-            { name: 'About.me', icon: 'fa-solid fa-user', url: 'https://about.me/{}' },
-            { name: 'Linktree', icon: 'fa-solid fa-tree', url: 'https://linktr.ee/{}' },
-            { name: 'Beacons', icon: 'fa-solid fa-bolt', url: 'https://beacons.ai/{}' },
-            { name: 'Carrd', icon: 'fa-solid fa-card', url: 'https://{}.carrd.co' },
-            { name: 'Vercel', icon: 'fa-solid fa-globe', url: 'https://{}.vercel.app' },
-            { name: 'Netlify', icon: 'fa-solid fa-globe', url: 'https://{}.netlify.app' },
-            { name: 'Render', icon: 'fa-solid fa-rocket', url: 'https://{}.render.com' },
-            { name: 'Heroku', icon: 'fa-solid fa-cloud', url: 'https://{}.herokuapp.com' },
-            { name: 'Railway', icon: 'fa-solid fa-train', url: 'https://{}.railway.app' },
-            { name: 'Docker', icon: 'fa-brands fa-docker', url: 'https://hub.docker.com/u/{}' },
-            { name: 'PyPI', icon: 'fa-brands fa-python', url: 'https://pypi.org/user/{}' },
-            { name: 'NPM', icon: 'fa-brands fa-npm', url: 'https://npmjs.com/~{}' },
-            { name: 'Cloudflare', icon: 'fa-brands fa-cloudflare', url: 'https://cloudflare.com/{}' },
-            { name: 'AWS', icon: 'fa-brands fa-aws', url: 'https://aws.amazon.com/{}' },
-            { name: 'Azure', icon: 'fa-brands fa-microsoft', url: 'https://azure.microsoft.com/{}' },
-            { name: 'GCP', icon: 'fa-solid fa-g', url: 'https://cloud.google.com/{}' },
-            { name: 'DigitalOcean', icon: 'fa-solid fa-d', url: 'https://digitalocean.com/{}' },
-            { name: 'Namecheap', icon: 'fa-solid fa-n', url: 'https://namecheap.com/{}' },
-            { name: 'GoDaddy', icon: 'fa-solid fa-g', url: 'https://godaddy.com/{}' },
-            { name: 'Hostinger', icon: 'fa-solid fa-h', url: 'https://hostinger.com/{}' },
-            { name: 'Bluehost', icon: 'fa-solid fa-b', url: 'https://bluehost.com/{}' },
-            { name: 'SiteGround', icon: 'fa-solid fa-s', url: 'https://siteground.com/{}' }
-        ];
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div style="color:var(--text-secondary);">جاري التحقق من الرقم...</div>
+        </div>
 
-        // ===== LEAK DATABASE =====
-        const LEAK_DATABASES = [
-            { name: 'Have I Been Pwned', icon: 'fa-solid fa-shield-halved', breaches: ['Adobe', 'LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'Dehashed', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakCheck', icon: 'fa-solid fa-search', breaches: ['Adobe', 'LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'IntelX', icon: 'fa-solid fa-microchip', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'Spyse', icon: 'fa-solid fa-spider', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'Snusbase', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'WeLeakInfo', icon: 'fa-solid fa-info-circle', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakBase', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'BreachDirectory', icon: 'fa-solid fa-folder-open', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'Scattered Secrets', icon: 'fa-solid fa-secret', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'GhostProject', icon: 'fa-solid fa-ghost', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakCheck.net', icon: 'fa-solid fa-check-double', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'BreachDB', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakLookup', icon: 'fa-solid fa-search', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'DataBreach', icon: 'fa-solid fa-bolt', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakScan', icon: 'fa-solid fa-scan', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'BreachAlert', icon: 'fa-solid fa-bell', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakProbe', icon: 'fa-solid fa-search-plus', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'DataLeak', icon: 'fa-solid fa-database', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'HackCheck', icon: 'fa-solid fa-shield', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'BreachWatch', icon: 'fa-solid fa-eye', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakMonitor', icon: 'fa-solid fa-monitor', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'DataVault', icon: 'fa-solid fa-vault', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'SecureLeak', icon: 'fa-solid fa-lock', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'BreachHunter', icon: 'fa-solid fa-crosshairs', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakAlert', icon: 'fa-solid fa-bell', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'DataGuard', icon: 'fa-solid fa-shield', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'BreachShield', icon: 'fa-solid fa-shield', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'LeakDefender', icon: 'fa-solid fa-shield-halved', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] },
-            { name: 'DataBreachCheck', icon: 'fa-solid fa-check', breaches: ['LinkedIn', 'MySpace', 'Dropbox', 'Tumblr'] }
-        ];
+        <!-- Result -->
+        <div class="result-box" id="resultBox">
+            <h3 style="margin-bottom:16px;color:var(--primary);"><i class="fas fa-list"></i> تفاصيل الرقم</h3>
+            <div id="resultContent"></div>
+        </div>
 
-        const BREACH_NAMES = [
-            'Adobe', 'LinkedIn', 'MySpace', 'Dropbox', 'Tumblr', 'Twitter', 'Facebook', 'Instagram',
-            'Snapchat', 'TikTok', 'WhatsApp', 'Telegram', 'Discord', 'Reddit', 'Pinterest', 'Spotify',
-            'Netflix', 'Amazon', 'Apple', 'Google', 'Microsoft', 'Yahoo', 'AOL', 'Hotmail',
-            'Gmail', 'Outlook', 'ProtonMail', 'Mail.ru', 'Yandex', 'GMX', 'Web.de',
-            'PayPal', 'eBay', 'Alibaba', 'AliExpress', 'Wish', 'Etsy', 'Shopify',
-            'WordPress', 'Blogger', 'Wix', 'Squarespace', 'Weebly', 'Ghost'
-        ];
+        <!-- API Info -->
+        <div class="api-info">
+            <i class="fas fa-info-circle"></i>
+            <strong>حالة API:</strong> 
+            <span id="apiStatus" style="color:var(--success);">🟢 جاهز</span>
+            &nbsp;|&nbsp;
+            <span id="apiCalls">0</span>/100 طلب مستخدم
+        </div>
+    </div>
 
-        // ===== STATE =====
-        let results = [];
-        let currentFilter = 'all';
-        let isScanning = false;
-        let isDark = true;
-        let currentMode = 'username';
-        let foundLeaks = 0;
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="number" id="statTotal">0</div>
+            <div class="label">إجمالي الطلبات</div>
+        </div>
+        <div class="stat-item">
+            <div class="number" id="statValid" style="color:var(--success);">0</div>
+            <div class="label">✅ أرقام صالحة</div>
+        </div>
+        <div class="stat-item">
+            <div class="number" id="statInvalid" style="color:var(--danger);">0</div>
+            <div class="label">❌ أرقام غير صالحة</div>
+        </div>
+        <div class="stat-item">
+            <div class="number" id="statRemaining" style="color:var(--warning);">100</div>
+            <div class="label">📊 متبقي من الطلبات</div>
+        </div>
+    </div>
 
-        // ===== DOM REFS =====
-        const usernameInput = document.getElementById('usernameInput');
-        const emailInput = document.getElementById('emailInput');
-        const phoneInput = document.getElementById('phoneInput');
-        const scanLevel = document.getElementById('scanLevel');
-        const timeoutSelect = document.getElementById('timeoutSelect');
-        const emailDepth = document.getElementById('emailDepth');
-        const phoneDepth = document.getElementById('phoneDepth');
-        const useML = document.getElementById('useML');
-        const correlate = document.getElementById('correlate');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const loadingText = document.getElementById('loadingText');
-        const progressBar = document.getElementById('progressBar');
-        const resultsSection = document.getElementById('resultsSection');
-        const platformGrid = document.getElementById('platformGrid');
-        const statTotal = document.getElementById('statTotal');
-        const statFound = document.getElementById('statFound');
-        const statMaybe = document.getElementById('statMaybe');
-        const statNotFound = document.getElementById('statNotFound');
-        const statLeaks = document.getElementById('statLeaks');
+    <!-- Footer -->
+    <div class="footer">
+        <p>The Cook Rat OSINT - By <a href="https://x.com/mouse0000000" target="_blank">@mouse0000000</a></p>
+        <p style="margin-top:4px;font-size:0.7rem;">⚠️ استخدم للأغراض التعليمية فقط | 100 طلب مجاني/شهر</p>
+    </div>
+</div>
 
-        // ===== THEME =====
-        function toggleTheme() {
-            isDark = !isDark;
-            const body = document.body;
-            const icon = document.getElementById('themeIcon');
-            body.style.background = isDark ? '#0a0e1a' : '#f0f4f8';
-            body.style.color = isDark ? '#e2e8f0' : '#0a1628';
-            icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
-            document.querySelectorAll('.stat-card, .search-section, .platform-card, .leak-card, .results-tabs, .header, .toast, .search-mode-tabs').forEach(el => {
-                el.style.background = isDark ? '#111827' : '#ffffff';
-                el.style.borderColor = isDark ? '#1e293b' : '#c8d6e5';
-                el.style.color = isDark ? '#e2e8f0' : '#0a1628';
-            });
-            document.querySelectorAll('.form-control').forEach(el => {
-                el.style.background = isDark ? '#0a0e1a' : '#eef2f7';
-                el.style.color = isDark ? '#e2e8f0' : '#0a1628';
-                el.style.borderColor = isDark ? '#1e293b' : '#c8d6e5';
-            });
-            document.querySelectorAll('.btn:not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-leak)').forEach(el => {
-                el.style.background = isDark ? '#111827' : '#ffffff';
-                el.style.color = isDark ? '#e2e8f0' : '#0a1628';
-            });
-            document.querySelector('.logo-sub').style.color = isDark ? '#94a3b8' : '#4a5568';
-            showToast(isDark ? '🌙 الوضع الداكن' : '☀️ الوضع الفاتح', 'info');
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    // ============================================================
+    //  THE COOK RAT - PHONE VALIDATOR
+    //  Uses REAL NumVerify API with your key
+    //  API Key: bfdb5d86bac237e65fd8fdf44bbe4fb7
+    // ============================================================
+
+    const API_KEY = 'bfdb5d86bac237e65fd8fdf44bbe4fb7';
+    const API_URL = 'https://api.numverify.com/validate';
+
+    let totalCalls = 0;
+    let validCalls = 0;
+    let invalidCalls = 0;
+    let remainingCalls = 100;
+    let isProcessing = false;
+
+    // ===== DOM REFS =====
+    const phoneInput = document.getElementById('phoneInput');
+    const checkBtn = document.getElementById('checkBtn');
+    const loading = document.getElementById('loading');
+    const resultBox = document.getElementById('resultBox');
+    const resultContent = document.getElementById('resultContent');
+    const apiCalls = document.getElementById('apiCalls');
+    const apiStatus = document.getElementById('apiStatus');
+    const statTotal = document.getElementById('statTotal');
+    const statValid = document.getElementById('statValid');
+    const statInvalid = document.getElementById('statInvalid');
+    const statRemaining = document.getElementById('statRemaining');
+
+    // ===== TOAST =====
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        const icons = {
+            success: 'fa-check-circle',
+            error: 'fa-exclamation-circle',
+            info: 'fa-info-circle'
+        };
+        const colors = {
+            success: '#00ff88',
+            error: '#ff3366',
+            info: '#00f0ff'
+        };
+        toast.innerHTML =
+            `<i class="fas ${icons[type]}" style="color:${colors[type]};font-size:1.1rem"></i> ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(120%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    // ===== VALIDATE PHONE =====
+    async function validatePhone() {
+        if (isProcessing) return;
+
+        const phone = phoneInput.value.trim();
+        if (!phone) {
+            showToast('⚠️ الرجاء إدخال رقم هاتف', 'error');
+            return;
         }
 
-        // ===== TOAST =====
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            const icons = { success: 'fa-check-circle', error: 'fa-exclamation-circle', info: 'fa-info-circle', leak: 'fa-exclamation-triangle' };
-            const colors = { success: '#00ff88', error: '#ff3366', info: '#00f0ff', leak: '#ff0044' };
-            toast.innerHTML = `<i class="fas ${icons[type]}" style="color:${colors[type]};font-size:1.1rem"></i> ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(120%)';
-                setTimeout(() => toast.remove(), 300);
-            }, 4000);
+        // تنظيف الرقم (إزالة المسافات والرموز غير الضرورية)
+        const cleanPhone = phone.replace(/\s/g, '');
+
+        // التحقق من التبقي
+        if (remainingCalls <= 0) {
+            showToast('❌ لقد استهلكت جميع الطلبات المجانية (100/شهر)', 'error');
+            return;
         }
 
-        // ===== SWITCH SEARCH MODE =====
-        function switchSearchMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.search-mode-tabs button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.querySelectorAll('.search-section').forEach(el => {
-                el.classList.remove('active');
-            });
+        isProcessing = true;
+        checkBtn.disabled = true;
+        loading.classList.add('active');
+        resultBox.classList.remove('active');
+        apiStatus.textContent = '⏳ جاري الاتصال...';
+        apiStatus.style.color = 'var(--warning)';
 
-            const tabs = document.querySelectorAll('.search-mode-tabs button');
-            const map = { 'username': 0, 'email': 1, 'phone': 2 };
-            tabs[map[mode]].classList.add('active');
-            document.getElementById('search-' + mode).classList.add('active');
+        try {
+            // طلب حقيقي إلى NumVerify API
+            const url = `${API_URL}?access_key=${API_KEY}&number=${encodeURIComponent(cleanPhone)}&format=1`;
+            
+            const response = await fetch(url);
+            const data = await response.json();
 
-            clearResults();
-        }
+            // تحديث عدد الطلبات
+            totalCalls++;
+            remainingCalls--;
+            updateStats();
 
-        // ===== START USERNAME SCAN =====
-        function startUsernameScan() {
-            const username = usernameInput.value.trim();
-            if (!username) {
-                showToast('⚠️ الرجاء إدخال اسم مستخدم', 'error');
-                return;
-            }
-            startScan('username', username);
-        }
+            // عرض النتيجة
+            displayResult(data, cleanPhone);
 
-        // ===== START EMAIL LEAK SCAN =====
-        function startEmailLeakScan() {
-            const email = emailInput.value.trim();
-            if (!email || !email.includes('@')) {
-                showToast('⚠️ الرجاء إدخال بريد إلكتروني صحيح', 'error');
-                return;
-            }
-            startLeakScan('email', email);
-        }
-
-        // ===== START PHONE LEAK SCAN =====
-        function startPhoneLeakScan() {
-            const phone = phoneInput.value.trim();
-            if (!phone || phone.length < 5) {
-                showToast('⚠️ الرجاء إدخال رقم هاتف صحيح', 'error');
-                return;
-            }
-            startLeakScan('phone', phone);
-        }
-
-        // ===== START EMAIL USERNAME SCAN =====
-        function startEmailUsernameScan() {
-            const email = emailInput.value.trim();
-            if (!email || !email.includes('@')) {
-                showToast('⚠️ الرجاء إدخال بريد إلكتروني صحيح', 'error');
-                return;
-            }
-            const username = email.split('@')[0];
-            usernameInput.value = username;
-            switchSearchMode('username');
-            setTimeout(() => startUsernameScan(), 300);
-        }
-
-        // ===== START PHONE USERNAME SCAN =====
-        function startPhoneUsernameScan() {
-            const phone = phoneInput.value.trim();
-            if (!phone || phone.length < 5) {
-                showToast('⚠️ الرجاء إدخال رقم هاتف صحيح', 'error');
-                return;
-            }
-            const username = 'user_' + phone.replace(/[^0-9]/g, '').slice(-6);
-            usernameInput.value = username;
-            switchSearchMode('username');
-            setTimeout(() => startUsernameScan(), 300);
-        }
-
-        // ===== GENERATE PROFILE DATA =====
-        function generateDisplayName(username) {
-            const names = ['John Doe', 'Jane Smith', 'Alex Johnson', 'Maria Garcia', 'David Kim',
-                'Sarah Lee', 'Michael Brown', 'Emma Wilson', 'Chris Taylor', 'Lisa Martinez'
-            ];
-            return names[Math.floor(Math.random() * names.length)] + ' (@' + username + ')';
-        }
-
-        function generateBio(username) {
-            const bios = [
-                'Software Developer | Open Source Enthusiast',
-                'Cybersecurity Researcher | Bug Bounty Hunter',
-                'Digital Artist & Designer',
-                'Tech Blogger & Content Creator',
-                'AI/ML Engineer | Data Scientist'
-            ];
-            return bios[Math.floor(Math.random() * bios.length)];
-        }
-
-        // ===== LEAK SCAN ENGINE =====
-        function startLeakScan(type, value) {
-            if (isScanning) return;
-            isScanning = true;
-            results = [];
-            foundLeaks = 0;
-            currentFilter = 'all';
-
-            loadingOverlay.classList.add('active');
-            resultsSection.classList.remove('active');
-            platformGrid.innerHTML = '';
-
-            statTotal.textContent = '0';
-            statFound.textContent = '0';
-            statMaybe.textContent = '0';
-            statNotFound.textContent = '0';
-            statLeaks.textContent = '0';
-
-            const depth = type === 'email' ? emailDepth.value : phoneDepth.value;
-            const total = LEAK_DATABASES.length;
-            let completed = 0;
-
-            loadingText.textContent = `🔍 جاري فحص التسريب في ${total} قاعدة بيانات...`;
-
-            const scanLeakDB = (db, index) => {
-                return new Promise((resolve) => {
-                    const delay = Math.random() * 300 + 50;
-                    setTimeout(() => {
-                        const isLeaked = Math.random() < 0.35;
-                        const breachesFound = isLeaked ? getRandomBreaches() : [];
-
-                        const result = {
-                            type: 'leak',
-                            database: db.name,
-                            icon: db.icon,
-                            status: isLeaked ? 'leak' : 'notfound',
-                            severity: isLeaked ? getSeverity(breachesFound.length) : null,
-                            breaches: breachesFound,
-                            data: {
-                                email: type === 'email' ? value : null,
-                                phone: type === 'phone' ? value : null,
-                                firstSeen: isLeaked ? getRandomDate() : null,
-                                lastSeen: isLeaked ? getRandomDate() : null
-                            }
-                        };
-
-                        results.push(result);
-                        completed++;
-                        if (isLeaked) foundLeaks++;
-
-                        const progress = (completed / total) * 100;
-                        progressBar.style.width = progress + '%';
-                        loadingText.textContent = `🔍 جاري الفحص... ${completed}/${total} (${Math.round(progress)}%)`;
-
-                        statTotal.textContent = completed;
-                        statLeaks.textContent = foundLeaks;
-
-                        resolve();
-                    }, delay);
-                });
-            };
-
-            const concurrency = depth === 'full' ? 10 : 20;
-            const chunks = [];
-            for (let i = 0; i < LEAK_DATABASES.length; i += concurrency) {
-                chunks.push(LEAK_DATABASES.slice(i, i + concurrency));
+            if (data.valid) {
+                validCalls++;
+                showToast(`✅ الرقم صالح (${data.country_name || 'غير معروف'})`, 'success');
+            } else {
+                invalidCalls++;
+                showToast('❌ الرقم غير صالح أو غير موجود', 'error');
             }
 
-            let chunkIndex = 0;
-            const runNextChunk = () => {
-                if (chunkIndex >= chunks.length) {
-                    isScanning = false;
-                    loadingOverlay.classList.remove('active');
-                    resultsSection.classList.add('active');
-                    renderResults();
-                    if (foundLeaks > 0) {
-                        showToast(`🔴 تم اكتشاف ${foundLeaks} تسريب!`, 'leak');
-                    } else {
-                        showToast('✅ لم يتم اكتشاف أي تسريب', 'success');
-                    }
-                    return;
-                }
+            updateStats();
 
-                const chunk = chunks[chunkIndex];
-                const promises = chunk.map((db, idx) => scanLeakDB(db, chunkIndex * concurrency + idx));
+        } catch (error) {
+            console.error('API Error:', error);
+            showToast(`❌ خطأ في الاتصال بـ NumVerify: ${error.message}`, 'error');
+            apiStatus.textContent = '🔴 خطأ في الاتصال';
+            apiStatus.style.color = 'var(--danger)';
 
-                Promise.all(promises).then(() => {
-                    chunkIndex++;
-                    runNextChunk();
-                });
-            };
-
-            runNextChunk();
+            // عرض رسالة خطأ
+            resultContent.innerHTML = `
+                <div style="color:var(--danger);padding:16px;text-align:center;">
+                    <i class="fas fa-exclamation-circle" style="font-size:2rem;display:block;margin-bottom:12px;"></i>
+                    <strong>حدث خطأ أثناء التحقق</strong>
+                    <p style="margin-top:8px;font-size:0.85rem;color:var(--text-secondary);">${error.message}</p>
+                    <p style="margin-top:4px;font-size:0.8rem;color:var(--text-muted);">تأكد من اتصالك بالإنترنت أو حاول مرة أخرى</p>
+                </div>
+            `;
+            resultBox.classList.add('active');
         }
 
-        function getRandomBreaches() {
-            const count = Math.floor(Math.random() * 4) + 1;
-            const shuffled = [...BREACH_NAMES].sort(() => Math.random() - 0.5);
-            return shuffled.slice(0, count);
+        isProcessing = false;
+        checkBtn.disabled = false;
+        loading.classList.remove('active');
+        apiStatus.textContent = '🟢 جاهز';
+        apiStatus.style.color = 'var(--success)';
+    }
+
+    // ===== DISPLAY RESULT =====
+    function displayResult(data, phone) {
+        const isValid = data.valid || false;
+
+        let html = `
+            <div class="row">
+                <span class="label">📞 رقم الهاتف</span>
+                <span class="value">${phone}</span>
+            </div>
+            <div class="row">
+                <span class="label">✅ صحة الرقم</span>
+                <span class="value ${isValid ? 'valid' : 'invalid'}">
+                    ${isValid ? '✅ صالح' : '❌ غير صالح'}
+                </span>
+            </div>
+        `;
+
+        if (isValid && data) {
+            html += `
+                <div class="row">
+                    <span class="label">🌍 الدولة</span>
+                    <span class="value">${data.country_name || 'غير معروف'} ${data.country_code ? `(${data.country_code})` : ''}</span>
+                </div>
+                <div class="row">
+                    <span class="label">📍 الموقع</span>
+                    <span class="value">${data.location || 'غير معروف'}</span>
+                </div>
+                <div class="row">
+                    <span class="label">📶 المشغل</span>
+                    <span class="value">${data.carrier || 'غير معروف'}</span>
+                </div>
+                <div class="row">
+                    <span class="label">📱 نوع الخط</span>
+                    <span class="value">${data.line_type || 'غير معروف'}</span>
+                </div>
+                <div class="row">
+                    <span class="label">🔢 مفتاح الدولة</span>
+                    <span class="value">${data.country_prefix || 'غير معروف'}</span>
+                </div>
+                <div class="row">
+                    <span class="label">📊 التنسيق الدولي</span>
+                    <span class="value">${data.international_format || phone}</span>
+                </div>
+                <div class="row">
+                    <span class="label">📊 التنسيق المحلي</span>
+                    <span class="value">${data.local_format || phone}</span>
+                </div>
+            `;
         }
 
-        function getSeverity(count) {
-            if (count >= 4) return 'critical';
-            if (count >= 3) return 'high';
-            if (count >= 2) return 'medium';
-            return 'low';
-        }
-
-        function getRandomDate() {
-            const year = 2010 + Math.floor(Math.random() * 14);
-            const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
-            const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        // ===== USERNAME SCAN ENGINE =====
-        function startScan(type, value) {
-            if (isScanning) return;
-            isScanning = true;
-            results = [];
-            foundLeaks = 0;
-            currentFilter = 'all';
-
-            loadingOverlay.classList.add('active');
-            resultsSection.classList.remove('active');
-            platformGrid.innerHTML = '';
-
-            statTotal.textContent = '0';
-            statFound.textContent = '0';
-            statMaybe.textContent = '0';
-            statNotFound.textContent = '0';
-            statLeaks.textContent = '0';
-
-            const level = scanLevel.value;
-            let platformsToScan = [...PLATFORMS];
-            if (level === 'basic') {
-                platformsToScan = platformsToScan.slice(0, 80);
-            }
-
-            const total = platformsToScan.length;
-            let completed = 0;
-            let found = 0;
-            let maybe = 0;
-            let notFound = 0;
-
-            loadingText.textContent = `🔍 جاري البحث في ${total} منصة...`;
-
-            const scanPlatform = (platform, index) => {
-                return new Promise((resolve) => {
-                    const delay = Math.random() * 250 + 30;
-                    setTimeout(() => {
-                        const isFound = Math.random() < 0.25;
-                        const isMaybe = !isFound && Math.random() < 0.15;
-                        const status = isFound ? 'found' : isMaybe ? 'maybe' : 'notfound';
-
-                        let profile = null;
-                        if (isFound || isMaybe) {
-                            profile = {
-                                displayName: generateDisplayName(value),
-                                bio: generateBio(value),
-                                avatar: `https://picsum.photos/seed/${value + index}/80/80`,
-                                url: platform.url.replace('{}', value),
-                                followers: Math.floor(Math.random() * 8000) + 100,
-                                posts: Math.floor(Math.random() * 400) + 10
-                            };
-                        }
-
-                        const result = {
-                            type: 'platform',
-                            platform: platform.name,
-                            icon: platform.icon,
-                            url: platform.url.replace('{}', value),
-                            status: status,
-                            confidence: isFound ? 0.7 + Math.random() * 0.29 : isMaybe ? 0.4 + Math.random() * 0.29 :
-                                0.1 + Math.random() * 0.2,
-                            profile: profile
-                        };
-
-                        results.push(result);
-
-                        completed++;
-                        if (status === 'found') found++;
-                        else if (status === 'maybe') maybe++;
-                        else notFound++;
-
-                        const progress = (completed / total) * 100;
-                        progressBar.style.width = progress + '%';
-                        loadingText.textContent = `🔍 جاري البحث... ${completed}/${total} (${Math.round(progress)}%)`;
-
-                        statTotal.textContent = completed;
-                        statFound.textContent = found;
-                        statMaybe.textContent = maybe;
-                        statNotFound.textContent = notFound;
-
-                        resolve();
-                    }, delay);
-                });
-            };
-
-            const concurrency = level === 'aggressive' ? 20 : 50;
-            const chunks = [];
-            for (let i = 0; i < platformsToScan.length; i += concurrency) {
-                chunks.push(platformsToScan.slice(i, i + concurrency));
-            }
-
-            let chunkIndex = 0;
-            const runNextChunk = () => {
-                if (chunkIndex >= chunks.length) {
-                    isScanning = false;
-                    loadingOverlay.classList.remove('active');
-                    resultsSection.classList.add('active');
-                    renderResults();
-                    showToast(`✅ تم البحث في ${total} منصة. تم العثور على ${found} حساب`, 'success');
-                    return;
-                }
-
-                const chunk = chunks[chunkIndex];
-                const promises = chunk.map((p, idx) => scanPlatform(p, chunkIndex * concurrency + idx));
-
-                Promise.all(promises).then(() => {
-                    chunkIndex++;
-                    runNextChunk();
-                });
-            };
-
-            runNextChunk();
-        }
-
-        // ===== RENDER RESULTS =====
-        function renderResults() {
-            const filtered = results.filter(r => {
-                if (currentFilter === 'all') return true;
-                if (currentFilter === 'leak') return r.type === 'leak' && r.status === 'leak';
-                return r.type === 'platform' && r.status === currentFilter;
-            });
-
-            if (filtered.length === 0) {
-                platformGrid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <p>لا توجد نتائج مطابقة للفلتر</p>
+        // عرض معلومات إضافية من API
+        if (data.location) {
+            html += `
+                <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+                    <div style="font-size:0.75rem;color:var(--text-muted);">
+                        <i class="fas fa-clock"></i> تاريخ الطلب: ${new Date().toLocaleString('ar-EG')}
                     </div>
-                `;
-                return;
-            }
-
-            let html = '';
-            for (const result of filtered) {
-                if (result.type === 'leak') {
-                    // Leak result
-                    const severityClass = result.severity === 'critical' ? 'severity-critical' :
-                        result.severity === 'high' ? 'severity-high' :
-                        result.severity === 'medium' ? 'severity-medium' : 'severity-low';
-                    const severityLabel = result.severity === 'critical' ? '🚨 خطير جداً' :
-                        result.severity === 'high' ? '🔴 عالي' :
-                        result.severity === 'medium' ? '🟠 متوسط' : '🟡 منخفض';
-
-                    html += `
-                        <div class="leak-card">
-                            <div class="leak-header">
-                                <div class="leak-name">
-                                    <i class="${result.icon}"></i>
-                                    ${result.database}
-                                </div>
-                                <span class="leak-severity ${severityClass}">${severityLabel}</span>
-                            </div>
-                            <div class="leak-details">
-                                ${result.breaches.length > 0 ? `
-                                    <div style="margin-bottom:8px;color:var(--text-secondary);">
-                                        <strong>🔓 التسريبات المكتشفة:</strong>
-                                    </div>
-                                    ${result.breaches.map(b => `<span style="display:inline-block;background:var(--bg-dark);padding:2px 10px;border-radius:12px;margin:2px 4px 2px 0;border:1px solid var(--border);font-size:0.78rem;">${b}</span>`).join('')}
-                                ` : `
-                                    <div style="color:var(--text-muted);">لم يتم العثور على تسريبات</div>
-                                `}
-                                ${result.data.email ? `
-                                    <div class="detail-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
-                                        <span class="label">📧 البريد الإلكتروني</span>
-                                        <span class="value leaked">${result.data.email}</span>
-                                    </div>
-                                ` : ''}
-                                ${result.data.phone ? `
-                                    <div class="detail-row" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">
-                                        <span class="label">📱 رقم الهاتف</span>
-                                        <span class="value leaked">${result.data.phone}</span>
-                                    </div>
-                                ` : ''}
-                                ${result.data.firstSeen ? `
-                                    <div class="detail-row">
-                                        <span class="label">📅 أول ظهور</span>
-                                        <span class="value">${result.data.firstSeen}</span>
-                                    </div>
-                                ` : ''}
-                                ${result.data.lastSeen ? `
-                                    <div class="detail-row">
-                                        <span class="label">📅 آخر ظهور</span>
-                                        <span class="value">${result.data.lastSeen}</span>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    // Platform result
-                    const statusClass = result.status === 'found' ? 'status-found' :
-                        result.status === 'maybe' ? 'status-maybe' : 'status-notfound';
-                    const statusText = result.status === 'found' ? '✓ تم العثور' :
-                        result.status === 'maybe' ? '❓ محتمل' : '✗ غير موجود';
-                    const confidence = Math.round(result.confidence * 100);
-
-                    html += `
-                        <div class="platform-card">
-                            <div class="platform-name">
-                                <i class="${result.icon}"></i>
-                                ${result.platform}
-                                <span class="confidence-badge">${confidence}%</span>
-                            </div>
-                            <div class="platform-status ${statusClass}">${statusText}</div>
-                            ${result.profile ? `
-                                <div class="profile-preview show">
-                                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-                                        <img src="${result.profile.avatar}" class="avatar" alt="Avatar" onerror="this.style.display='none'">
-                                        <div>
-                                            <div><span class="label">👤</span> <span class="value">${result.profile.displayName}</span></div>
-                                            <div><span class="label">📝</span> <span class="value">${result.profile.bio}</span></div>
-                                        </div>
-                                    </div>
-                                    <div style="font-size:0.7rem;color:var(--text-muted);margin-top:4px;">
-                                        <span>👥 ${result.profile.followers} متابع</span>
-                                        <span style="margin:0 8px;">|</span>
-                                        <span>📱 ${result.profile.posts} منشور</span>
-                                    </div>
-                                    <div style="margin-top:4px;">
-                                        <a href="${result.url}" target="_blank" class="url-link">${result.url}</a>
-                                    </div>
-                                </div>
-                            ` : `
-                                <div style="margin-top:8px;font-size:0.75rem;color:var(--text-secondary);">
-                                    <a href="${result.url}" target="_blank" style="color:var(--text-muted);">${result.url}</a>
-                                </div>
-                            `}
-                        </div>
-                    `;
-                }
-            }
-            platformGrid.innerHTML = html;
+                </div>
+            `;
         }
 
-        // ===== FILTER RESULTS =====
-        function filterResults(filter) {
-            currentFilter = filter;
-            document.querySelectorAll('.results-tabs button').forEach(btn => {
-                btn.classList.remove('active');
-                const map = { 'all': 'الكل', 'found': 'تم العثور', 'maybe': 'محتمل', 'notfound': 'غير موجود', 'leak': '🔴 تسريبات' };
-                if (btn.textContent.trim() === map[filter]) {
-                    btn.classList.add('active');
-                }
-            });
-            renderResults();
-        }
+        resultContent.innerHTML = html;
+        resultBox.classList.add('active');
+    }
 
-        // ===== CLEAR RESULTS =====
-        function clearResults() {
-            results = [];
-            foundLeaks = 0;
-            platformGrid.innerHTML = '';
-            resultsSection.classList.remove('active');
-            statTotal.textContent = '0';
-            statFound.textContent = '0';
-            statMaybe.textContent = '0';
-            statNotFound.textContent = '0';
-            statLeaks.textContent = '0';
-            showToast('🧹 تم مسح النتائج', 'info');
-        }
+    // ===== UPDATE STATS =====
+    function updateStats() {
+        statTotal.textContent = totalCalls;
+        statValid.textContent = validCalls;
+        statInvalid.textContent = invalidCalls;
+        statRemaining.textContent = remainingCalls;
+        apiCalls.textContent = totalCalls;
 
-        // ===== EXPORT RESULTS =====
-        function exportResults() {
-            if (results.length === 0) {
-                showToast('⚠️ لا توجد نتائج للتصدير', 'error');
-                return;
+        // تحديث لون المتبقي
+        if (remainingCalls <= 10) {
+            statRemaining.style.color = 'var(--danger)';
+        } else if (remainingCalls <= 30) {
+            statRemaining.style.color = 'var(--warning)';
+        } else {
+            statRemaining.style.color = 'var(--success)';
+        }
+    }
+
+    // ===== KEYBOARD SHORTCUT =====
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.activeElement === phoneInput) {
+            validatePhone();
+        }
+    });
+
+    // ===== INIT =====
+    console.log('🐀 The Cook Rat Phone Validator');
+    console.log('📱 NumVerify API Key:', API_KEY);
+    console.log('📊 100 requests/month (Free plan)');
+    console.log('🔍 Enter a phone number to validate');
+
+    showToast('🐀 الأداة جاهزة! أدخل رقم هاتف وتحقق منه', 'info');
+    updateStats();
+
+    // اختبار سريع للـ API
+    async function testAPI() {
+        try {
+            const testUrl = `${API_URL}?access_key=${API_KEY}&number=201234567890&format=1`;
+            const response = await fetch(testUrl);
+            if (response.ok) {
+                apiStatus.textContent = '🟢 API متصل';
+                apiStatus.style.color = 'var(--success)';
             }
-            const data = {
-                tool: 'The Cook Rat OSINT Scanner',
-                mode: currentMode,
-                timestamp: new Date().toISOString(),
-                total: results.length,
-                found: results.filter(r => r.type === 'platform' && r.status === 'found').length,
-                maybe: results.filter(r => r.type === 'platform' && r.status === 'maybe').length,
-                notfound: results.filter(r => r.type === 'platform' && r.status === 'notfound').length,
-                leaks: results.filter(r => r.type === 'leak' && r.status === 'leak').length,
-                results: results
-            };
-            const json = JSON.stringify(data, null, 2);
-            const blob = new Blob([json], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `cookrat_osint_${Date.now()}.json`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast('📥 تم تصدير النتائج', 'success');
+        } catch (e) {
+            apiStatus.textContent = '🟡 API غير متصل (تحقق من الإنترنت)';
+            apiStatus.style.color = 'var(--warning)';
         }
+    }
+    testAPI();
+</script>
 
-        // ===== KEYBOARD SHORTCUTS =====
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                if (currentMode === 'username' && document.activeElement === usernameInput) {
-                    startUsernameScan();
-                } else if (currentMode === 'email' && document.activeElement === emailInput) {
-                    startEmailLeakScan();
-                } else if (currentMode === 'phone' && document.activeElement === phoneInput) {
-                    startPhoneLeakScan();
-                }
-            }
-        });
-
-        // ===== INIT =====
-        console.log('🐀 The Cook Rat OSINT Scanner');
-        console.log('📡 Scan 840+ platforms with AI-powered detection');
-        console.log('📧 Email leak detection');
-        console.log('📱 Phone leak detection');
-        console.log('🔍 Enter a username, email or phone and click "بدء البحث"');
-
-        showToast('🐀 The Cook Rat OSINT Scanner جاهز', 'info');
-    </script>
 </body>
 </html>
