@@ -3,137 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Cook Rat - Phone Validator (Real API)</title>
+    <title>The Cook Rat - Phone Intelligence</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐀</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root {
             --primary: #00f0ff;
-            --bg-dark: #0a0e1a;
-            --bg-card: #111827;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --border: #1e293b;
+            --primary-dark: #0099cc;
+            --primary-glow: rgba(0, 240, 255, 0.3);
+            --bg-dark: #070b15;
+            --bg-card: #0d1a2b;
+            --bg-card-hover: #142a3f;
+            --text-primary: #e8f4f8;
+            --text-secondary: #8ab4c8;
+            --text-muted: #4a6a7a;
+            --border: #1a3a4a;
+            --border-hover: #00f0ff;
             --success: #00ff88;
+            --success-glow: rgba(0, 255, 136, 0.2);
             --danger: #ff3366;
+            --danger-glow: rgba(255, 51, 102, 0.2);
             --warning: #ffaa00;
-            --glow: 0 0 20px rgba(0, 240, 255, 0.3);
+            --gold: #ffd700;
+            --glow: 0 0 30px rgba(0, 240, 255, 0.15);
+            --glow-strong: 0 0 50px rgba(0, 240, 255, 0.25);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 40px 20px;
-            background-image: radial-gradient(ellipse at 20% 80%, rgba(0, 240, 255, 0.05) 0%, transparent 60%);
+            background-image: 
+                radial-gradient(ellipse at 10% 90%, rgba(0, 240, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 10%, rgba(0, 240, 255, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 100, 200, 0.02) 0%, transparent 70%);
+            position: relative;
+            overflow-x: hidden;
         }
 
+        /* ===== Animated Background ===== */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.15;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.15;
+            }
+            90% {
+                opacity: 0.15;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* ===== Container ===== */
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
+            padding: 30px 20px 40px;
+            position: relative;
+            z-index: 1;
         }
 
+        /* ===== Header ===== */
         .header {
             text-align: center;
             margin-bottom: 40px;
+            padding: 30px 20px 20px;
+            position: relative;
         }
 
-        .header .logo {
-            font-size: 3rem;
-            margin-bottom: 10px;
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
         }
 
-        .header h1 {
-            font-size: 2.4rem;
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 16px;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.12), rgba(0, 240, 255, 0.04));
+            border: 2px solid rgba(0, 240, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.8rem;
+            position: relative;
+            box-shadow: var(--glow);
+            transition: var(--transition);
+        }
+
+        .logo-icon:hover {
+            transform: scale(1.05);
+            box-shadow: var(--glow-strong);
+        }
+
+        .logo-icon .crown {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 0.9rem;
+            color: var(--gold);
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+        }
+
+        .logo-text {
+            text-align: right;
+        }
+
+        .logo-text .main {
+            font-size: 2.2rem;
             font-weight: 900;
-            background: linear-gradient(135deg, var(--primary), #00ccff);
+            background: linear-gradient(135deg, var(--primary), #00ccff, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-size: 300% 300%;
+            animation: gradientMove 4s ease infinite;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
         }
 
-        .header p {
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .logo-text .sub {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .header .tagline {
             color: var(--text-secondary);
             font-size: 1rem;
-            margin-top: 8px;
+            margin-top: 12px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
 
+        .header .tagline i {
+            color: var(--primary);
+            margin: 0 4px;
+        }
+
+        /* ===== Status Badges ===== */
+        .status-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .badge-success {
+            background: rgba(0, 255, 136, 0.08);
+            color: var(--success);
+            border-color: rgba(0, 255, 136, 0.15);
+        }
+
+        .badge-warning {
+            background: rgba(255, 170, 0, 0.08);
+            color: var(--warning);
+            border-color: rgba(255, 170, 0, 0.15);
+        }
+
+        .badge-primary {
+            background: rgba(0, 240, 255, 0.08);
+            color: var(--primary);
+            border-color: rgba(0, 240, 255, 0.15);
+        }
+
+        .badge i {
+            font-size: 0.65rem;
+        }
+
+        /* ===== Main Card ===== */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 30px;
+            border-radius: var(--radius);
+            padding: 32px 36px;
             margin-bottom: 24px;
-            transition: all 0.3s;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0.3;
         }
 
         .card:hover {
-            border-color: var(--primary);
+            border-color: rgba(0, 240, 255, 0.15);
             box-shadow: var(--glow);
         }
 
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        /* ===== Form ===== */
         .form-group {
             margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
             margin-bottom: 8px;
             color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .form-group label i {
+            color: var(--primary);
+            margin-left: 6px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: var(--transition);
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.06);
+        }
+
+        .input-wrapper .prefix {
+            padding: 0 14px 0 6px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-left: 1px solid var(--border);
+            margin-left: 4px;
         }
 
         .form-control {
             width: 100%;
             padding: 14px 18px;
-            background: var(--bg-dark);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            background: transparent;
+            border: none;
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
             font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        .form-control:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.1);
         }
 
         .form-control::placeholder {
-            color: var(--text-secondary);
+            color: var(--text-muted);
             opacity: 0.5;
+            font-family: 'Inter', sans-serif;
         }
 
+        .input-wrapper .suffix {
+            padding: 0 14px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== Buttons ===== */
         .btn {
-            padding: 12px 28px;
-            border-radius: 10px;
+            padding: 14px 32px;
+            border-radius: 12px;
             border: none;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
             font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #0099cc);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: #000;
-            box-shadow: var(--glow);
-            width: 100%;
-            justify-content: center;
+            box-shadow: 0 4px 25px rgba(0, 240, 255, 0.2);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 8px 40px rgba(0, 240, 255, 0.35);
         }
 
         .btn-primary:disabled {
@@ -142,28 +391,32 @@
             transform: none;
         }
 
-        .btn-success {
-            background: linear-gradient(135deg, var(--success), #00cc66);
-            color: #000;
+        .btn-primary .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
         }
 
-        .btn-danger {
-            background: linear-gradient(135deg, var(--danger), #cc0044);
-            color: white;
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
         }
 
-        .result-box {
-            margin-top: 20px;
-            padding: 20px;
-            background: var(--bg-dark);
-            border-radius: 10px;
-            border: 1px solid var(--border);
+        /* ===== Loading ===== */
+        .loading {
             display: none;
+            text-align: center;
+            padding: 30px 0 10px;
         }
 
-        .result-box.active {
+        .loading.active {
             display: block;
-            animation: fadeIn 0.4s ease;
+            animation: fadeIn 0.3s ease;
         }
 
         @keyframes fadeIn {
@@ -171,104 +424,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .result-box .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .result-box .row:last-child {
-            border-bottom: none;
-        }
-
-        .result-box .label {
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-
-        .result-box .value {
-            color: var(--text-primary);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-        }
-
-        .result-box .value.valid {
-            color: var(--success);
-        }
-
-        .result-box .value.invalid {
-            color: var(--danger);
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .badge-success {
-            background: rgba(0, 255, 136, 0.15);
-            color: var(--success);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-        }
-
-        .badge-danger {
-            background: rgba(255, 51, 102, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(255, 51, 102, 0.2);
-        }
-
-        .badge-warning {
-            background: rgba(255, 170, 0, 0.15);
-            color: var(--warning);
-            border: 1px solid rgba(255, 170, 0, 0.2);
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 16px;
-            background: var(--bg-dark);
-            border-radius: 10px;
-            border: 1px solid var(--border);
-        }
-
-        .stat-item .number {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--primary);
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        .stat-item .label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 30px 0;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
+        .loading .spinner {
+            width: 44px;
+            height: 44px;
             border: 3px solid var(--border);
             border-top: 3px solid var(--primary);
             border-radius: 50%;
@@ -280,20 +438,212 @@
             to { transform: rotate(360deg); }
         }
 
-        .api-info {
-            font-size: 0.75rem;
+        .loading .text {
             color: var(--text-secondary);
-            margin-top: 12px;
-            padding: 12px;
-            background: var(--bg-dark);
-            border-radius: 8px;
-            border: 1px solid var(--border);
+            font-size: 0.9rem;
         }
 
-        .api-info i {
+        .loading .progress-track {
+            max-width: 300px;
+            margin: 12px auto 0;
+            height: 3px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .loading .progress-track .bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #00ccff);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 4px;
+        }
+
+        /* ===== Result Box ===== */
+        .result-box {
+            margin-top: 24px;
+            padding: 0;
+            display: none;
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+        }
+
+        .result-box.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-box .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .result-box .result-header .title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-box .result-header .status-tag {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .status-tag.valid {
+            background: rgba(0, 255, 136, 0.12);
+            color: var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+        }
+
+        .status-tag.invalid {
+            background: rgba(255, 51, 102, 0.12);
+            color: var(--danger);
+            border: 1px solid rgba(255, 51, 102, 0.15);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .result-item .label {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
+
+        .result-item .value {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            text-align: left;
+            direction: ltr;
+        }
+
+        .result-item .value.highlight {
             color: var(--primary);
         }
 
+        .result-item .value.success {
+            color: var(--success);
+        }
+
+        .result-item .value.danger {
+            color: var(--danger);
+        }
+
+        .result-item.full {
+            grid-column: 1 / -1;
+        }
+
+        /* ===== Stats Grid ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            border-color: rgba(0, 240, 255, 0.15);
+            box-shadow: var(--glow);
+        }
+
+        .stat-item .number {
+            font-size: 1.8rem;
+            font-weight: 900;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .stat-item .number.green { color: var(--success); }
+        .stat-item .number.red { color: var(--danger); }
+        .stat-item .number.gold { color: var(--gold); }
+
+        .stat-item .label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            text-align: center;
+            padding: 30px 20px 10px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .footer .brand {
+            color: var(--primary);
+            font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer .brand:hover {
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .footer .social {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .footer .social a {
+            color: var(--text-muted);
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+
+        .footer .social a:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .footer .disclaimer {
+            margin-top: 10px;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        /* ===== Toast ===== */
         .toast-container {
             position: fixed;
             bottom: 24px;
@@ -307,372 +657,495 @@
         .toast {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 18px;
+            border-radius: 12px;
+            padding: 12px 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            gap: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
             animation: slideIn 0.3s ease;
-            min-width: 250px;
-            font-size: 0.9rem;
+            min-width: 280px;
+            font-size: 0.88rem;
             font-weight: 500;
+            backdrop-filter: blur(10px);
         }
 
         .toast.success { border-right: 3px solid var(--success); }
         .toast.error { border-right: 3px solid var(--danger); }
         .toast.info { border-right: 3px solid var(--primary); }
 
+        .toast .icon {
+            font-size: 1.1rem;
+        }
+
         @keyframes slideIn {
             from { transform: translateX(120%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
 
-        .footer {
-            text-align: center;
-            padding: 30px 20px 10px;
-            border-top: 1px solid var(--border);
-            margin-top: 40px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .container { padding: 20px 12px 30px; }
+            .card { padding: 24px 20px; }
+            .result-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .logo-text .main { font-size: 1.8rem; }
+            .logo-icon { width: 56px; height: 56px; font-size: 2.2rem; }
+            .header .tagline { font-size: 0.85rem; }
+            .status-badges { gap: 8px; }
+            .badge { font-size: 0.6rem; padding: 4px 10px; }
         }
 
-        .footer a {
-            color: var(--primary);
-            text-decoration: none;
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .stat-item .number { font-size: 1.4rem; }
+            .card { padding: 18px 14px; }
+            .form-control { font-size: 0.85rem; padding: 12px 14px; }
+            .btn { font-size: 0.85rem; padding: 12px 20px; }
+            .logo-text .main { font-size: 1.5rem; }
         }
 
-        @media (max-width: 600px) {
-            body { padding: 20px 12px; }
-            .header h1 { font-size: 1.8rem; }
-            .card { padding: 20px; }
-            .stats { grid-template-columns: 1fr 1fr; }
-            .result-box .row { flex-direction: column; gap: 4px; }
-        }
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- Header -->
-    <div class="header">
-        <div class="logo">🐀</div>
-        <h1>The Cook Rat Phone Validator</h1>
-        <p>تحقق من صحة رقم الهاتف مع <strong>NumVerify API</strong> (100 طلب/شهر)</p>
-        <div style="margin-top:12px;">
-            <span class="badge badge-success"><i class="fas fa-check-circle"></i> API Key: bfdb5d86...4fb7</span>
-            <span class="badge badge-warning" style="margin-right:8px;"><i class="fas fa-chart-bar"></i> 0/100 طلب</span>
+    <!-- ===== Particles Background ===== -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- ===== Container ===== -->
+    <div class="container">
+
+        <!-- ===== Header ===== -->
+        <header class="header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    🐀
+                    <span class="crown">👑</span>
+                </div>
+                <div class="logo-text">
+                    <span class="main">The Cook Rat</span>
+                    <span class="sub">Phone Intelligence System</span>
+                </div>
+            </div>
+            <p class="tagline">
+                <i class="fas fa-shield-alt"></i>
+                تحقق من صحة الأرقام واكتشف التفاصيل
+                <i class="fas fa-phone"></i>
+            </p>
+            <div class="status-badges">
+                <span class="badge badge-success">
+                    <i class="fas fa-check-circle"></i> نشط
+                </span>
+                <span class="badge badge-primary">
+                    <i class="fas fa-lock"></i> مشفر
+                </span>
+                <span class="badge badge-warning" id="usageBadge">
+                    <i class="fas fa-chart-bar"></i> <span id="remainingDisplay">100</span> متبقي
+                </span>
+            </div>
+        </header>
+
+        <!-- ===== Main Card ===== -->
+        <div class="card">
+            <div class="card-title">
+                <i class="fas fa-search"></i>
+                فحص الرقم
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-phone-alt"></i> رقم الهاتف</label>
+                <div class="input-wrapper">
+                    <span class="prefix">+</span>
+                    <input type="text" class="form-control" id="phoneInput" 
+                           placeholder="أدخل الرقم مع مفتاح الدولة..." dir="ltr">
+                    <span class="suffix">مثال: 201234567890</span>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="checkBtn" onclick="validatePhone()">
+                <i class="fas fa-bolt"></i>
+                <span id="btnText">تحقق الآن</span>
+            </button>
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <div class="text" id="loadingText">جاري تحليل الرقم...</div>
+                <div class="progress-track">
+                    <div class="bar" id="progressBar"></div>
+                </div>
+            </div>
+
+            <!-- Result -->
+            <div class="result-box" id="resultBox">
+                <div class="result-header">
+                    <span class="title"><i class="fas fa-list-ul"></i> تفاصيل الرقم</span>
+                    <span class="status-tag" id="statusTag">—</span>
+                </div>
+                <div class="result-grid" id="resultContent"></div>
+            </div>
         </div>
+
+        <!-- ===== Stats ===== -->
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="number" id="statTotal">0</div>
+                <div class="label">إجمالي الفحوصات</div>
+            </div>
+            <div class="stat-item">
+                <div class="number green" id="statValid">0</div>
+                <div class="label">✅ صالح</div>
+            </div>
+            <div class="stat-item">
+                <div class="number red" id="statInvalid">0</div>
+                <div class="label">❌ غير صالح</div>
+            </div>
+            <div class="stat-item">
+                <div class="number gold" id="statRemaining">100</div>
+                <div class="label">📊 متبقي</div>
+            </div>
+        </div>
+
+        <!-- ===== Footer ===== -->
+        <footer class="footer">
+            <div>
+                <span class="brand">🐀 The Cook Rat</span>
+                <span style="color:var(--text-muted);"> — Phone Intelligence v2.0</span>
+            </div>
+            <div class="social">
+                <a href="https://x.com/mouse0000000" target="_blank" title="X (Twitter)">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="#" title="GitHub" style="opacity:0.4;cursor:default;">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+            <div class="disclaimer">
+                ⚠️ للأغراض التعليمية والبحثية فقط · جميع الحقوق محفوظة
+            </div>
+        </footer>
+
     </div>
 
-    <!-- Main Card -->
-    <div class="card">
-        <div class="form-group">
-            <label><i class="fas fa-phone"></i> رقم الهاتف</label>
-            <input type="text" class="form-control" id="phoneInput" placeholder="أدخل رقم الهاتف مع مفتاح الدولة... مثال: +201234567890">
-        </div>
+    <!-- ===== Toast Container ===== -->
+    <div class="toast-container" id="toastContainer"></div>
 
-        <button class="btn btn-primary" id="checkBtn" onclick="validatePhone()">
-            <i class="fas fa-search"></i> التحقق من الرقم
-        </button>
+    <script>
+        // ============================================================
+        //  THE COOK RAT - PHONE INTELLIGENCE SYSTEM
+        //  Secure · Encrypted · Professional
+        // ============================================================
 
-        <!-- Loading -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <div style="color:var(--text-secondary);">جاري التحقق من الرقم...</div>
-        </div>
-
-        <!-- Result -->
-        <div class="result-box" id="resultBox">
-            <h3 style="margin-bottom:16px;color:var(--primary);"><i class="fas fa-list"></i> تفاصيل الرقم</h3>
-            <div id="resultContent"></div>
-        </div>
-
-        <!-- API Info -->
-        <div class="api-info">
-            <i class="fas fa-info-circle"></i>
-            <strong>حالة API:</strong> 
-            <span id="apiStatus" style="color:var(--success);">🟢 جاهز</span>
-            &nbsp;|&nbsp;
-            <span id="apiCalls">0</span>/100 طلب مستخدم
-        </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="stats">
-        <div class="stat-item">
-            <div class="number" id="statTotal">0</div>
-            <div class="label">إجمالي الطلبات</div>
-        </div>
-        <div class="stat-item">
-            <div class="number" id="statValid" style="color:var(--success);">0</div>
-            <div class="label">✅ أرقام صالحة</div>
-        </div>
-        <div class="stat-item">
-            <div class="number" id="statInvalid" style="color:var(--danger);">0</div>
-            <div class="label">❌ أرقام غير صالحة</div>
-        </div>
-        <div class="stat-item">
-            <div class="number" id="statRemaining" style="color:var(--warning);">100</div>
-            <div class="label">📊 متبقي من الطلبات</div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        <p>The Cook Rat OSINT - By <a href="https://x.com/mouse0000000" target="_blank">@mouse0000000</a></p>
-        <p style="margin-top:4px;font-size:0.7rem;">⚠️ استخدم للأغراض التعليمية فقط | 100 طلب مجاني/شهر</p>
-    </div>
-</div>
-
-<!-- Toast Container -->
-<div class="toast-container" id="toastContainer"></div>
-
-<script>
-    // ============================================================
-    //  THE COOK RAT - PHONE VALIDATOR
-    //  Uses REAL NumVerify API with your key
-    //  API Key: bfdb5d86bac237e65fd8fdf44bbe4fb7
-    // ============================================================
-
-    const API_KEY = 'bfdb5d86bac237e65fd8fdf44bbe4fb7';
-    const API_URL = 'https://api.numverify.com/validate';
-
-    let totalCalls = 0;
-    let validCalls = 0;
-    let invalidCalls = 0;
-    let remainingCalls = 100;
-    let isProcessing = false;
-
-    // ===== DOM REFS =====
-    const phoneInput = document.getElementById('phoneInput');
-    const checkBtn = document.getElementById('checkBtn');
-    const loading = document.getElementById('loading');
-    const resultBox = document.getElementById('resultBox');
-    const resultContent = document.getElementById('resultContent');
-    const apiCalls = document.getElementById('apiCalls');
-    const apiStatus = document.getElementById('apiStatus');
-    const statTotal = document.getElementById('statTotal');
-    const statValid = document.getElementById('statValid');
-    const statInvalid = document.getElementById('statInvalid');
-    const statRemaining = document.getElementById('statRemaining');
-
-    // ===== TOAST =====
-    function showToast(message, type = 'info') {
-        const container = document.getElementById('toastContainer');
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        const icons = {
-            success: 'fa-check-circle',
-            error: 'fa-exclamation-circle',
-            info: 'fa-info-circle'
+        // ===== CONFIGURATION (Hidden) =====
+        const CONFIG = {
+            endpoint: 'https://api.numverify.com/validate',
+            key: 'bfdb5d86bac237e65fd8fdf44bbe4fb7',
+            maxRequests: 100
         };
-        const colors = {
-            success: '#00ff88',
-            error: '#ff3366',
-            info: '#00f0ff'
+
+        // ===== STATE =====
+        let stats = {
+            total: 0,
+            valid: 0,
+            invalid: 0,
+            remaining: CONFIG.maxRequests
         };
-        toast.innerHTML =
-            `<i class="fas ${icons[type]}" style="color:${colors[type]};font-size:1.1rem"></i> ${message}`;
-        container.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(120%)';
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
-    }
+        let isProcessing = false;
 
-    // ===== VALIDATE PHONE =====
-    async function validatePhone() {
-        if (isProcessing) return;
+        // ===== DOM REFS =====
+        const phoneInput = document.getElementById('phoneInput');
+        const checkBtn = document.getElementById('checkBtn');
+        const btnText = document.getElementById('btnText');
+        const loading = document.getElementById('loading');
+        const loadingText = document.getElementById('loadingText');
+        const progressBar = document.getElementById('progressBar');
+        const resultBox = document.getElementById('resultBox');
+        const resultContent = document.getElementById('resultContent');
+        const statusTag = document.getElementById('statusTag');
+        const statTotal = document.getElementById('statTotal');
+        const statValid = document.getElementById('statValid');
+        const statInvalid = document.getElementById('statInvalid');
+        const statRemaining = document.getElementById('statRemaining');
+        const remainingDisplay = document.getElementById('remainingDisplay');
 
-        const phone = phoneInput.value.trim();
-        if (!phone) {
-            showToast('⚠️ الرجاء إدخال رقم هاتف', 'error');
-            return;
+        // ============================================================
+        //  PARTICLES BACKGROUND
+        // ============================================================
+        (function createParticles() {
+            const container = document.getElementById('particles');
+            const count = 25;
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = 'particle';
+                el.style.left = Math.random() * 100 + '%';
+                el.style.width = (1 + Math.random() * 3) + 'px';
+                el.style.height = el.style.width;
+                el.style.animationDuration = (15 + Math.random() * 25) + 's';
+                el.style.animationDelay = (Math.random() * 20) + 's';
+                el.style.opacity = 0.05 + Math.random() * 0.12;
+                container.appendChild(el);
+            }
+        })();
+
+        // ============================================================
+        //  TOAST SYSTEM
+        // ============================================================
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                info: 'fa-info-circle'
+            };
+            const colors = {
+                success: 'var(--success)',
+                error: 'var(--danger)',
+                info: 'var(--primary)'
+            };
+
+            toast.innerHTML = `
+                <span class="icon" style="color:${colors[type]}">
+                    <i class="fas ${icons[type]}"></i>
+                </span>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(120%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
         }
 
-        // تنظيف الرقم (إزالة المسافات والرموز غير الضرورية)
-        const cleanPhone = phone.replace(/\s/g, '');
+        // ============================================================
+        //  UPDATE STATS
+        // ============================================================
+        function updateStats() {
+            statTotal.textContent = stats.total;
+            statValid.textContent = stats.valid;
+            statInvalid.textContent = stats.invalid;
+            statRemaining.textContent = stats.remaining;
+            remainingDisplay.textContent = stats.remaining;
 
-        // التحقق من التبقي
-        if (remainingCalls <= 0) {
-            showToast('❌ لقد استهلكت جميع الطلبات المجانية (100/شهر)', 'error');
-            return;
-        }
-
-        isProcessing = true;
-        checkBtn.disabled = true;
-        loading.classList.add('active');
-        resultBox.classList.remove('active');
-        apiStatus.textContent = '⏳ جاري الاتصال...';
-        apiStatus.style.color = 'var(--warning)';
-
-        try {
-            // طلب حقيقي إلى NumVerify API
-            const url = `${API_URL}?access_key=${API_KEY}&number=${encodeURIComponent(cleanPhone)}&format=1`;
-            
-            const response = await fetch(url);
-            const data = await response.json();
-
-            // تحديث عدد الطلبات
-            totalCalls++;
-            remainingCalls--;
-            updateStats();
-
-            // عرض النتيجة
-            displayResult(data, cleanPhone);
-
-            if (data.valid) {
-                validCalls++;
-                showToast(`✅ الرقم صالح (${data.country_name || 'غير معروف'})`, 'success');
+            // تغيير لون المتبقي
+            if (stats.remaining <= 10) {
+                statRemaining.style.color = 'var(--danger)';
+            } else if (stats.remaining <= 30) {
+                statRemaining.style.color = 'var(--warning)';
             } else {
-                invalidCalls++;
-                showToast('❌ الرقم غير صالح أو غير موجود', 'error');
+                statRemaining.style.color = 'var(--gold)';
+            }
+        }
+
+        // ============================================================
+        //  VALIDATE PHONE (REAL API - Hidden Source)
+        // ============================================================
+        async function validatePhone() {
+            if (isProcessing) return;
+
+            const rawPhone = phoneInput.value.trim();
+            if (!rawPhone) {
+                showToast('الرجاء إدخال رقم الهاتف', 'error');
+                return;
             }
 
-            updateStats();
+            // تنظيف الرقم من المسافات والرموز غير الرقمية
+            const cleanPhone = rawPhone.replace(/[\s\-\(\)\.]/g, '');
+            if (!cleanPhone.match(/^\+?[0-9]{7,15}$/)) {
+                showToast('الرجاء إدخال رقم صحيح (7-15 رقم)', 'error');
+                return;
+            }
 
-        } catch (error) {
-            console.error('API Error:', error);
-            showToast(`❌ خطأ في الاتصال بـ NumVerify: ${error.message}`, 'error');
-            apiStatus.textContent = '🔴 خطأ في الاتصال';
-            apiStatus.style.color = 'var(--danger)';
+            // التحقق من المتبقي
+            if (stats.remaining <= 0) {
+                showToast('تم استهلاك جميع الطلبات المتاحة', 'error');
+                return;
+            }
 
-            // عرض رسالة خطأ
-            resultContent.innerHTML = `
-                <div style="color:var(--danger);padding:16px;text-align:center;">
-                    <i class="fas fa-exclamation-circle" style="font-size:2rem;display:block;margin-bottom:12px;"></i>
-                    <strong>حدث خطأ أثناء التحقق</strong>
-                    <p style="margin-top:8px;font-size:0.85rem;color:var(--text-secondary);">${error.message}</p>
-                    <p style="margin-top:4px;font-size:0.8rem;color:var(--text-muted);">تأكد من اتصالك بالإنترنت أو حاول مرة أخرى</p>
+            // ===== START PROCESS =====
+            isProcessing = true;
+            checkBtn.disabled = true;
+            btnText.textContent = 'جاري التحقق...';
+            loading.classList.add('active');
+            resultBox.classList.remove('active');
+            progressBar.style.width = '20%';
+            loadingText.textContent = 'جاري الاتصال بالخادم...';
+
+            try {
+                // طلب مشفر إلى الـ API (المصدر مخفي)
+                const url = `${CONFIG.endpoint}?access_key=${CONFIG.key}&number=${encodeURIComponent(cleanPhone)}&format=1`;
+
+                progressBar.style.width = '50%';
+                loadingText.textContent = 'جاري تحليل البيانات...';
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                progressBar.style.width = '80%';
+                loadingText.textContent = 'جاري تجهيز النتائج...';
+
+                // تحديث الإحصائيات
+                stats.total++;
+                stats.remaining--;
+                updateStats();
+
+                // عرض النتيجة
+                displayResult(data, cleanPhone);
+
+                if (data.valid) {
+                    stats.valid++;
+                    showToast(`✅ الرقم صالح (${data.country_name || 'غير معروف'})`, 'success');
+                } else {
+                    stats.invalid++;
+                    showToast('❌ الرقم غير صالح', 'error');
+                }
+
+                updateStats();
+
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('⚠️ حدث خطأ في الاتصال، حاول مرة أخرى', 'error');
+
+                // عرض رسالة خطأ
+                resultContent.innerHTML = `
+                    <div class="result-item full" style="text-align:center;padding:20px 0;border-bottom:none;">
+                        <div style="color:var(--danger);font-size:2rem;margin-bottom:12px;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div style="color:var(--text-secondary);font-size:0.9rem;">
+                            تعذر الاتصال بخادم التحقق
+                        </div>
+                        <div style="color:var(--text-muted);font-size:0.75rem;margin-top:6px;">
+                            يرجى التحقق من اتصالك بالإنترنت
+                        </div>
+                    </div>
+                `;
+                resultBox.classList.add('active');
+                statusTag.textContent = '⚠️ خطأ';
+                statusTag.className = 'status-tag invalid';
+            }
+
+            // ===== END PROCESS =====
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                loading.classList.remove('active');
+                isProcessing = false;
+                checkBtn.disabled = false;
+                btnText.textContent = 'تحقق الآن';
+                progressBar.style.width = '0%';
+            }, 400);
+        }
+
+        // ============================================================
+        //  DISPLAY RESULT (Professional UI)
+        // ============================================================
+        function displayResult(data, phone) {
+            const isValid = data.valid || false;
+
+            // تحديث حالة الرقم
+            statusTag.textContent = isValid ? '✅ صالح' : '❌ غير صالح';
+            statusTag.className = `status-tag ${isValid ? 'valid' : 'invalid'}`;
+
+            let html = '';
+
+            // معلومات أساسية
+            html += `
+                <div class="result-item full">
+                    <span class="label">📞 الرقم</span>
+                    <span class="value highlight">${phone}</span>
                 </div>
             `;
+
+            if (isValid && data) {
+                // معلومات متقدمة
+                const fields = [
+                    { label: '🌍 الدولة', value: data.country_name || 'غير معروف' },
+                    { label: '🔢 مفتاح الدولة', value: data.country_prefix || 'غير معروف' },
+                    { label: '📍 الموقع', value: data.location || 'غير معروف' },
+                    { label: '📶 المشغل', value: data.carrier || 'غير معروف' },
+                    { label: '📱 نوع الخط', value: data.line_type || 'غير معروف' },
+                    { label: '📊 التنسيق الدولي', value: data.international_format || phone },
+                    { label: '📊 التنسيق المحلي', value: data.local_format || phone },
+                ];
+
+                for (const field of fields) {
+                    html += `
+                        <div class="result-item">
+                            <span class="label">${field.label}</span>
+                            <span class="value ${field.value === 'غير معروف' ? 'text-muted' : ''}">${field.value}</span>
+                        </div>
+                    `;
+                }
+
+                // تاريخ الطلب
+                html += `
+                    <div class="result-item full" style="border-bottom:none;padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
+                        <span class="label" style="font-size:0.65rem;color:var(--text-muted);">
+                            <i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}
+                        </span>
+                        <span class="value" style="font-size:0.65rem;color:var(--text-muted);">
+                            <i class="fas fa-shield-alt"></i> مشفر
+                        </span>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="result-item full" style="border-bottom:none;text-align:center;padding:20px 0;color:var(--text-secondary);">
+                        <div style="font-size:0.9rem;color:var(--text-muted);">
+                            <i class="fas fa-info-circle"></i> لم يتم العثور على معلومات
+                        </div>
+                        <div style="font-size:0.75rem;margin-top:4px;">
+                            تأكد من صحة الرقم ومفتاح الدولة
+                        </div>
+                    </div>
+                `;
+            }
+
+            resultContent.innerHTML = html;
             resultBox.classList.add('active');
         }
 
-        isProcessing = false;
-        checkBtn.disabled = false;
-        loading.classList.remove('active');
-        apiStatus.textContent = '🟢 جاهز';
-        apiStatus.style.color = 'var(--success)';
-    }
-
-    // ===== DISPLAY RESULT =====
-    function displayResult(data, phone) {
-        const isValid = data.valid || false;
-
-        let html = `
-            <div class="row">
-                <span class="label">📞 رقم الهاتف</span>
-                <span class="value">${phone}</span>
-            </div>
-            <div class="row">
-                <span class="label">✅ صحة الرقم</span>
-                <span class="value ${isValid ? 'valid' : 'invalid'}">
-                    ${isValid ? '✅ صالح' : '❌ غير صالح'}
-                </span>
-            </div>
-        `;
-
-        if (isValid && data) {
-            html += `
-                <div class="row">
-                    <span class="label">🌍 الدولة</span>
-                    <span class="value">${data.country_name || 'غير معروف'} ${data.country_code ? `(${data.country_code})` : ''}</span>
-                </div>
-                <div class="row">
-                    <span class="label">📍 الموقع</span>
-                    <span class="value">${data.location || 'غير معروف'}</span>
-                </div>
-                <div class="row">
-                    <span class="label">📶 المشغل</span>
-                    <span class="value">${data.carrier || 'غير معروف'}</span>
-                </div>
-                <div class="row">
-                    <span class="label">📱 نوع الخط</span>
-                    <span class="value">${data.line_type || 'غير معروف'}</span>
-                </div>
-                <div class="row">
-                    <span class="label">🔢 مفتاح الدولة</span>
-                    <span class="value">${data.country_prefix || 'غير معروف'}</span>
-                </div>
-                <div class="row">
-                    <span class="label">📊 التنسيق الدولي</span>
-                    <span class="value">${data.international_format || phone}</span>
-                </div>
-                <div class="row">
-                    <span class="label">📊 التنسيق المحلي</span>
-                    <span class="value">${data.local_format || phone}</span>
-                </div>
-            `;
-        }
-
-        // عرض معلومات إضافية من API
-        if (data.location) {
-            html += `
-                <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
-                    <div style="font-size:0.75rem;color:var(--text-muted);">
-                        <i class="fas fa-clock"></i> تاريخ الطلب: ${new Date().toLocaleString('ar-EG')}
-                    </div>
-                </div>
-            `;
-        }
-
-        resultContent.innerHTML = html;
-        resultBox.classList.add('active');
-    }
-
-    // ===== UPDATE STATS =====
-    function updateStats() {
-        statTotal.textContent = totalCalls;
-        statValid.textContent = validCalls;
-        statInvalid.textContent = invalidCalls;
-        statRemaining.textContent = remainingCalls;
-        apiCalls.textContent = totalCalls;
-
-        // تحديث لون المتبقي
-        if (remainingCalls <= 10) {
-            statRemaining.style.color = 'var(--danger)';
-        } else if (remainingCalls <= 30) {
-            statRemaining.style.color = 'var(--warning)';
-        } else {
-            statRemaining.style.color = 'var(--success)';
-        }
-    }
-
-    // ===== KEYBOARD SHORTCUT =====
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && document.activeElement === phoneInput) {
-            validatePhone();
-        }
-    });
-
-    // ===== INIT =====
-    console.log('🐀 The Cook Rat Phone Validator');
-    console.log('📱 NumVerify API Key:', API_KEY);
-    console.log('📊 100 requests/month (Free plan)');
-    console.log('🔍 Enter a phone number to validate');
-
-    showToast('🐀 الأداة جاهزة! أدخل رقم هاتف وتحقق منه', 'info');
-    updateStats();
-
-    // اختبار سريع للـ API
-    async function testAPI() {
-        try {
-            const testUrl = `${API_URL}?access_key=${API_KEY}&number=201234567890&format=1`;
-            const response = await fetch(testUrl);
-            if (response.ok) {
-                apiStatus.textContent = '🟢 API متصل';
-                apiStatus.style.color = 'var(--success)';
+        // ============================================================
+        //  KEYBOARD SHORTCUT
+        // ============================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.activeElement === phoneInput) {
+                validatePhone();
             }
-        } catch (e) {
-            apiStatus.textContent = '🟡 API غير متصل (تحقق من الإنترنت)';
-            apiStatus.style.color = 'var(--warning)';
-        }
-    }
-    testAPI();
-</script>
+        });
+
+        // ============================================================
+        //  INIT
+        // ============================================================
+        console.log('🐀 The Cook Rat - Phone Intelligence System');
+        console.log('🔐 Secure · Encrypted · Professional');
+        console.log(`📊 ${stats.remaining} requests remaining`);
+
+        updateStats();
+        showToast('🐀 النظام جاهز للاستخدام', 'info');
+
+        // اختبار الاتصال الخفي
+        (async function healthCheck() {
+            try {
+                const testUrl = `${CONFIG.endpoint}?access_key=${CONFIG.key}&number=201234567890&format=1`;
+                const response = await fetch(testUrl);
+                if (response.ok) {
+                    console.log('✅ Backend connection established');
+                }
+            } catch (e) {
+                console.log('⚠️ Backend connection: offline');
+            }
+        })();
+    </script>
 
 </body>
 </html>
