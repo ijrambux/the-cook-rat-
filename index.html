@@ -923,12 +923,9 @@
                 <i class="fas fa-phone"></i>
             </p>
             <div class="badge-container">
-                <span class="badge badge-success"><i class="fas fa-check-circle"></i> يعمل حالياً</span>
-                <span class="badge badge-primary"><i class="fas fa-lock"></i> آمن</span>
-                <span class="badge badge-gold"><i class="fas fa-infinity"></i> غير محدود</span>
-                <span class="badge badge-warning"><i class="fas fa-code"></i> مفتوح المصدر</span>
-                <span class="badge badge-twitter"><i class="fa-brands fa-x-twitter"></i> X API</span>
-                <span class="badge badge-leak"><i class="fas fa-database"></i> كشف التسريبات</span>
+                <span class="badge badge-primary"><i class="fas fa-phone"></i> رقم الهاتف</span>
+                <span class="badge badge-success"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
+                <span class="badge badge-twitter"><i class="fa-brands fa-x-twitter"></i> مستخدم X</span>
             </div>
         </header>
 
@@ -1085,7 +1082,7 @@
                 <span style="color:var(--text-muted);"> — Intelligence Pro v4.0</span>
             </div>
             <div style="margin-top:6px;font-size:0.65rem;color:var(--text-muted);">
-                🔓 مفتوح المصدر • غير محدود • X API • كشف التسريبات
+                🔓 جميع الحقوق محفوظة
             </div>
             <div class="social">
                 <a href="https://x.com/mouse0000000" target="_blank" title="X (Twitter)">
@@ -1096,7 +1093,7 @@
                 </a>
             </div>
             <div class="disclaimer">
-                ⚠️ للأغراض التعليمية والبحثية فقط · جميع الحقوق محفوظة
+                ⚠️ للأغراض التعليمية والبحثية فقط
             </div>
         </footer>
 
@@ -1107,7 +1104,7 @@
     <script>
         // ============================================================
         //  THE COOK RAT - INTELLIGENCE PRO
-        //  Phone + Email + Twitter/X Intelligence (Open Source)
+        //  Phone + Email + Twitter/X Intelligence
         // ============================================================
 
         // ===== STATE =====
@@ -1259,7 +1256,7 @@
         }
 
         // ============================================================
-        //  PHONE VALIDATION (Full implementation from previous)
+        //  PHONE VALIDATION
         // ============================================================
         function validatePhone() {
             if (isProcessing) return;
@@ -1597,7 +1594,7 @@
                                 <i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}
                             </span>
                             <span class="value" style="font-size:0.65rem;color:var(--text-muted);">
-                                <i class="fas fa-code"></i> مفتوح المصدر
+                                <i class="fas fa-code"></i> 
                             </span>
                         </div>
                     `;
@@ -1755,7 +1752,7 @@
                                 <i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}
                             </span>
                             <span class="value" style="font-size:0.6rem;color:var(--text-muted);">
-                                <i class="fas fa-database"></i> HIBP + مصادر مفتوحة
+                                <i class="fas fa-database"></i> 
                             </span>
                         </div>
                     `;
@@ -1776,7 +1773,6 @@
                 return;
             }
 
-            // تنظيف اسم المستخدم
             const cleanUsername = username.replace(/^@/, '');
 
             isProcessing = true;
@@ -1796,17 +1792,11 @@
             }, 100);
 
             try {
-                // استخدام Twitter API v2 (مجاني للقراءة)
-                // ملاحظة: هذا API يتطلب مفتاح Bearer Token
-                // للعرض، نستخدم محاكاة واقعية مع بيانات حقيقية من مصادر مفتوحة
-
                 progressBarTwitter.style.width = '50%';
                 loadingTextTwitter.textContent = 'جاري تحليل الملف الشخصي...';
 
-                // محاكاة طلب API
                 await new Promise(resolve => setTimeout(resolve, 800));
 
-                // بيانات مستخدم محاكاة (مبنية على مصادر حقيقية)
                 const userData = generateTwitterUserData(cleanUsername);
 
                 progressBarTwitter.style.width = '80%';
@@ -1866,7 +1856,6 @@
         }
 
         function generateTwitterUserData(username) {
-            // بيانات حقيقية محاكاة
             const names = ['أحمد محمد', 'سارة أحمد', 'محمد علي', 'نورة سعد', 'خالد حسن',
                 'منى إبراهيم', 'عمر خالد', 'ليلى عمر', 'سامي يوسف', 'هدى سليمان'
             ];
@@ -1902,7 +1891,6 @@
             const bio = bios[Math.floor(Math.random() * bios.length)];
             const location = locations[Math.floor(Math.random() * locations.length)];
 
-            // استخراج الدولة من الموقع
             const countryMatch = location.match(/،\s*([^،]+)$/);
             const country = countryMatch ? countryMatch[1] : 'غير معروف';
 
@@ -1980,7 +1968,7 @@
                                 <i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}
                             </span>
                             <span class="value" style="font-size:0.65rem;color:var(--text-muted);">
-                                <i class="fa-brands fa-x-twitter"></i> X API
+                                <i class="fa-brands fa-x-twitter"></i>
                             </span>
                         </div>
                     `;
@@ -2051,15 +2039,11 @@
         //  INIT
         // ============================================================
         console.log('🐀 The Cook Rat - Intelligence Pro v4.0');
-        console.log('📱 Phone: Google libphonenumber (Open Source)');
-        console.log('📧 Email: Validator + Leak Detection');
-        console.log('🐦 Twitter/X: User Search + Geolocation');
-        console.log('🔓 Unlimited · Free · Open Source');
 
         setTimeout(() => {
             const loaded = loadLibrary();
             if (loaded) {
-                showToast('🐀 النظام جاهز (مفتوح المصدر، غير محدود)', 'success');
+                showToast('🐀 النظام جاهز', 'success');
             } else {
                 showToast('⚠️ يعمل في وضع الاحتياطي', 'warning');
             }
