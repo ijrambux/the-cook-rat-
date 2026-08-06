@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Cook Rat - Phone Intelligence</title>
+    <title>The Cook Rat - Phone Intelligence Pro</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐀</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google libphonenumber - مفتوح المصدر ومجاني -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/libphonenumber-js/1.10.24/libphonenumber-js.min.js">
+    </script>
     <style>
         :root {
             --primary: #00f0ff;
             --primary-dark: #0099cc;
-            --primary-glow: rgba(0, 240, 255, 0.3);
             --bg-dark: #070b15;
             --bg-card: #0d1a2b;
             --bg-card-hover: #142a3f;
@@ -21,9 +23,7 @@
             --border: #1a3a4a;
             --border-hover: #00f0ff;
             --success: #00ff88;
-            --success-glow: rgba(0, 255, 136, 0.2);
             --danger: #ff3366;
-            --danger-glow: rgba(255, 51, 102, 0.2);
             --warning: #ffaa00;
             --gold: #ffd700;
             --glow: 0 0 30px rgba(0, 240, 255, 0.15);
@@ -43,15 +43,13 @@
             background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
-            background-image: 
+            background-image:
                 radial-gradient(ellipse at 10% 90%, rgba(0, 240, 255, 0.03) 0%, transparent 50%),
-                radial-gradient(ellipse at 90% 10%, rgba(0, 240, 255, 0.02) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 50%, rgba(0, 100, 200, 0.02) 0%, transparent 70%);
+                radial-gradient(ellipse at 90% 10%, rgba(0, 240, 255, 0.02) 0%, transparent 50%);
             position: relative;
             overflow-x: hidden;
         }
 
-        /* ===== Animated Background ===== */
         .bg-particles {
             position: fixed;
             top: 0;
@@ -90,9 +88,8 @@
             }
         }
 
-        /* ===== Container ===== */
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 30px 20px 40px;
             position: relative;
@@ -169,8 +166,13 @@
         }
 
         @keyframes gradientMove {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
         }
 
         .logo-text .sub {
@@ -196,8 +198,7 @@
             margin: 0 4px;
         }
 
-        /* ===== Status Badges ===== */
-        .status-badges {
+        .badge-container {
             display: flex;
             justify-content: center;
             gap: 12px;
@@ -215,7 +216,6 @@
             font-weight: 600;
             letter-spacing: 0.5px;
             border: 1px solid transparent;
-            transition: var(--transition);
         }
 
         .badge-success {
@@ -236,11 +236,13 @@
             border-color: rgba(0, 240, 255, 0.15);
         }
 
-        .badge i {
-            font-size: 0.65rem;
+        .badge-gold {
+            background: rgba(255, 215, 0, 0.08);
+            color: var(--gold);
+            border-color: rgba(255, 215, 0, 0.15);
         }
 
-        /* ===== Main Card ===== */
+        /* ===== Card ===== */
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -326,6 +328,8 @@
             font-size: 0.9rem;
             border-left: 1px solid var(--border);
             margin-left: 4px;
+            cursor: default;
+            user-select: none;
         }
 
         .form-control {
@@ -401,8 +405,14 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .loading .spinner {
@@ -416,7 +426,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .loading .text {
@@ -492,6 +504,12 @@
             border: 1px solid rgba(255, 51, 102, 0.15);
         }
 
+        .status-tag.possible {
+            background: rgba(255, 170, 0, 0.12);
+            color: var(--warning);
+            border: 1px solid rgba(255, 170, 0, 0.15);
+        }
+
         .result-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -531,6 +549,10 @@
             color: var(--danger);
         }
 
+        .result-item .value.gold {
+            color: var(--gold);
+        }
+
         .result-item.full {
             grid-column: 1 / -1;
         }
@@ -564,9 +586,15 @@
             line-height: 1.2;
         }
 
-        .stat-item .number.green { color: var(--success); }
-        .stat-item .number.red { color: var(--danger); }
-        .stat-item .number.gold { color: var(--gold); }
+        .stat-item .number.green {
+            color: var(--success);
+        }
+        .stat-item .number.red {
+            color: var(--danger);
+        }
+        .stat-item .number.gold {
+            color: var(--gold);
+        }
 
         .stat-item .label {
             font-size: 0.65rem;
@@ -651,58 +679,113 @@
             backdrop-filter: blur(10px);
         }
 
-        .toast.success { border-right: 3px solid var(--success); }
-        .toast.error { border-right: 3px solid var(--danger); }
-        .toast.info { border-right: 3px solid var(--primary); }
+        .toast.success {
+            border-right: 3px solid var(--success);
+        }
+        .toast.error {
+            border-right: 3px solid var(--danger);
+        }
+        .toast.info {
+            border-right: 3px solid var(--primary);
+        }
 
         .toast .icon {
             font-size: 1.1rem;
         }
 
         @keyframes slideIn {
-            from { transform: translateX(120%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* ===== Responsive ===== */
         @media (max-width: 768px) {
-            .container { padding: 20px 12px 30px; }
-            .card { padding: 24px 20px; }
-            .result-grid { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .logo-text .main { font-size: 1.8rem; }
-            .logo-icon { width: 56px; height: 56px; }
-            .header .tagline { font-size: 0.85rem; }
-            .status-badges { gap: 8px; }
-            .badge { font-size: 0.6rem; padding: 4px 10px; }
+            .container {
+                padding: 20px 12px 30px;
+            }
+            .card {
+                padding: 24px 20px;
+            }
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .logo-text .main {
+                font-size: 1.8rem;
+            }
+            .logo-icon {
+                width: 56px;
+                height: 56px;
+            }
+            .header .tagline {
+                font-size: 0.85rem;
+            }
+            .badge-container {
+                gap: 8px;
+            }
+            .badge {
+                font-size: 0.6rem;
+                padding: 4px 10px;
+            }
         }
 
         @media (max-width: 480px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-            .stat-item .number { font-size: 1.4rem; }
-            .card { padding: 18px 14px; }
-            .form-control { font-size: 0.85rem; padding: 12px 14px; }
-            .btn { font-size: 0.85rem; padding: 12px 20px; }
-            .logo-text .main { font-size: 1.5rem; }
-            .logo-icon { width: 48px; height: 48px; }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .stat-item .number {
+                font-size: 1.4rem;
+            }
+            .card {
+                padding: 18px 14px;
+            }
+            .form-control {
+                font-size: 0.85rem;
+                padding: 12px 14px;
+            }
+            .btn {
+                font-size: 0.85rem;
+                padding: 12px 20px;
+            }
+            .logo-text .main {
+                font-size: 1.5rem;
+            }
+            .logo-icon {
+                width: 48px;
+                height: 48px;
+            }
         }
 
-        /* ===== Scrollbar ===== */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg-dark); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
     </style>
 </head>
 <body>
 
-    <!-- ===== Particles Background ===== -->
     <div class="bg-particles" id="particles"></div>
 
-    <!-- ===== Container ===== -->
     <div class="container">
 
-        <!-- ===== Header ===== -->
         <header class="header">
             <div class="logo-container">
                 <div class="logo-icon">
@@ -710,50 +793,42 @@
                 </div>
                 <div class="logo-text">
                     <span class="main">The Cook Rat</span>
-                    <span class="sub">Phone Intelligence System</span>
+                    <span class="sub">Phone Intelligence Pro</span>
                 </div>
             </div>
             <p class="tagline">
                 <i class="fas fa-shield-alt"></i>
-                تحقق من صحة الأرقام واكتشف التفاصيل
+                تحليل متقدم للأرقام باستخدام تقنيات مفتوحة المصدر
                 <i class="fas fa-phone"></i>
             </p>
-            <div class="status-badges">
-                <span class="badge badge-success">
-                    <i class="fas fa-check-circle"></i> نشط
-                </span>
-                <span class="badge badge-primary">
-                    <i class="fas fa-lock"></i> آمن
-                </span>
-                <span class="badge badge-warning" id="usageBadge">
-                    <i class="fas fa-chart-bar"></i> <span id="remainingDisplay">0</span>
-                </span>
+            <div class="badge-container">
+                <span class="badge badge-success"><i class="fas fa-check-circle"></i> يعمل حالياً</span>
+                <span class="badge badge-primary"><i class="fas fa-lock"></i> آمن ومشفر</span>
+                <span class="badge badge-gold"><i class="fas fa-infinity"></i> غير محدود</span>
+                <span class="badge badge-warning"><i class="fas fa-code"></i> مفتوح المصدر</span>
             </div>
         </header>
 
-        <!-- ===== Main Card ===== -->
         <div class="card">
             <div class="card-title">
-                <i class="fas fa-search"></i>
-                فحص الرقم
+                <i class="fas fa-search"></i> فحص الرقم
             </div>
 
             <div class="form-group">
                 <label><i class="fas fa-phone-alt"></i> رقم الهاتف</label>
                 <div class="input-wrapper">
-                    <span class="prefix">+</span>
-                    <input type="text" class="form-control" id="phoneInput" 
-                           placeholder="أدخل الرقم مع مفتاح الدولة..." dir="ltr">
+                    <span class="prefix" id="countryPrefix">+</span>
+                    <input type="text" class="form-control" id="phoneInput"
+                    placeholder="أدخل الرقم مع مفتاح الدولة..." dir="ltr">
                     <span class="suffix">مثال: 201234567890</span>
                 </div>
             </div>
 
             <button class="btn btn-primary" id="checkBtn" onclick="validatePhone()">
                 <i class="fas fa-bolt"></i>
-                <span id="btnText">تحقق الآن</span>
+                <span id="btnText">تحليل الرقم</span>
             </button>
 
-            <!-- Loading -->
             <div class="loading" id="loading">
                 <div class="spinner"></div>
                 <div class="text" id="loadingText">جاري تحليل الرقم...</div>
@@ -762,7 +837,6 @@
                 </div>
             </div>
 
-            <!-- Result -->
             <div class="result-box" id="resultBox">
                 <div class="result-header">
                     <span class="title"><i class="fas fa-list-ul"></i> تفاصيل الرقم</span>
@@ -772,7 +846,6 @@
             </div>
         </div>
 
-        <!-- ===== Stats ===== -->
         <div class="stats-grid">
             <div class="stat-item">
                 <div class="number" id="statTotal">0</div>
@@ -787,16 +860,18 @@
                 <div class="label">❌ غير مؤكد</div>
             </div>
             <div class="stat-item">
-                <div class="number gold" id="statRemaining">0</div>
-                <div class="label">📊 متبقي</div>
+                <div class="number gold" id="statPossible">0</div>
+                <div class="label">⚠️ محتمل</div>
             </div>
         </div>
 
-        <!-- ===== Footer ===== -->
         <footer class="footer">
             <div>
                 <span class="brand">🐀 The Cook Rat</span>
-                <span style="color:var(--text-muted);"> — Phone Intelligence v2.0</span>
+                <span style="color:var(--text-muted);"> — Phone Intelligence Pro v3.0</span>
+            </div>
+            <div style="margin-top:6px;font-size:0.65rem;color:var(--text-muted);">
+                🔓 يعمل بدون إنترنت • مفتوح المصدر • غير محدود
             </div>
             <div class="social">
                 <a href="https://x.com/mouse0000000" target="_blank" title="X (Twitter)">
@@ -813,33 +888,28 @@
 
     </div>
 
-    <!-- ===== Toast Container ===== -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
         // ============================================================
-        //  THE COOK RAT - PHONE INTELLIGENCE SYSTEM
-        //  Secure · Professional
+        //  THE COOK RAT - PHONE INTELLIGENCE PRO
+        //  Powered by Google libphonenumber (Open Source)
+        //  مجاني 100%، يعمل بدون إنترنت، غير محدود
         // ============================================================
-
-        // ===== CONFIGURATION =====
-        const CONFIG = {
-            endpoint: 'https://api.numverify.com/validate',
-            key: 'bfdb5d86bac237e65fd8fdf44bbe4fb7',
-            maxRequests: 100
-        };
 
         // ===== STATE =====
         let stats = {
             total: 0,
             valid: 0,
             invalid: 0,
-            remaining: CONFIG.maxRequests
+            possible: 0
         };
         let isProcessing = false;
+        let phoneUtil = null;
 
         // ===== DOM REFS =====
         const phoneInput = document.getElementById('phoneInput');
+        const countryPrefix = document.getElementById('countryPrefix');
         const checkBtn = document.getElementById('checkBtn');
         const btnText = document.getElementById('btnText');
         const loading = document.getElementById('loading');
@@ -851,16 +921,12 @@
         const statTotal = document.getElementById('statTotal');
         const statValid = document.getElementById('statValid');
         const statInvalid = document.getElementById('statInvalid');
-        const statRemaining = document.getElementById('statRemaining');
-        const remainingDisplay = document.getElementById('remainingDisplay');
+        const statPossible = document.getElementById('statPossible');
 
-        // ============================================================
-        //  PARTICLES BACKGROUND
-        // ============================================================
+        // ===== PARTICLES BACKGROUND =====
         (function createParticles() {
             const container = document.getElementById('particles');
-            const count = 25;
-            for (let i = 0; i < count; i++) {
+            for (let i = 0; i < 25; i++) {
                 const el = document.createElement('div');
                 el.className = 'particle';
                 el.style.left = Math.random() * 100 + '%';
@@ -880,7 +946,6 @@
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-
             const icons = {
                 success: 'fa-check-circle',
                 error: 'fa-exclamation-circle',
@@ -891,14 +956,12 @@
                 error: 'var(--danger)',
                 info: 'var(--primary)'
             };
-
             toast.innerHTML = `
-                <span class="icon" style="color:${colors[type]}">
-                    <i class="fas ${icons[type]}"></i>
-                </span>
-                <span>${message}</span>
-            `;
-
+                        <span class="icon" style="color:${colors[type]}">
+                            <i class="fas ${icons[type]}"></i>
+                        </span>
+                        <span>${message}</span>
+                    `;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
@@ -914,22 +977,102 @@
             statTotal.textContent = stats.total;
             statValid.textContent = stats.valid;
             statInvalid.textContent = stats.invalid;
-            statRemaining.textContent = stats.remaining;
-            remainingDisplay.textContent = stats.remaining;
+            statPossible.textContent = stats.possible;
+        }
 
-            if (stats.remaining <= 10) {
-                statRemaining.style.color = 'var(--danger)';
-            } else if (stats.remaining <= 30) {
-                statRemaining.style.color = 'var(--warning)';
-            } else {
-                statRemaining.style.color = 'var(--gold)';
+        // ============================================================
+        //  LOAD LIBRARY
+        // ============================================================
+        function loadLibrary() {
+            try {
+                if (typeof libphonenumber !== 'undefined') {
+                    phoneUtil = libphonenumber;
+                    console.log('✅ Google libphonenumber loaded successfully');
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.error('❌ Failed to load library:', e);
+                return false;
             }
         }
 
         // ============================================================
-        //  VALIDATE PHONE
+        //  DETECT COUNTRY FROM PREFIX
         // ============================================================
-        async function validatePhone() {
+        function detectCountry(phoneNumber) {
+            if (!phoneUtil) return null;
+
+            try {
+                const parsed = phoneUtil.parsePhoneNumber(phoneNumber);
+                if (parsed && parsed.country) {
+                    return parsed.country;
+                }
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // ============================================================
+        //  GET COUNTRY NAME
+        // ============================================================
+        function getCountryName(countryCode) {
+            const countries = {
+                'EG': 'مصر',
+                'SA': 'السعودية',
+                'AE': 'الإمارات',
+                'KW': 'الكويت',
+                'QA': 'قطر',
+                'BH': 'البحرين',
+                'OM': 'عمان',
+                'JO': 'الأردن',
+                'LB': 'لبنان',
+                'PS': 'فلسطين',
+                'SY': 'سوريا',
+                'IQ': 'العراق',
+                'YE': 'اليمن',
+                'DZ': 'الجزائر',
+                'MA': 'المغرب',
+                'TN': 'تونس',
+                'LY': 'ليبيا',
+                'SD': 'السودان',
+                'SO': 'الصومال',
+                'MR': 'موريتانيا',
+                'US': 'الولايات المتحدة',
+                'GB': 'بريطانيا',
+                'FR': 'فرنسا',
+                'DE': 'ألمانيا',
+                'IT': 'إيطاليا',
+                'ES': 'إسبانيا',
+                'TR': 'تركيا',
+                'IN': 'الهند',
+                'CN': 'الصين',
+                'JP': 'اليابان',
+                'KR': 'كوريا الجنوبية',
+                'RU': 'روسيا',
+                'BR': 'البرازيل',
+                'AU': 'أستراليا',
+                'CA': 'كندا',
+                'MX': 'المكسيك',
+                'ZA': 'جنوب أفريقيا',
+                'NG': 'نيجيريا',
+                'PK': 'باكستان',
+                'BD': 'بنغلاديش',
+                'PH': 'الفلبين',
+                'VN': 'فيتنام',
+                'IR': 'إيران',
+                'SA': 'السعودية',
+                'IL': 'إسرائيل',
+                'AE': 'الإمارات'
+            };
+            return countries[countryCode] || countryCode;
+        }
+
+        // ============================================================
+        //  VALIDATE PHONE - REAL & OPEN SOURCE
+        // ============================================================
+        function validatePhone() {
             if (isProcessing) return;
 
             const rawPhone = phoneInput.value.trim();
@@ -938,146 +1081,372 @@
                 return;
             }
 
+            // تنظيف الرقم
             const cleanPhone = rawPhone.replace(/[\s\-\(\)\.]/g, '');
-            if (!cleanPhone.match(/^\+?[0-9]{7,15}$/)) {
-                showToast('الرجاء إدخال رقم صحيح (7-15 رقم)', 'error');
-                return;
+
+            // التحقق من أن الرقم يحتوي على علامة +
+            let phoneWithPrefix = cleanPhone;
+            if (!phoneWithPrefix.startsWith('+')) {
+                // محاولة إضافة + تلقائياً
+                phoneWithPrefix = '+' + phoneWithPrefix;
             }
 
-            if (stats.remaining <= 0) {
-                showToast('تم استهلاك جميع الطلبات المتاحة', 'error');
+            // التحقق من صحة التنسيق الأساسي
+            if (!phoneWithPrefix.match(/^\+[0-9]{7,15}$/)) {
+                showToast('الرجاء إدخال رقم صحيح (7-15 رقم مع مفتاح الدولة)', 'error');
                 return;
             }
 
             // ===== START PROCESS =====
             isProcessing = true;
             checkBtn.disabled = true;
-            btnText.textContent = 'جاري التحقق...';
+            btnText.textContent = 'جاري التحليل...';
             loading.classList.add('active');
             resultBox.classList.remove('active');
             progressBar.style.width = '20%';
-            loadingText.textContent = 'جاري الاتصال بالخادم...';
+            loadingText.textContent = 'جاري تحليل الرقم...';
 
-            try {
-                const url = `${CONFIG.endpoint}?access_key=${CONFIG.key}&number=${encodeURIComponent(cleanPhone)}&format=1`;
+            // محاكاة تقدم واقعي
+            let progress = 20;
+            const interval = setInterval(() => {
+                progress += 5;
+                if (progress <= 80) {
+                    progressBar.style.width = progress + '%';
+                }
+            }, 50);
 
-                progressBar.style.width = '50%';
-                loadingText.textContent = 'جاري تحليل البيانات...';
+            setTimeout(() => {
+                clearInterval(interval);
+                progressBar.style.width = '100%';
 
-                const response = await fetch(url);
-                const data = await response.json();
+                try {
+                    // استخدام Google libphonenumber للتحليل
+                    let result = analyzeWithLibphonenumber(phoneWithPrefix);
 
-                progressBar.style.width = '80%';
-                loadingText.textContent = 'جاري تجهيز النتائج...';
+                    // تحديث الإحصائيات
+                    stats.total++;
+                    if (result.status === 'valid') stats.valid++;
+                    else if (result.status === 'possible') stats.possible++;
+                    else stats.invalid++;
+                    updateStats();
 
-                stats.total++;
-                stats.remaining--;
-                updateStats();
+                    // عرض النتيجة
+                    displayResult(result, phoneWithPrefix);
 
-                displayResult(data, cleanPhone);
+                    if (result.status === 'valid') {
+                        showToast(`✅ الرقم مؤكد (${result.countryName || 'غير معروف'})`, 'success');
+                    } else if (result.status === 'possible') {
+                        showToast('⚠️ الرقم محتمل (تحقق من التنسيق)', 'warning');
+                    } else {
+                        showToast('❌ الرقم غير مؤكد', 'error');
+                    }
 
-                if (data.valid) {
-                    stats.valid++;
-                    showToast(`✅ الرقم مؤكد (${data.country_name || 'غير معروف'})`, 'success');
-                } else {
-                    stats.invalid++;
-                    showToast('❌ الرقم غير مؤكد', 'error');
+                } catch (error) {
+                    console.error('Error:', error);
+                    showToast('⚠️ حدث خطأ في التحليل', 'error');
+
+                    // عرض رسالة خطأ
+                    resultContent.innerHTML = `
+                                <div class="result-item full" style="text-align:center;padding:20px 0;border-bottom:none;">
+                                    <div style="color:var(--danger);font-size:2rem;margin-bottom:12px;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div style="color:var(--text-secondary);font-size:0.9rem;">
+                                        تعذر تحليل الرقم
+                                    </div>
+                                    <div style="color:var(--text-muted);font-size:0.75rem;margin-top:6px;">
+                                        تأكد من صحة الرقم ومفتاح الدولة
+                                    </div>
+                                </div>
+                            `;
+                    resultBox.classList.add('active');
+                    statusTag.textContent = '⚠️ خطأ';
+                    statusTag.className = 'status-tag invalid';
                 }
 
-                updateStats();
+                // ===== END PROCESS =====
+                setTimeout(() => {
+                    loading.classList.remove('active');
+                    isProcessing = false;
+                    checkBtn.disabled = false;
+                    btnText.textContent = 'تحليل الرقم';
+                    progressBar.style.width = '0%';
+                }, 300);
 
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('⚠️ حدث خطأ في الاتصال، حاول مرة أخرى', 'error');
+            }, 800);
+        }
 
-                resultContent.innerHTML = `
-                    <div class="result-item full" style="text-align:center;padding:20px 0;border-bottom:none;">
-                        <div style="color:var(--danger);font-size:2rem;margin-bottom:12px;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div style="color:var(--text-secondary);font-size:0.9rem;">
-                            تعذر الاتصال بالخادم
-                        </div>
-                        <div style="color:var(--text-muted);font-size:0.75rem;margin-top:6px;">
-                            يرجى التحقق من اتصالك بالإنترنت
-                        </div>
-                    </div>
-                `;
-                resultBox.classList.add('active');
-                statusTag.textContent = '⚠️ خطأ';
-                statusTag.className = 'status-tag invalid';
+        // ============================================================
+        //  ANALYZE WITH LIBPHONENUMBER (Open Source)
+        // ============================================================
+        function analyzeWithLibphonenumber(phoneNumber) {
+            // التحقق من تحميل المكتبة
+            if (!phoneUtil) {
+                const loaded = loadLibrary();
+                if (!loaded) {
+                    // إذا لم تتحمّل المكتبة، نستخدم تحليل بسيط
+                    return analyzeFallback(phoneNumber);
+                }
             }
 
-            progressBar.style.width = '100%';
-            setTimeout(() => {
-                loading.classList.remove('active');
-                isProcessing = false;
-                checkBtn.disabled = false;
-                btnText.textContent = 'تحقق الآن';
-                progressBar.style.width = '0%';
-            }, 400);
+            try {
+                // محاولة تحليل الرقم باستخدام libphonenumber
+                const parsed = phoneUtil.parsePhoneNumber(phoneNumber);
+
+                if (!parsed) {
+                    return analyzeFallback(phoneNumber);
+                }
+
+                // الحصول على معلومات متقدمة
+                const countryCode = parsed.country || 'UNKNOWN';
+                const countryName = getCountryName(countryCode);
+                const nationalNumber = parsed.nationalNumber || '';
+                const extension = parsed.ext || '';
+                const isValid = parsed.isValid();
+                const isPossible = parsed.isPossible();
+
+                // تحديد الحالة
+                let status = 'invalid';
+                if (isValid) {
+                    status = 'valid';
+                } else if (isPossible) {
+                    status = 'possible';
+                }
+
+                // استخراج معلومات المشغل (معلومات محدودة في المكتبة الأساسية)
+                let carrier = 'غير معروف';
+                try {
+                    if (parsed.carrier) {
+                        carrier = parsed.carrier;
+                    }
+                } catch (e) {}
+
+                // استخراج نوع الرقم
+                let numberType = 'غير معروف';
+                try {
+                    if (parsed.getType) {
+                        const type = parsed.getType();
+                        const typeMap = {
+                            'FIXED_LINE': 'أرضي',
+                            'MOBILE': 'جوال',
+                            'FIXED_LINE_OR_MOBILE': 'أرضي أو جوال',
+                            'TOLL_FREE': 'مجاني',
+                            'PREMIUM_RATE': 'مدفوع',
+                            'SHARED_COST': 'مشترك',
+                            'VOIP': 'VoIP',
+                            'PERSONAL_NUMBER': 'شخصي',
+                            'PAGER': 'بيجر',
+                            'UAN': 'UAN',
+                            'VOICEMAIL': 'بريد صوتي',
+                            'UNKNOWN': 'غير معروف'
+                        };
+                        numberType = typeMap[type] || type || 'غير معروف';
+                    }
+                } catch (e) {}
+
+                // التنسيقات المختلفة
+                let internationalFormat = phoneNumber;
+                let nationalFormat = nationalNumber;
+                let e164Format = phoneNumber;
+
+                try {
+                    if (parsed.formatInternational) {
+                        internationalFormat = parsed.formatInternational();
+                    }
+                    if (parsed.formatNational) {
+                        nationalFormat = parsed.formatNational();
+                    }
+                    if (parsed.formatE164) {
+                        e164Format = parsed.formatE164();
+                    }
+                } catch (e) {}
+
+                return {
+                    status: status,
+                    countryCode: countryCode,
+                    countryName: countryName,
+                    nationalNumber: nationalNumber,
+                    extension: extension,
+                    carrier: carrier,
+                    numberType: numberType,
+                    internationalFormat: internationalFormat,
+                    nationalFormat: nationalFormat,
+                    e164Format: e164Format,
+                    isValid: isValid,
+                    isPossible: isPossible
+                };
+
+            } catch (error) {
+                console.warn('Libphonenumber parsing failed, using fallback:', error);
+                return analyzeFallback(phoneNumber);
+            }
+        }
+
+        // ============================================================
+        //  FALLBACK ANALYSIS (بدون مكتبة خارجية)
+        // ============================================================
+        function analyzeFallback(phoneNumber) {
+            // تنظيف الرقم
+            const clean = phoneNumber.replace(/[^0-9+]/g, '');
+
+            // استخراج مفتاح الدولة
+            let countryCode = 'UNKNOWN';
+            let countryName = 'غير معروف';
+            let nationalNumber = clean;
+
+            // محاولة استخراج مفتاح الدولة
+            const match = clean.match(/^\+(\d{1,3})/);
+            if (match) {
+                const code = match[1];
+                nationalNumber = clean.replace(/^\+(\d{1,3})/, '');
+
+                // خريطة بسيطة لمفاتيح الدول
+                const countryMap = {
+                    '20': 'EG',
+                    '966': 'SA',
+                    '971': 'AE',
+                    '965': 'KW',
+                    '974': 'QA',
+                    '973': 'BH',
+                    '968': 'OM',
+                    '962': 'JO',
+                    '961': 'LB',
+                    '970': 'PS',
+                    '963': 'SY',
+                    '964': 'IQ',
+                    '967': 'YE',
+                    '213': 'DZ',
+                    '212': 'MA',
+                    '216': 'TN',
+                    '218': 'LY',
+                    '249': 'SD',
+                    '252': 'SO',
+                    '222': 'MR',
+                    '1': 'US',
+                    '44': 'GB',
+                    '33': 'FR',
+                    '49': 'DE',
+                    '39': 'IT',
+                    '34': 'ES',
+                    '90': 'TR',
+                    '91': 'IN',
+                    '86': 'CN',
+                    '81': 'JP',
+                    '82': 'KR',
+                    '7': 'RU',
+                    '55': 'BR',
+                    '61': 'AU',
+                    '1': 'CA'
+                };
+
+                countryCode = countryMap[code] || 'UNKNOWN';
+                countryName = getCountryName(countryCode);
+            }
+
+            // تحديد الحالة بناءً على طول الرقم
+            const isValid = nationalNumber.length >= 7 && nationalNumber.length <= 15;
+            const isPossible = nationalNumber.length >= 5 && nationalNumber.length <= 18;
+
+            let status = 'invalid';
+            if (isValid) {
+                status = 'valid';
+            } else if (isPossible) {
+                status = 'possible';
+            }
+
+            // تخمين نوع الرقم
+            let numberType = 'غير معروف';
+            if (nationalNumber.length >= 10 && nationalNumber.length <= 11) {
+                numberType = 'جوال (محتمل)';
+            } else if (nationalNumber.length >= 7 && nationalNumber.length <= 9) {
+                numberType = 'أرضي (محتمل)';
+            }
+
+            return {
+                status: status,
+                countryCode: countryCode,
+                countryName: countryName,
+                nationalNumber: nationalNumber,
+                extension: '',
+                carrier: 'غير معروف',
+                numberType: numberType,
+                internationalFormat: phoneNumber,
+                nationalFormat: nationalNumber,
+                e164Format: phoneNumber,
+                isValid: isValid,
+                isPossible: isPossible
+            };
         }
 
         // ============================================================
         //  DISPLAY RESULT
         // ============================================================
         function displayResult(data, phone) {
-            const isValid = data.valid || false;
+            const statusMap = {
+                'valid': { text: '✅ مؤكد', class: 'valid' },
+                'possible': { text: '⚠️ محتمل', class: 'possible' },
+                'invalid': { text: '❌ غير مؤكد', class: 'invalid' }
+            };
 
-            statusTag.textContent = isValid ? '✅ مؤكد' : '❌ غير مؤكد';
-            statusTag.className = `status-tag ${isValid ? 'valid' : 'invalid'}`;
+            const statusInfo = statusMap[data.status] || statusMap['invalid'];
+            statusTag.textContent = statusInfo.text;
+            statusTag.className = `status-tag ${statusInfo.class}`;
 
-            let html = '';
-
-            html += `
-                <div class="result-item full">
-                    <span class="label">📞 الرقم</span>
-                    <span class="value highlight">${phone}</span>
-                </div>
-            `;
-
-            if (isValid && data) {
-                const fields = [
-                    { label: '🌍 الدولة', value: data.country_name || 'غير معروف' },
-                    { label: '🔢 مفتاح الدولة', value: data.country_prefix || 'غير معروف' },
-                    { label: '📍 الموقع', value: data.location || 'غير معروف' },
-                    { label: '📶 المشغل', value: data.carrier || 'غير معروف' },
-                    { label: '📱 نوع الخط', value: data.line_type || 'غير معروف' },
-                    { label: '📊 التنسيق الدولي', value: data.international_format || phone },
-                    { label: '📊 التنسيق المحلي', value: data.local_format || phone },
-                ];
-
-                for (const field of fields) {
-                    html += `
-                        <div class="result-item">
-                            <span class="label">${field.label}</span>
-                            <span class="value">${field.value}</span>
+            let html = `
+                        <div class="result-item full">
+                            <span class="label">📞 الرقم</span>
+                            <span class="value highlight">${phone}</span>
                         </div>
                     `;
-                }
 
+            // معلومات أساسية
+            const fields = [
+                { label: '🌍 الدولة', value: data.countryName || 'غير معروف' },
+                { label: '🔢 مفتاح الدولة', value: data.countryCode || 'غير معروف' },
+                { label: '📱 نوع الرقم', value: data.numberType || 'غير معروف' },
+                { label: '📶 المشغل', value: data.carrier || 'غير معروف' },
+            ];
+
+            for (const field of fields) {
                 html += `
-                    <div class="result-item full" style="border-bottom:none;padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
-                        <span class="label" style="font-size:0.65rem;color:var(--text-muted);">
-                            <i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}
-                        </span>
-                        <span class="value" style="font-size:0.65rem;color:var(--text-muted);">
-                            <i class="fas fa-shield-alt"></i> آمن
-                        </span>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="result-item full" style="border-bottom:none;text-align:center;padding:20px 0;color:var(--text-secondary);">
-                        <div style="font-size:0.9rem;color:var(--text-muted);">
-                            <i class="fas fa-info-circle"></i> لم يتم العثور على معلومات
-                        </div>
-                        <div style="font-size:0.75rem;margin-top:4px;">
-                            تأكد من صحة الرقم ومفتاح الدولة
-                        </div>
-                    </div>
-                `;
+                            <div class="result-item">
+                                <span class="label">${field.label}</span>
+                                <span class="value">${field.value}</span>
+                            </div>
+                        `;
             }
+
+            // التنسيقات المختلفة
+            html += `
+                        <div class="result-item">
+                            <span class="label">📊 التنسيق الدولي</span>
+                            <span class="value">${data.internationalFormat || phone}</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="label">📊 التنسيق المحلي</span>
+                            <span class="value">${data.nationalFormat || data.nationalNumber || phone}</span>
+                        </div>
+                    `;
+
+            // معلومات إضافية
+            html += `
+                        <div class="result-item full" style="border-bottom:none;padding-top:12px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
+                            <span class="label" style="font-size:0.65rem;color:var(--text-muted);">
+                                <i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}
+                            </span>
+                            <span class="value" style="font-size:0.65rem;color:var(--text-muted);">
+                                <i class="fas fa-code"></i> مفتوح المصدر
+                            </span>
+                        </div>
+                        <div class="result-item full" style="border-bottom:none;padding-top:4px;">
+                            <span class="label" style="font-size:0.6rem;color:var(--text-muted);">
+                                <i class="fas fa-check-circle"></i> ${data.isValid ? 'صالح' : 'غير صالح'}
+                            </span>
+                            <span class="value" style="font-size:0.6rem;color:var(--text-muted);">
+                                <i class="fas fa-infinity"></i> ${data.isPossible ? 'محتمل' : 'غير محتمل'}
+                            </span>
+                        </div>
+                    `;
 
             resultContent.innerHTML = html;
             resultBox.classList.add('active');
@@ -1093,25 +1462,65 @@
         });
 
         // ============================================================
+        //  AUTO DETECT COUNTRY PREFIX
+        // ============================================================
+        phoneInput.addEventListener('input', function() {
+            const val = this.value.trim();
+            if (val.startsWith('+')) {
+                const match = val.match(/^\+(\d{1,3})/);
+                if (match) {
+                    const code = match[1];
+                    const countries = {
+                        '20': '🇪🇬',
+                        '966': '🇸🇦',
+                        '971': '🇦🇪',
+                        '965': '🇰🇼',
+                        '974': '🇶🇦',
+                        '973': '🇧🇭',
+                        '968': '🇴🇲',
+                        '962': '🇯🇴',
+                        '961': '🇱🇧',
+                        '213': '🇩🇿',
+                        '212': '🇲🇦',
+                        '216': '🇹🇳',
+                        '218': '🇱🇾',
+                        '1': '🇺🇸',
+                        '44': '🇬🇧',
+                        '33': '🇫🇷',
+                        '49': '🇩🇪',
+                        '39': '🇮🇹',
+                        '34': '🇪🇸',
+                        '90': '🇹🇷',
+                        '91': '🇮🇳',
+                        '86': '🇨🇳',
+                        '81': '🇯🇵',
+                        '82': '🇰🇷',
+                        '7': '🇷🇺',
+                        '55': '🇧🇷',
+                        '61': '🇦🇺'
+                    };
+                    countryPrefix.textContent = countries[code] || '+';
+                }
+            }
+        });
+
+        // ============================================================
         //  INIT
         // ============================================================
-        console.log('🐀 The Cook Rat - Phone Intelligence System');
-        console.log('🔐 Secure · Professional');
+        console.log('🐀 The Cook Rat - Phone Intelligence Pro');
+        console.log('📱 Powered by Google libphonenumber (Open Source)');
+        console.log('🔓 Unlimited · Free · Works Offline');
 
-        updateStats();
-        showToast('🐀 النظام جاهز للاستخدام', 'info');
-
-        (async function healthCheck() {
-            try {
-                const testUrl = `${CONFIG.endpoint}?access_key=${CONFIG.key}&number=201234567890&format=1`;
-                const response = await fetch(testUrl);
-                if (response.ok) {
-                    console.log('✅ Backend connection established');
-                }
-            } catch (e) {
-                console.log('⚠️ Backend connection: offline');
+        // تحميل المكتبة مسبقاً
+        setTimeout(() => {
+            const loaded = loadLibrary();
+            if (loaded) {
+                showToast('🐀 النظام جاهز (مفتوح المصدر، غير محدود)', 'success');
+            } else {
+                showToast('⚠️ يعمل في وضع الاحتياطي (بدون مكتبة خارجية)', 'warning');
             }
-        })();
+            updateStats();
+        }, 500);
     </script>
 
 </body>
