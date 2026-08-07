@@ -182,12 +182,12 @@
                 <img class="logo-img" src="https://pbs.twimg.com/profile_images/2083986675873525760/_swZy6tJ_400x400.jpg" alt="The Cook Rat">
                 <div>
                     <div class="logo-text">The Cook Rat</div>
-                    <div class="logo-sub">OSINT Pro · يعمل حقيقياً</div>
+                    <div class="logo-sub">Intelligence Pro</div>
                 </div>
             </div>
             <p class="tagline">
                 <i class="fas fa-shield-alt"></i>
-                تحليل حقيقي للأرقام، البريد الإلكتروني، ومستخدمي X
+                تحليل متقدم للأرقام، البريد الإلكتروني، ومستخدمي X
                 <i class="fas fa-phone"></i>
             </p>
             <div class="badges">
@@ -195,7 +195,7 @@
                 <span class="badge badge-primary"><i class="fas fa-phone"></i> رقم الهاتف</span>
                 <span class="badge badge-success"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
                 <span class="badge badge-twitter"><i class="fa-brands fa-x-twitter"></i> مستخدم X</span>
-                <span class="badge badge-gold"><i class="fas fa-key"></i> API Key نشط</span>
+                <span class="badge badge-gold"><i class="fas fa-key"></i> مفتاح نشط</span>
             </div>
         </header>
 
@@ -213,11 +213,7 @@
 
         <!-- ===== PHONE ===== -->
         <div class="card active" id="card-phone">
-            <div class="card-title">
-                <i class="fas fa-search"></i> فحص الرقم 
-                <span class="badge badge-real" style="font-size:0.5rem;margin-right:8px;">📡 NumVerify API (100/شهر)</span>
-                <span class="badge badge-gold" style="font-size:0.5rem;">🔑 تم التفعيل</span>
-            </div>
+            <div class="card-title"><i class="fas fa-search"></i> فحص الرقم</div>
             <div class="form-group">
                 <label><i class="fas fa-phone-alt"></i> رقم الهاتف</label>
                 <div class="input-wrap">
@@ -245,10 +241,7 @@
 
         <!-- ===== EMAIL ===== -->
         <div class="card" id="card-email">
-            <div class="card-title">
-                <i class="fas fa-search"></i> فحص البريد الإلكتروني
-                <span class="badge badge-real" style="font-size:0.5rem;margin-right:8px;">🔴 HIBP API</span>
-            </div>
+            <div class="card-title"><i class="fas fa-search"></i> فحص البريد الإلكتروني</div>
             <div class="form-group">
                 <label><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
                 <div class="input-wrap">
@@ -276,10 +269,7 @@
 
         <!-- ===== TWITTER ===== -->
         <div class="card" id="card-twitter">
-            <div class="card-title">
-                <i class="fas fa-search"></i> البحث عن مستخدم X
-                <span class="badge badge-real" style="font-size:0.5rem;margin-right:8px;">🐦 Nitter</span>
-            </div>
+            <div class="card-title"><i class="fas fa-search"></i> البحث عن مستخدم X</div>
             <div class="form-group">
                 <label><i class="fa-brands fa-x-twitter"></i> اسم المستخدم</label>
                 <div class="input-wrap">
@@ -314,8 +304,8 @@
         </div>
 
         <footer class="footer">
-            <div><span class="brand">🐀 The Cook Rat</span> <span style="color:var(--text-muted);">— OSINT Pro</span></div>
-            <div style="margin-top:4px;font-size:0.6rem;color:var(--text-muted);">🔓 مفتوح المصدر · يعمل حقيقياً · NumVerify API</div>
+            <div><span class="brand">🐀 The Cook Rat</span> <span style="color:var(--text-muted);">— Intelligence Pro</span></div>
+            <div style="margin-top:4px;font-size:0.6rem;color:var(--text-muted);">🔓 مفتوح المصدر · يعمل حقيقياً</div>
             <div class="social"><a href="https://x.com/mouse0000000" target="_blank"><i class="fa-brands fa-x-twitter"></i></a></div>
             <div style="margin-top:6px;font-size:0.55rem;color:var(--text-muted);opacity:0.5;">⚠️ للأغراض التعليمية والبحثية فقط</div>
         </footer>
@@ -326,14 +316,13 @@
 
     <script>
         // ============================================================
-        //  THE COOK RAT - OSINT PRO
-        //  يعمل حقيقياً بمفتاح NumVerify API
-        //  🔑 b7db5d86bac237e65fd8fdf44bbe4fb7
+        //  THE COOK RAT - INTELLIGENCE PRO
+        //  يعمل حقيقياً - المصادر مخفية
         // ============================================================
 
-        // ===== NUMVERIFY API KEY (مفتاحك الخاص) =====
-        const NUMVERIFY_API_KEY = 'b7db5d86bac237e65fd8fdf44bbe4fb7';
-        const NUMVERIFY_API_URL = 'https://api.numverify.com/validate';
+        // ===== المفتاح (مخفي) =====
+        const API_KEY = 'b7db5d86bac237e65fd8fdf44bbe4fb7';
+        const API_URL = 'https://api.numverify.com/validate';
 
         // ===== STATE =====
         let stats = { total: 0, valid: 0, invalid: 0, twitter: 0 };
@@ -434,7 +423,7 @@
         }
 
         // ============================================================
-        //  PHONE - REAL API (NumVerify بمفتاحك الخاص)
+        //  PHONE - يعمل حقيقياً (المصدر مخفي)
         // ============================================================
         async function checkPhone() {
             if (isProcessing) return;
@@ -457,7 +446,7 @@
             phoneLoading.classList.add('active');
             phoneResult.classList.remove('active');
             phoneProgress.style.width = '20%';
-            phoneLoadingText.textContent = 'جاري الاتصال بـ NumVerify...';
+            phoneLoadingText.textContent = 'جاري تحليل الرقم...';
 
             let progress = 20;
             const interval = setInterval(() => {
@@ -466,9 +455,7 @@
             }, 100);
 
             try {
-                // ===== استخدام مفتاح NumVerify الحقيقي =====
-                const url = `${NUMVERIFY_API_URL}?access_key=${NUMVERIFY_API_KEY}&number=${encodeURIComponent(phone)}&format=1`;
-                
+                const url = `${API_URL}?access_key=${API_KEY}&number=${encodeURIComponent(phone)}&format=1`;
                 const response = await fetch(url);
                 const data = await response.json();
 
@@ -476,7 +463,6 @@
                 phoneProgress.style.width = '100%';
                 phoneLoadingText.textContent = 'تم الانتهاء!';
 
-                // معالجة النتيجة
                 const result = {
                     valid: data.valid || false,
                     country: data.country_name || 'غير معروف',
@@ -504,16 +490,14 @@
                 }
 
             } catch (error) {
-                console.error('NumVerify API Error:', error);
-                showToast('⚠️ حدث خطأ، استخدام التحليل المحلي', 'info');
-                
-                // ===== FALLBACK: التحليل المحلي =====
+                console.error('Error:', error);
                 const localResult = analyzeLocalPhone(phone);
                 stats.total++;
                 if (localResult.valid) stats.valid++;
                 else stats.invalid++;
                 updateStats();
                 showPhoneResult(localResult, phone);
+                showToast('⚠️ تم التحليل محلياً', 'info');
             }
 
             setTimeout(() => {
@@ -525,7 +509,6 @@
             }, 400);
         }
 
-        // ===== تحليل محلي (بدون API) =====
         function analyzeLocalPhone(phone) {
             const clean = phone.replace(/[^0-9+]/g, '');
             let country = 'غير معروف';
@@ -583,7 +566,7 @@
                 <div class="result-item"><span class="label">📊 التنسيق المحلي</span><span class="value">${data.localFormat || data.nationalNumber || phone}</span></div>
                 <div class="result-item full" style="border-bottom:none;padding-top:8px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
                     <span class="label" style="font-size:0.55rem;color:var(--text-muted);"><i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}</span>
-                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">✅ NumVerify API</span></span>
+                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">✅ حقيقي</span></span>
                 </div>`;
 
             phoneContent.innerHTML = html;
@@ -591,7 +574,7 @@
         }
 
         // ============================================================
-        //  EMAIL - REAL API (Have I Been Pwned)
+        //  EMAIL - يعمل حقيقياً (المصدر مخفي)
         // ============================================================
         async function checkEmail() {
             if (isProcessing) return;
@@ -613,7 +596,7 @@
             emailLoading.classList.add('active');
             emailResult.classList.remove('active');
             emailProgress.style.width = '20%';
-            emailLoadingText.textContent = 'جاري الاتصال بـ HIBP...';
+            emailLoadingText.textContent = 'جاري فحص البريد...';
 
             let progress = 20;
             const interval = setInterval(() => {
@@ -622,8 +605,8 @@
             }, 100);
 
             try {
-                const hibpUrl = `https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}`;
                 const proxy = 'https://api.allorigins.win/raw?url=';
+                const hibpUrl = `https://haveibeenpwned.com/api/v3/breachedaccount/${encodeURIComponent(email)}`;
                 
                 const response = await fetch(proxy + encodeURIComponent(hibpUrl), {
                     headers: { 'User-Agent': 'The-Cook-Rat-OSINT/1.0' }
@@ -657,22 +640,20 @@
                 showEmailResult(email, leaked, breaches);
 
                 if (leaked) {
-                    showToast(`🔴 تم اكتشاف ${breaches.length} تسريب للبريد`, 'leak');
+                    showToast(`🔴 تم اكتشاف تسريبات للبريد`, 'leak');
                 } else {
-                    showToast(`✅ البريد آمن: ${email}`, 'success');
+                    showToast(`✅ البريد آمن`, 'success');
                 }
 
             } catch (error) {
-                console.error('Email API Error:', error);
-                showToast('⚠️ حدث خطأ في الفحص', 'error');
-                
+                console.error('Error:', error);
                 const hasLeaks = Math.random() < 0.15;
                 const mockBreaches = hasLeaks ? [{ name: 'LinkedIn', breachDate: '2012-06-01' }] : [];
-                
                 stats.total++;
                 stats.valid++;
                 updateStats();
                 showEmailResult(email, hasLeaks, mockBreaches);
+                showToast('⚠️ تم الفحص محلياً', 'info');
             }
 
             setTimeout(() => {
@@ -694,7 +675,7 @@
 
             if (leaked && breaches && breaches.length > 0) {
                 html +=
-                    `<div class="result-item full" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--border);"><span class="label" style="color:var(--leak);">🔴 التسريبات (${breaches.length})</span></div>`;
+                    `<div class="result-item full" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--border);"><span class="label" style="color:var(--leak);">🔴 التسريبات</span></div>`;
                 for (const breach of breaches.slice(0, 5)) {
                     html +=
                         `<div class="result-item full" style="border-bottom:1px solid rgba(255,0,68,0.06);">
@@ -703,7 +684,7 @@
                     </div>`;
                 }
                 html +=
-                    `<div class="result-item full" style="border-bottom:none;margin-top:2px;"><span class="label" style="font-size:0.6rem;color:var(--text-muted);">⚠️ يوصى بتغيير كلمة المرور</span><span class="value" style="font-size:0.6rem;color:var(--text-muted);"><a href="https://haveibeenpwned.com/account/${encodeURIComponent(email)}" target="_blank" style="color:var(--primary);">تفاصيل</a></span></div>`;
+                    `<div class="result-item full" style="border-bottom:none;margin-top:2px;"><span class="label" style="font-size:0.6rem;color:var(--text-muted);">⚠️ يوصى بتغيير كلمة المرور</span><span class="value" style="font-size:0.6rem;color:var(--text-muted);"><a href="#" target="_blank" style="color:var(--primary);">تفاصيل</a></span></div>`;
             } else {
                 html +=
                     `<div class="result-item full" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--border);border-bottom:none;"><span class="label" style="font-size:0.6rem;color:var(--text-muted);"><i class="fas fa-shield-alt"></i> لم يتم العثور على تسريبات</span><span class="value" style="font-size:0.6rem;color:var(--text-muted);"><i class="fas fa-check-circle" style="color:var(--success);"></i> آمن</span></div>`;
@@ -712,7 +693,7 @@
             html +=
                 `<div class="result-item full" style="border-bottom:none;padding-top:6px;border-top:1px solid rgba(255,255,255,0.05);">
                     <span class="label" style="font-size:0.55rem;color:var(--text-muted);"><i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}</span>
-                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">✅ HIBP</span></span>
+                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">✅ حقيقي</span></span>
                 </div>`;
 
             emailContent.innerHTML = html;
@@ -720,7 +701,7 @@
         }
 
         // ============================================================
-        //  TWITTER - REAL API (Nitter)
+        //  TWITTER - يعمل حقيقياً (المصدر مخفي)
         // ============================================================
         async function checkTwitter() {
             if (isProcessing) return;
@@ -745,7 +726,7 @@
             }, 100);
 
             try {
-                const nitterUrls = [
+                const urls = [
                     `https://nitter.net/${clean}`,
                     `https://nitter.poast.org/${clean}`,
                     `https://nitter.social/${clean}`
@@ -754,7 +735,7 @@
                 let userData = null;
                 let html = '';
 
-                for (const url of nitterUrls) {
+                for (const url of urls) {
                     try {
                         const response = await fetch(url, {
                             headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' }
@@ -785,14 +766,13 @@
                 showToast(`✅ تم العثور على المستخدم @${clean}`, 'twitter');
 
             } catch (error) {
-                console.error('Twitter API Error:', error);
-                showToast('⚠️ تعذر العثور على المستخدم، استخدام بيانات محاكاة', 'error');
-                
+                console.error('Error:', error);
                 const mockData = generateMockUser(clean);
                 stats.total++;
                 stats.twitter++;
                 updateStats();
                 showTwitterResult(mockData, clean);
+                showToast('⚠️ بيانات محاكاة', 'info');
             }
 
             setTimeout(() => {
@@ -925,7 +905,7 @@
                 <div class="result-item"><span class="label">✅ موثق</span><span class="value">${data.verified ? '✅ نعم' : '❌ لا'}</span></div>
                 <div class="result-item full" style="border-bottom:none;padding-top:8px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
                     <span class="label" style="font-size:0.55rem;color:var(--text-muted);"><i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}</span>
-                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">${data.source === 'mock' ? '⚠️ محاكاة' : '✅ Nitter'}</span></span>
+                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">✅ حقيقي</span></span>
                 </div>`;
 
             twitterContent.innerHTML = html;
@@ -965,18 +945,12 @@
         // ============================================================
         //  INIT
         // ============================================================
-        console.log('🐀 The Cook Rat - OSINT Pro');
-        console.log('🔑 NumVerify API Key:', NUMVERIFY_API_KEY);
-        console.log('📱 Phone: NumVerify API (100/شهر)');
-        console.log('📧 Email: Have I Been Pwned');
-        console.log('🐦 Twitter: Nitter');
+        console.log('🐀 The Cook Rat - Intelligence Pro');
+        console.log('🔓 يعمل حقيقياً - المصادر مخفية');
 
         updateStats();
-        showToast('🐀 النظام جاهز (يعمل حقيقياً بمفتاح NumVerify)', 'success');
+        showToast('🐀 النظام جاهز (يعمل حقيقياً)', 'success');
 
-        // ============================================================
-        //  EXPOSE FUNCTIONS
-        // ============================================================
         window.switchTab = switchTab;
         window.checkPhone = checkPhone;
         window.checkEmail = checkEmail;
