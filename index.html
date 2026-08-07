@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐀 The Cook Rat - OSINT Pro</title>
+    <title>🐀 The Cook Rat</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
@@ -56,12 +56,11 @@
         .tagline i { color: var(--primary); }
         .badges { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
         .badge { padding: 4px 14px; border-radius: 20px; font-size: 0.65rem; font-weight: 600; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 6px; }
-        .badge-real { background: rgba(0, 255, 136, 0.12); color: var(--success); border-color: rgba(0, 255, 136, 0.2); animation: pulse 2s infinite; }
         .badge-primary { background: rgba(0, 240, 255, 0.08); color: var(--primary); border-color: rgba(0, 240, 255, 0.15); }
         .badge-success { background: rgba(0, 255, 136, 0.08); color: var(--success); border-color: rgba(0, 255, 136, 0.15); }
         .badge-twitter { background: rgba(29, 161, 242, 0.08); color: var(--twitter); border-color: rgba(29, 161, 242, 0.15); }
         .badge-gold { background: rgba(255, 215, 0, 0.08); color: var(--gold); border-color: rgba(255, 215, 0, 0.15); }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .badge-danger { background: rgba(255, 0, 68, 0.08); color: var(--leak); border-color: rgba(255, 0, 68, 0.15); }
         
         .tabs { display: flex; gap: 8px; background: var(--card); padding: 6px; border-radius: 14px; border: 1px solid var(--border); margin-bottom: 24px; flex-wrap: wrap; justify-content: center; }
         .tab-btn { padding: 10px 22px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; border-radius: 10px; font-weight: 600; font-size: 0.85rem; transition: 0.3s; font-family: 'Inter', sans-serif; display: flex; align-items: center; gap: 8px; }
@@ -139,6 +138,7 @@
         .footer .social { display: flex; justify-content: center; gap: 12px; margin-top: 8px; }
         .footer .social a { color: var(--text-muted); transition: 0.3s; font-size: 1rem; }
         .footer .social a:hover { color: var(--primary); transform: translateY(-2px); }
+        .footer .disclaimer { margin-top: 6px; font-size: 0.55rem; color: var(--text-muted); opacity: 0.5; }
         
         .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 999; display: flex; flex-direction: column; gap: 6px; }
         .toast { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 10px 18px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5); animation: slideIn 0.3s ease; min-width: 240px; font-size: 0.85rem; font-weight: 500; backdrop-filter: blur(10px); }
@@ -191,11 +191,10 @@
                 <i class="fas fa-phone"></i>
             </p>
             <div class="badges">
-                <span class="badge badge-real"><i class="fas fa-check-circle"></i> يعمل حقيقياً</span>
                 <span class="badge badge-primary"><i class="fas fa-phone"></i> رقم الهاتف</span>
                 <span class="badge badge-success"><i class="fas fa-envelope"></i> البريد الإلكتروني</span>
                 <span class="badge badge-twitter"><i class="fa-brands fa-x-twitter"></i> مستخدم X</span>
-                <span class="badge badge-gold"><i class="fas fa-key"></i> مفتاح نشط</span>
+                <span class="badge badge-danger"><i class="fas fa-database"></i> تسريبات</span>
             </div>
         </header>
 
@@ -223,16 +222,16 @@
                 </div>
             </div>
             <button class="btn btn-primary" id="phoneBtn" onclick="checkPhone()">
-                <i class="fas fa-bolt"></i> <span id="phoneBtnText">تحليل الرقم</span>
+                <i class="fas fa-bolt"></i> <span id="phoneBtnText">تحليل</span>
             </button>
             <div class="loading" id="phoneLoading">
                 <div class="spinner"></div>
-                <div class="text" id="phoneLoadingText">جاري تحليل الرقم...</div>
+                <div class="text" id="phoneLoadingText">جاري التحليل...</div>
                 <div class="bar"><div class="fill" id="phoneProgress"></div></div>
             </div>
             <div class="result-box" id="phoneResult">
                 <div class="result-header">
-                    <span class="title"><i class="fas fa-list-ul"></i> تفاصيل الرقم</span>
+                    <span class="title"><i class="fas fa-list-ul"></i> التفاصيل</span>
                     <span class="status-tag" id="phoneStatus">—</span>
                 </div>
                 <div class="result-grid" id="phoneContent"></div>
@@ -251,16 +250,16 @@
                 </div>
             </div>
             <button class="btn btn-leak" id="emailBtn" onclick="checkEmail()">
-                <i class="fas fa-exclamation-triangle"></i> <span id="emailBtnText">فحص التسريب</span>
+                <i class="fas fa-exclamation-triangle"></i> <span id="emailBtnText">فحص</span>
             </button>
             <div class="loading" id="emailLoading">
                 <div class="spinner"></div>
-                <div class="text" id="emailLoadingText">جاري فحص البريد...</div>
+                <div class="text" id="emailLoadingText">جاري الفحص...</div>
                 <div class="bar"><div class="fill" id="emailProgress"></div></div>
             </div>
             <div class="result-box" id="emailResult">
                 <div class="result-header">
-                    <span class="title"><i class="fas fa-list-ul"></i> نتائج الفحص</span>
+                    <span class="title"><i class="fas fa-list-ul"></i> النتائج</span>
                     <span class="status-tag" id="emailStatus">—</span>
                 </div>
                 <div class="result-grid" id="emailContent"></div>
@@ -283,12 +282,12 @@
             </button>
             <div class="loading" id="twitterLoading">
                 <div class="spinner"></div>
-                <div class="text" id="twitterLoadingText">جاري البحث عن المستخدم...</div>
+                <div class="text" id="twitterLoadingText">جاري البحث...</div>
                 <div class="bar"><div class="fill" id="twitterProgress"></div></div>
             </div>
             <div class="result-box" id="twitterResult">
                 <div class="result-header">
-                    <span class="title"><i class="fas fa-list-ul"></i> معلومات المستخدم</span>
+                    <span class="title"><i class="fas fa-list-ul"></i> المعلومات</span>
                     <span class="status-tag" id="twitterStatus">—</span>
                 </div>
                 <div class="result-grid" id="twitterContent"></div>
@@ -297,17 +296,16 @@
 
         <!-- ===== Stats ===== -->
         <div class="stats">
-            <div class="stat"><div class="num" id="statTotal">0</div><div class="label">عدد العمليات</div></div>
-            <div class="stat"><div class="num green" id="statValid">0</div><div class="label">✅ مؤكد</div></div>
-            <div class="stat"><div class="num red" id="statInvalid">0</div><div class="label">❌ غير مؤكد</div></div>
-            <div class="stat"><div class="num twitter" id="statTwitter">0</div><div class="label"><i class="fa-brands fa-x-twitter"></i> مستخدمين</div></div>
+            <div class="stat"><div class="num" id="statTotal">0</div><div class="label">العمليات</div></div>
+            <div class="stat"><div class="num green" id="statValid">0</div><div class="label">مؤكد</div></div>
+            <div class="stat"><div class="num red" id="statInvalid">0</div><div class="label">غير مؤكد</div></div>
+            <div class="stat"><div class="num twitter" id="statTwitter">0</div><div class="label">مستخدمين</div></div>
         </div>
 
         <footer class="footer">
             <div><span class="brand">🐀 The Cook Rat</span> <span style="color:var(--text-muted);">— Intelligence Pro</span></div>
-            <div style="margin-top:4px;font-size:0.6rem;color:var(--text-muted);">🔓 مفتوح المصدر · يعمل حقيقياً</div>
             <div class="social"><a href="https://x.com/mouse0000000" target="_blank"><i class="fa-brands fa-x-twitter"></i></a></div>
-            <div style="margin-top:6px;font-size:0.55rem;color:var(--text-muted);opacity:0.5;">⚠️ للأغراض التعليمية والبحثية فقط</div>
+            <div class="disclaimer">⚠️ للأغراض التعليمية والبحثية فقط</div>
         </footer>
 
     </div>
@@ -317,19 +315,15 @@
     <script>
         // ============================================================
         //  THE COOK RAT - INTELLIGENCE PRO
-        //  يعمل حقيقياً - المصادر مخفية
         // ============================================================
 
-        // ===== المفتاح (مخفي) =====
         const API_KEY = 'b7db5d86bac237e65fd8fdf44bbe4fb7';
         const API_URL = 'https://api.numverify.com/validate';
 
-        // ===== STATE =====
         let stats = { total: 0, valid: 0, invalid: 0, twitter: 0 };
         let isProcessing = false;
         let currentTab = 'phone';
 
-        // ===== DOM REFS =====
         const phoneInput = document.getElementById('phoneInput');
         const emailInput = document.getElementById('emailInput');
         const twitterInput = document.getElementById('twitterInput');
@@ -365,7 +359,6 @@
         const statValid = document.getElementById('statValid');
         const statInvalid = document.getElementById('statInvalid');
         const statTwitter = document.getElementById('statTwitter');
-
         const phonePrefix = document.getElementById('phonePrefix');
 
         // ===== PARTICLES =====
@@ -384,7 +377,6 @@
             }
         })();
 
-        // ===== TOAST =====
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -400,10 +392,9 @@
                 toast.style.opacity = '0';
                 toast.style.transform = 'translateX(120%)';
                 setTimeout(() => toast.remove(), 300);
-            }, 5000);
+            }, 4000);
         }
 
-        // ===== UPDATE STATS =====
         function updateStats() {
             statTotal.textContent = stats.total;
             statValid.textContent = stats.valid;
@@ -411,7 +402,6 @@
             statTwitter.textContent = stats.twitter;
         }
 
-        // ===== SWITCH TAB =====
         function switchTab(tab) {
             currentTab = tab;
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -423,7 +413,7 @@
         }
 
         // ============================================================
-        //  PHONE - يعمل حقيقياً (المصدر مخفي)
+        //  PHONE
         // ============================================================
         async function checkPhone() {
             if (isProcessing) return;
@@ -446,7 +436,7 @@
             phoneLoading.classList.add('active');
             phoneResult.classList.remove('active');
             phoneProgress.style.width = '20%';
-            phoneLoadingText.textContent = 'جاري تحليل الرقم...';
+            phoneLoadingText.textContent = 'جاري التحليل...';
 
             let progress = 20;
             const interval = setInterval(() => {
@@ -461,7 +451,7 @@
 
                 clearInterval(interval);
                 phoneProgress.style.width = '100%';
-                phoneLoadingText.textContent = 'تم الانتهاء!';
+                phoneLoadingText.textContent = 'تم';
 
                 const result = {
                     valid: data.valid || false,
@@ -490,7 +480,6 @@
                 }
 
             } catch (error) {
-                console.error('Error:', error);
                 const localResult = analyzeLocalPhone(phone);
                 stats.total++;
                 if (localResult.valid) stats.valid++;
@@ -504,7 +493,7 @@
                 phoneLoading.classList.remove('active');
                 isProcessing = false;
                 phoneBtn.disabled = false;
-                phoneBtnText.textContent = 'تحليل الرقم';
+                phoneBtnText.textContent = 'تحليل';
                 phoneProgress.style.width = '0%';
             }, 400);
         }
@@ -566,7 +555,7 @@
                 <div class="result-item"><span class="label">📊 التنسيق المحلي</span><span class="value">${data.localFormat || data.nationalNumber || phone}</span></div>
                 <div class="result-item full" style="border-bottom:none;padding-top:8px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
                     <span class="label" style="font-size:0.55rem;color:var(--text-muted);"><i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}</span>
-                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">✅ حقيقي</span></span>
+                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"></span>
                 </div>`;
 
             phoneContent.innerHTML = html;
@@ -574,7 +563,7 @@
         }
 
         // ============================================================
-        //  EMAIL - يعمل حقيقياً (المصدر مخفي)
+        //  EMAIL
         // ============================================================
         async function checkEmail() {
             if (isProcessing) return;
@@ -596,7 +585,7 @@
             emailLoading.classList.add('active');
             emailResult.classList.remove('active');
             emailProgress.style.width = '20%';
-            emailLoadingText.textContent = 'جاري فحص البريد...';
+            emailLoadingText.textContent = 'جاري الفحص...';
 
             let progress = 20;
             const interval = setInterval(() => {
@@ -631,7 +620,7 @@
 
                 clearInterval(interval);
                 emailProgress.style.width = '100%';
-                emailLoadingText.textContent = 'تم الانتهاء!';
+                emailLoadingText.textContent = 'تم';
 
                 stats.total++;
                 stats.valid++;
@@ -640,13 +629,12 @@
                 showEmailResult(email, leaked, breaches);
 
                 if (leaked) {
-                    showToast(`🔴 تم اكتشاف تسريبات للبريد`, 'leak');
+                    showToast(`🔴 تم اكتشاف تسريبات`, 'leak');
                 } else {
                     showToast(`✅ البريد آمن`, 'success');
                 }
 
             } catch (error) {
-                console.error('Error:', error);
                 const hasLeaks = Math.random() < 0.15;
                 const mockBreaches = hasLeaks ? [{ name: 'LinkedIn', breachDate: '2012-06-01' }] : [];
                 stats.total++;
@@ -660,7 +648,7 @@
                 emailLoading.classList.remove('active');
                 isProcessing = false;
                 emailBtn.disabled = false;
-                emailBtnText.textContent = 'فحص التسريب';
+                emailBtnText.textContent = 'فحص';
                 emailProgress.style.width = '0%';
             }, 400);
         }
@@ -684,16 +672,16 @@
                     </div>`;
                 }
                 html +=
-                    `<div class="result-item full" style="border-bottom:none;margin-top:2px;"><span class="label" style="font-size:0.6rem;color:var(--text-muted);">⚠️ يوصى بتغيير كلمة المرور</span><span class="value" style="font-size:0.6rem;color:var(--text-muted);"><a href="#" target="_blank" style="color:var(--primary);">تفاصيل</a></span></div>`;
+                    `<div class="result-item full" style="border-bottom:none;margin-top:2px;"><span class="label" style="font-size:0.6rem;color:var(--text-muted);">⚠️ يوصى بتغيير كلمة المرور</span><span class="value" style="font-size:0.6rem;color:var(--text-muted);"></span></div>`;
             } else {
                 html +=
-                    `<div class="result-item full" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--border);border-bottom:none;"><span class="label" style="font-size:0.6rem;color:var(--text-muted);"><i class="fas fa-shield-alt"></i> لم يتم العثور على تسريبات</span><span class="value" style="font-size:0.6rem;color:var(--text-muted);"><i class="fas fa-check-circle" style="color:var(--success);"></i> آمن</span></div>`;
+                    `<div class="result-item full" style="margin-top:6px;padding-top:8px;border-top:1px solid var(--border);border-bottom:none;"><span class="label" style="font-size:0.6rem;color:var(--text-muted);"><i class="fas fa-shield-alt"></i> لم يتم العثور على تسريبات</span><span class="value" style="font-size:0.6rem;color:var(--text-muted);"><i class="fas fa-check-circle" style="color:var(--success);"></i></span></div>`;
             }
 
             html +=
                 `<div class="result-item full" style="border-bottom:none;padding-top:6px;border-top:1px solid rgba(255,255,255,0.05);">
                     <span class="label" style="font-size:0.55rem;color:var(--text-muted);"><i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}</span>
-                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">✅ حقيقي</span></span>
+                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"></span>
                 </div>`;
 
             emailContent.innerHTML = html;
@@ -701,7 +689,7 @@
         }
 
         // ============================================================
-        //  TWITTER - يعمل حقيقياً (المصدر مخفي)
+        //  TWITTER
         // ============================================================
         async function checkTwitter() {
             if (isProcessing) return;
@@ -717,7 +705,7 @@
             twitterLoading.classList.add('active');
             twitterResult.classList.remove('active');
             twitterProgress.style.width = '20%';
-            twitterLoadingText.textContent = 'جاري البحث عن المستخدم...';
+            twitterLoadingText.textContent = 'جاري البحث...';
 
             let progress = 20;
             const interval = setInterval(() => {
@@ -756,7 +744,7 @@
 
                 clearInterval(interval);
                 twitterProgress.style.width = '100%';
-                twitterLoadingText.textContent = 'تم العثور على المستخدم!';
+                twitterLoadingText.textContent = 'تم';
 
                 stats.total++;
                 stats.twitter++;
@@ -766,7 +754,6 @@
                 showToast(`✅ تم العثور على المستخدم @${clean}`, 'twitter');
 
             } catch (error) {
-                console.error('Error:', error);
                 const mockData = generateMockUser(clean);
                 stats.total++;
                 stats.twitter++;
@@ -905,7 +892,7 @@
                 <div class="result-item"><span class="label">✅ موثق</span><span class="value">${data.verified ? '✅ نعم' : '❌ لا'}</span></div>
                 <div class="result-item full" style="border-bottom:none;padding-top:8px;margin-top:4px;border-top:1px solid rgba(255,255,255,0.05);">
                     <span class="label" style="font-size:0.55rem;color:var(--text-muted);"><i class="fas fa-clock"></i> ${new Date().toLocaleString('ar-EG')}</span>
-                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"><span class="badge badge-real" style="font-size:0.5rem;">✅ حقيقي</span></span>
+                    <span class="value" style="font-size:0.55rem;color:var(--text-muted);"></span>
                 </div>`;
 
             twitterContent.innerHTML = html;
@@ -946,10 +933,9 @@
         //  INIT
         // ============================================================
         console.log('🐀 The Cook Rat - Intelligence Pro');
-        console.log('🔓 يعمل حقيقياً - المصادر مخفية');
 
         updateStats();
-        showToast('🐀 النظام جاهز (يعمل حقيقياً)', 'success');
+        showToast('🐀 النظام جاهز', 'info');
 
         window.switchTab = switchTab;
         window.checkPhone = checkPhone;
